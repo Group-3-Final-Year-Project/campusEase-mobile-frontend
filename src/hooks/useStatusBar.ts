@@ -2,7 +2,7 @@ import { theme } from "../shared/theme";
 import { useEffect } from "react";
 import { Platform, StatusBar } from "react-native";
 
-export const useStatusBar = (
+const useStatusBar = (
   isTransparent?: boolean,
   backgroundColor?: string,
   barStyle?: "light-content" | "dark-content"
@@ -24,3 +24,5 @@ export const useStatusBar = (
     }
   }, []);
 };
+
+export default useStatusBar;

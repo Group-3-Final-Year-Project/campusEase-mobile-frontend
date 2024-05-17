@@ -1,15 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { APP_PAGES } from "../shared/constants";
-import Home from "../screens/Home/Home";
-import { Iconify } from "react-native-iconify";
-import { theme } from "../shared/theme";
-import Explore from "../screens/Explore/Explore";
-import Bookmarks from "../screens/Bookmarks/Bookmarks";
-import Chats from "../screens/Chats/Chats";
-import Profile from "../screens/Profile/Profile";
-import Tabbar from "../components/Tabbar";
 import { Keyboard } from "react-native";
+import { ThemeContext } from "styled-components/native";
 
 const UserTabNavigator = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
@@ -30,6 +22,7 @@ const UserTabNavigator = () => {
 
   const Tab = createBottomTabNavigator();
 
+  const theme = useContext(ThemeContext);
   const tabs = [
     {
       name: APP_PAGES.HOME,
@@ -39,7 +32,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:home-smile-angle-outline"
           size={24}
-          color={theme.BACKGROUND}
+          color={theme.PRIMARY_COLOR}
           strokeWidth={24}
         />
       ),
@@ -47,7 +40,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:home-smile-angle-outline"
           size={24}
-          color={theme.ACCENT}
+          color={theme.FOREGROUND3}
           strokeWidth={24}
         />
       ),
@@ -60,7 +53,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:map-point-outline"
           size={24}
-          color={theme.BACKGROUND}
+          color={theme.PRIMARY_COLOR}
           strokeWidth={24}
         />
       ),
@@ -68,7 +61,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:map-point-outline"
           size={24}
-          color={theme.ACCENT}
+          color={theme.FOREGROUND3}
           strokeWidth={24}
         />
       ),
@@ -81,7 +74,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:documents-minimalistic-outline"
           size={24}
-          color={theme.BACKGROUND}
+          color={theme.PRIMARY_COLOR}
           strokeWidth={24}
         />
       ),
@@ -89,7 +82,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:documents-minimalistic-outline"
           size={24}
-          color={theme.ACCENT}
+          color={theme.FOREGROUND3}
           strokeWidth={24}
         />
       ),
@@ -102,7 +95,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:chat-round-line-outline"
           size={24}
-          color={theme.BACKGROUND}
+          color={theme.PRIMARY_COLOR}
           strokeWidth={24}
         />
       ),
@@ -110,7 +103,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:chat-round-line-outline"
           size={24}
-          color={theme.ACCENT}
+          color={theme.FOREGROUND3}
           strokeWidth={24}
         />
       ),
@@ -124,7 +117,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:user-rounded-outline"
           size={24}
-          color={theme.BACKGROUND}
+          color={theme.PRIMARY_COLOR}
           strokeWidth={24}
         />
       ),
@@ -132,7 +125,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:user-rounded-outline"
           size={24}
-          color={theme.ACCENT}
+          color={theme.FOREGROUND3}
           strokeWidth={24}
         />
       ),
@@ -146,22 +139,14 @@ const UserTabNavigator = () => {
       }}
       initialRouteName={APP_PAGES.HOME}
       sceneContainerStyle={{
-        backgroundColor: `${theme.BACKGROUND}`,
+        backgroundColor: `${theme?.colors.background}`,
       }}
       screenOptions={{
         tabBarHideOnKeyboard: true,
-        headerShadowVisible: true,
         tabBarAllowFontScaling: true,
-        headerTitleAlign: "center",
         headerShown: true,
         headerTitleStyle: {
           fontFamily: "Urbanist_700Bold",
-        },
-        headerStyle: {
-          backgroundColor: `${theme.BACKGROUND}`,
-          shadowColor: `${theme.ACCENT}`,
-          borderBottomLeftRadius: 14,
-          borderBottomRightRadius: 14,
         },
       }}
     >

@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { theme } from "../shared/theme";
 
-export const useNavigationBar = (
+const useNavigationBar = (
   isTransparent?: boolean,
   backgroundColor?: string
 ) => {
@@ -23,3 +23,5 @@ export const useNavigationBar = (
     }
   }, []);
 };
+
+export default useNavigationBar;

@@ -7,7 +7,7 @@ type CustomFormikProps = {
   onSumbit?: (values: object) => void;
 };
 
-export const useCustomFormik = (props: CustomFormikProps) => {
+const useCustomFormik = (props: CustomFormikProps) => {
   const formik = useFormik({
     initialValues: props.initialValues,
     validationSchema: props.validationSchema,
@@ -17,3 +17,5 @@ export const useCustomFormik = (props: CustomFormikProps) => {
   });
   return formik;
 };
+
+export default useCustomFormik;

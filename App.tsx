@@ -1,58 +1,51 @@
 import "react-native-gesture-handler";
-import { GluestackUIProvider } from "@gluestack-ui/themed";
-import { config } from "@gluestack-ui/config";
+import { useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import RootNavigator from "./src/navigators/RootNavigator";
-import { useCallback } from "react";
+import { useMemo } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
-  Urbanist_200ExtraLight,
-  Urbanist_300Light,
-  Urbanist_400Regular,
-  Urbanist_500Medium,
-  Urbanist_600SemiBold,
-  Urbanist_700Bold,
+  // Urbanist_800ExtraBold,
+  // Urbanist_300Light,
+  // Urbanist_400Regular,
+  // Urbanist_500Medium,
+  // Urbanist_600SemiBold,
+  // Urbanist_700Bold,
 } from "@expo-google-fonts/urbanist";
-import {
-  Lexend_100Thin,
-  Lexend_200ExtraLight,
-  Lexend_300Light,
-  Lexend_400Regular,
-  Lexend_500Medium,
-  Lexend_600SemiBold,
-  Lexend_700Bold,
-  Lexend_800ExtraBold,
-  Lexend_900Black,
-} from "@expo-google-fonts/lexend";
 import { setCustomTextInput, setCustomText } from "react-native-global-props";
-import { useStatusBar } from "./src/hooks/useStatusBar";
-import { useNavigationBar } from "./src/hooks/useNavigationBar";
-import { theme } from "./src/shared/theme";
+import { enableScreens } from "react-native-screens";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ThemeProvider } from "styled-components/native";
+import { useNavigationBar, useStatusBar } from "~hooks";
+import { DarkTheme, DefaultTheme, Font, LightTheme } from "~src/shared/theme";
+import { useDidMountEffect } from "~services/uiService";
+import { SafeComponent } from "~components";
+import RootNavigator from "~src/navigators/RootNavigator";
+
+enableScreens();
 SplashScreen.preventAutoHideAsync();
+
 export default function App() {
   useStatusBar(true, "", "light-content");
   useNavigationBar();
-  const [fontsLoaded, error] = useFonts({
-    Urbanist_200ExtraLight,
-    Urbanist_300Light,
-    Urbanist_400Regular,
-    Urbanist_500Medium,
-    Urbanist_600SemiBold,
-    Urbanist_700Bold,
-    Lexend_100Thin,
-    Lexend_200ExtraLight,
-    Lexend_300Light,
-    Lexend_400Regular,
-    Lexend_500Medium,
-    Lexend_600SemiBold,
-    Lexend_700Bold,
-    Lexend_800ExtraBold,
-    Lexend_900Black,
+  let [fontsLoaded, error] = useFonts({
+    [Font.GilroyBold]: require("./src/assets/fonts/Gilroy-Bold.ttf"),
+    [Font.GilroyExtraBold]: require("./src/assets/fonts/Gilroy-ExtraBold.ttf"),
+    [Font.GilroyLight]: require("./src/assets/fonts/Gilroy-Light.ttf"),
+    [Font.GilroyMedium]: require("./src/assets/fonts/Gilroy-Medium.ttf"),
+    [Font.GilroyRegular]: require("./src/assets/fonts/Gilroy-Regular.ttf"),
+    [Font.GilroySemiBold]: require("./src/assets/fonts/Gilroy-SemiBold.ttf"),
   });
-  const onLayoutView = useCallback(async () => {
-    if (fontsLoaded) await SplashScreen.hideAsync();
+  const colorScheme = useColorScheme();
+  const theme = useMemo(() => {
+    if (!colorScheme) return DefaultTheme;
+    return colorScheme === "dark" ? DarkTheme : LightTheme;
+  }, [colorScheme]);
+
+  useDidMountEffect(() => {
+    if (fontsLoaded) setTimeout(SplashScreen.hideAsync, 100);
   }, [fontsLoaded]);
+
   if (error) {
     throw error;
   }
@@ -61,39 +54,24 @@ export default function App() {
   }
   setCustomText({
     style: {
-      fontFamily: "Urbanist_400Regular",
-      color: `${theme.FOREGROUND}`,
+      fontFamily: Font.GilroyRegular,
+      color: theme.colors.text,
     },
   });
   setCustomTextInput({
     style: {
-      fontFamily: "Urbanist_400Regular",
+      fontFamily: Font.GilroyRegular,
     },
   });
   return (
-    <GluestackUIProvider
-      globalStyles={{
-        fontFamily: "Urbanist_400Regular",
-      }}
-      colorMode="light"
-      config={config}
-    >
-      <NavigationContainer
-        onReady={onLayoutView}
-        theme={{
-          dark: false,
-          colors: {
-            background: theme.BACKGROUND,
-            text: theme.FOREGROUND,
-            primary: theme.PRIMARY_COLOR,
-            border: theme.ACCENT,
-            card: theme.ACCENT,
-            notification: theme.BACKGROUND,
-          },
-        }}
-      >
-        <RootNavigator />
-      </NavigationContainer>
-    </GluestackUIProvider>
+    <SafeAreaProvider>
+      <ThemeProvider theme={theme}>
+        <SafeComponent request={{ loading: !fontsLoaded, data: true }}>
+          <NavigationContainer theme={theme as any}>
+            <RootNavigator />
+          </NavigationContainer>
+        </SafeComponent>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

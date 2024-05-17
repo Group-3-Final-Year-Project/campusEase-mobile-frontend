@@ -75,10 +75,6 @@ const Tabbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                 display={"flex"}
                 alignItems={"center"}
                 justifyContent={"center"}
-                backgroundColor={
-                  isFocused ? theme.PRIMARY_COLOR : "transparent"
-                }
-                borderRadius={14}
               >
                 {/* <Icon
                 as={Ionicons}
@@ -87,15 +83,17 @@ const Tabbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                 color={isFocused ? "white" : "coolGray.400"}
               /> */}
                 {isFocused ? activeIconName : inactiveIconName}
-                {/* <Heading
+                <Heading
                   fontSize={10}
                   color={
-                    isFocused ? `${theme.BACKGROUND}` : `${theme.FOREGROUND3}`
+                    isFocused
+                      ? `${theme.PRIMARY_COLOR}`
+                      : `${theme.FOREGROUND3}`
                   }
                   fontFamily={"Urbanist_400Regular"}
                 >
                   {label}
-                </Heading> */}
+                </Heading>
               </VStack>
             </Box>
           </Pressable>
