@@ -12,7 +12,7 @@ export interface ContainerProps extends VariantProps, TouchableOpacityProps {
 
 export const Container = styled.TouchableOpacity<ContainerProps>`
   padding: 18px;
-  border-radius: 15px;
+  border-radius: 20px;
   justify-content: center;
   align-items: center;
 

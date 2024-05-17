@@ -17,11 +17,10 @@ export const ContentCard = styled.View`
 `;
 
 export const Title = styled(Text).attrs({
-  fontSize: "h3",
+  fontSize: "h2",
   fontWeight: "bold",
 })`
   color: ${(props) => props.theme.colors.text};
-  margin-bottom: 5px;
 `;
 
 export const Highlight = styled(Title)`

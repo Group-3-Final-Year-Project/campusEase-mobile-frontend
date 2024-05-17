@@ -15,7 +15,6 @@ import { CustomNavigationProp } from "~src/@types/types";
 import { StatusBar } from "expo-status-bar";
 import Checkbox from "react-native-ui-lib/checkbox";
 import { Iconify } from "react-native-iconify";
-import { APP_PAGES } from "~src/shared/constants";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -122,7 +121,7 @@ const SignInOrUp = ({ navigation, route }: CustomNavigationProp) => {
               </FormControl>
             )}
             <FormControl>
-              <Button loading={loading} onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}>
+              <Button loading={loading}>
                 {isSignup ? "Continue" : "Sign in"}
               </Button>
             </FormControl>

@@ -1,8 +1,13 @@
-import { NavigationProp } from "@react-navigation/native";
+import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type CustomNavigationProp = {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: NativeStackNavigationProp<ParamListBase, any>;
+  route: RouteProp<{
+    params: {
+      [x: string]: object | string | object | null | any;
+    };
+  }>;
 };
 
 export type User = {

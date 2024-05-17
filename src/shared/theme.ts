@@ -10,6 +10,7 @@
 //   ACCENT3: "#787978",
 // };
 
+import Color from "color";
 import { DefaultTheme as DefaultThemeProps } from "styled-components";
 
 export enum Font {
@@ -66,6 +67,7 @@ export const DarkTheme: DefaultThemeProps = {
     primary: "#5F55FE",
     text: "#ffffff",
     secondaryText: "#D5D9EB",
+    secondaryText2: Color("#D5D9EB").fade(0.5).rgb().string(),
     background: "#07112D",
     secondaryBackground: "#111D40",
     border: "#111D40",
@@ -79,6 +81,7 @@ export const LightTheme: DefaultThemeProps = {
     primary: "#5F55FE",
     text: "#070F26",
     secondaryText: "#4C5266",
+    secondaryText2: Color("#4C5266").fade(0.5).rgb().string(),
     background: "#ffffff",
     secondaryBackground: "#F8F8F8",
     border: "#f2f2f2",

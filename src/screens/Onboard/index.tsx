@@ -13,6 +13,7 @@ import { KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
 import { CustomNavigationProp } from "~src/@types/types";
+import { StatusBar } from "expo-status-bar";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -28,7 +29,7 @@ const Onboard = ({ navigation }: CustomNavigationProp) => {
   const handleGoToSignup = async () => {
     setLoading(true);
     setTimeout(() => {
-      navigation.navigate(APP_PAGES.SIGNINUP);
+      navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: true });
       setLoading(false);
     }, 1000);
   };
@@ -39,6 +40,7 @@ const Onboard = ({ navigation }: CustomNavigationProp) => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flexGrow: 1 }}
       >
+        <StatusBar style={themeContext?.dark ? "light" : "dark"} />
         <TopCard
           source={
             themeContext?.dark
@@ -58,7 +60,11 @@ const Onboard = ({ navigation }: CustomNavigationProp) => {
           <Button loading={loading} onPress={handleGoToSignup}>
             Get started
           </Button>
-          <Pressable onPress={handleGoToSignup}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: false })
+            }
+          >
             <Description>
               Already have an account?{" "}
               <HighlightedDescription>Log in</HighlightedDescription>
