@@ -2,6 +2,14 @@ import React, { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Keyboard } from "react-native";
 import { ThemeContext } from "styled-components/native";
+import { APP_PAGES } from "~src/shared/constants";
+import Home from "~src/screens/Home";
+import { Iconify } from "react-native-iconify";
+import Explore from "~src/screens/Explore";
+import Bookmarks from "~src/screens/Bookmarks";
+import Chats from "~src/screens/Chats";
+import Profile from "~src/screens/Profile";
+import { TabBar } from "~components";
 
 const UserTabNavigator = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
@@ -32,7 +40,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:home-smile-angle-outline"
           size={24}
-          color={theme.PRIMARY_COLOR}
+          color={theme?.colors.primary}
           strokeWidth={24}
         />
       ),
@@ -40,7 +48,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:home-smile-angle-outline"
           size={24}
-          color={theme.FOREGROUND3}
+          color={theme?.colors.text}
           strokeWidth={24}
         />
       ),
@@ -53,7 +61,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:map-point-outline"
           size={24}
-          color={theme.PRIMARY_COLOR}
+          color={theme?.colors.primary}
           strokeWidth={24}
         />
       ),
@@ -61,7 +69,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:map-point-outline"
           size={24}
-          color={theme.FOREGROUND3}
+          color={theme?.colors.text}
           strokeWidth={24}
         />
       ),
@@ -74,7 +82,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:documents-minimalistic-outline"
           size={24}
-          color={theme.PRIMARY_COLOR}
+          color={theme?.colors.primary}
           strokeWidth={24}
         />
       ),
@@ -82,7 +90,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:documents-minimalistic-outline"
           size={24}
-          color={theme.FOREGROUND3}
+          color={theme?.colors.text}
           strokeWidth={24}
         />
       ),
@@ -95,7 +103,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:chat-round-line-outline"
           size={24}
-          color={theme.PRIMARY_COLOR}
+          color={theme?.colors.primary}
           strokeWidth={24}
         />
       ),
@@ -103,7 +111,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:chat-round-line-outline"
           size={24}
-          color={theme.FOREGROUND3}
+          color={theme?.colors.text}
           strokeWidth={24}
         />
       ),
@@ -117,7 +125,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:user-rounded-outline"
           size={24}
-          color={theme.PRIMARY_COLOR}
+          color={theme?.colors.primary}
           strokeWidth={24}
         />
       ),
@@ -125,7 +133,7 @@ const UserTabNavigator = () => {
         <Iconify
           icon="solar:user-rounded-outline"
           size={24}
-          color={theme.FOREGROUND3}
+          color={theme?.colors.text}
           strokeWidth={24}
         />
       ),
@@ -135,7 +143,7 @@ const UserTabNavigator = () => {
   return (
     <Tab.Navigator
       tabBar={(props) => {
-        return keyboardVisible ? null : <Tabbar {...props} />;
+        return keyboardVisible ? null : <TabBar {...props} />;
       }}
       initialRouteName={APP_PAGES.HOME}
       sceneContainerStyle={{
@@ -158,6 +166,7 @@ const UserTabNavigator = () => {
             component={_.component}
             options={{
               tabBarLabel: _.label,
+              // @ts-ignore
               tabBarActiveIcon: _.activeIconName,
               tabBarInactiveIcon: _.inactiveIconName,
               headerTitle: _.label,

@@ -1,5 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Home from "~src/screens/Home";
+import { APP_PAGES } from "~src/shared/constants";
 
 const ServiceProviderTabNavigator = () => {
   const Tab = createBottomTabNavigator();

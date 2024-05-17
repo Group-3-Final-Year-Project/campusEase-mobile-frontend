@@ -97,8 +97,8 @@ export default function SafeComponent({
     );
 
   if (request?.data) return SafeChildren;
-  if (request && offline) return <OfflineComponent refetch={refetch} />;
-  if (request?.error) return <RequestErrorComponent refetch={refetch} />;
+  if (request && offline) return <OfflineComponent refetch={refetch!} />;
+  if (request?.error) return <RequestErrorComponent refetch={refetch!} />;
 
   return SafeChildren;
 }

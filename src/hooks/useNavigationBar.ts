@@ -1,18 +1,23 @@
-import { useEffect } from "react";
-import { Platform } from "react-native";
+import { useContext, useEffect } from "react";
+import { Platform, useColorScheme } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
-import { theme } from "../shared/theme";
+import { ThemeContext } from "styled-components/native";
 
 const useNavigationBar = (
   isTransparent?: boolean,
   backgroundColor?: string
 ) => {
+  const theme = useContext(ThemeContext);
+  const colorScheme = useColorScheme();
+
   const setNavbar = async () => {
     if (isTransparent) {
       await NavigationBar.setBackgroundColorAsync("#00000000");
     } else {
       await NavigationBar.setBackgroundColorAsync(
-        backgroundColor || theme.BACKGROUND
+        backgroundColor ||
+          theme?.colors.background ||
+          (colorScheme === "dark" ? "#07112D" : "#ffffff")
       );
     }
     await NavigationBar.setBorderColorAsync("#00000000");

@@ -19,6 +19,7 @@ declare module "styled-components" {
       background: string;
       secondaryBackground: string;
       border: string;
+      secondaryText: string;
     };
     typography: {
       fontFamily: {

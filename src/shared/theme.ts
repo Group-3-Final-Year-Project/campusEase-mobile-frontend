@@ -63,8 +63,9 @@ export const DarkTheme: DefaultThemeProps = {
   ...DefaultConfigs,
   dark: true,
   colors: {
-    primary: "#D45B90",
+    primary: "#5F55FE",
     text: "#ffffff",
+    secondaryText: "#D5D9EB",
     background: "#07112D",
     secondaryBackground: "#111D40",
     border: "#111D40",
@@ -75,8 +76,9 @@ export const LightTheme: DefaultThemeProps = {
   ...DefaultConfigs,
   dark: false,
   colors: {
-    primary: "#EE61A1",
+    primary: "#5F55FE",
     text: "#070F26",
+    secondaryText: "#4C5266",
     background: "#ffffff",
     secondaryBackground: "#F8F8F8",
     border: "#f2f2f2",

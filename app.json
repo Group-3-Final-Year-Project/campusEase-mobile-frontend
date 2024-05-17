@@ -1,5 +1,4 @@
 {
-  "displayName": "CampusEase",
   "expo": {
     "name": "CampusEase",
     "slug": "campusEase",
@@ -10,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#191923"
+      "backgroundColor": "#5f55fe"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -18,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#191923"
+        "backgroundColor": "#5f55fe"
       }
     },
     "web": {

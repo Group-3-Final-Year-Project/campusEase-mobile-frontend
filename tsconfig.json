@@ -11,7 +11,6 @@
       "~screens": ["src/screens"],
       "~hooks": ["src/hooks"],
       "~navigators": ["src/navigators"],
-      "~constants": ["src/shared/constants"],
       "~components/*": ["src/components/*"],
       "~graphql": ["src/graphql"],
       "~graphql/*": ["src/graphql/*"],

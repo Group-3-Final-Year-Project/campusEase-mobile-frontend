@@ -1,51 +1,88 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState, useContext } from "react";
+import {
+  BottomCard,
+  Container,
+  Description,
+  TopCard,
+  Title,
+  Highlight,
+} from "./styles";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { Button } from "~components";
+import Logo from "~images/Logo.svg";
+import HeroText from "./components/HeroText";
+import PhoneInput from "./components/PhoneInput";
+import { KeyboardAvoidingView, Platform } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { ThemeContext } from "styled-components/native";
+import { SceneName } from "~src/@types/SceneName";
+
+export const useCustomBottomInset = () => {
+  const insets = useSafeAreaInsets();
+  return Math.max(20, insets.bottom + 5);
+};
 
 const SignInOrUp = () => {
+  const insets = useSafeAreaInsets();
+  const bottomInset = useCustomBottomInset();
+  const themeContext = useContext(ThemeContext);
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setTimeout(() => {
+      navigation.navigate(SceneName.OneTimeCode);
+      setLoading(false);
+    }, 1000);
+  };
+
   return (
-    <View>
-      <Text>SignInOrUp</Text>
-    </View>
+    <Container>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ flexGrow: 1 }}
+      >
+        <StatusBar style={themeContext?.dark ? "light" : "dark"} />
+        <TopCard
+          source={
+            themeContext?.dark
+              ? require("~images/background-dark.png")
+              : require("~images/background-light.png")
+          }
+          style={{ paddingTop: 60 + insets.top }}
+        >
+          {/* <Logo
+            style={{ marginBottom: 25 }}
+            width={70}
+            height={70}
+            fill={themeContext?.colors.text}
+          /> */}
+          <HeroText />
+        </TopCard>
+        <BottomCard style={{ paddingBottom: bottomInset }}>
+          <Title>
+            Insira seu <Highlight>celular</Highlight>
+          </Title>
+          <Description>
+            Vamos enviar um código de 4 digitos para autorizar sua conta. Se
+            ainda não tem uma, vamos cria-la
+          </Description>
+          <PhoneInput
+            enablesReturnKeyAutomatically
+            returnKeyType="send"
+            onSubmitEditing={handleLogin}
+            blurOnSubmit={false}
+            placeholder="(99) 99999-9999"
+          />
+          <Button loading={loading} onPress={handleLogin}>
+            Continuar
+          </Button>
+        </BottomCard>
+      </KeyboardAvoidingView>
+    </Container>
   );
 };
 
 export default SignInOrUp;
-
-const styles = StyleSheet.create({});
-
-// const registerSchema = yup.object().shape({
-//   name: yup
-//     .string()
-//     .required("Name is required")
-//     .min(3, "Name must be at least 3 characters")
-//     .max(50, "Name must be at most 50 characters"),
-//   email: yup.string().email("Invalid email").required("Email is required"),
-//   password: yup
-//     .string()
-//     .min(8, "Password must be at least 8 characters")
-//     .matches(
-//       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-//       "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
-//     )
-//     .required("Password is required"),
-//   phone_number: yup
-//     .string()
-//     .min(8, "Phone number must be at least 8 characters")
-//     .required("Phone number is required"),
-// });
-
-// const signinSchema = yup.object().shape({
-//   email: yup.string().email("Invalid email").required("Email is required"),
-//   password: yup.string().required("Password is required"),
-// });
-// const signinInitialValues = {
-//   email: "",
-//   password: "",
-// };
-
-// const registerInitialValues = {
-//   name: "",
-//   email: "",
-//   password: "",
-//   phone_number: "",
-// };

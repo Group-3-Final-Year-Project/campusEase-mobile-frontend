@@ -10,17 +10,17 @@ interface SearchProps extends TextInputProps {
 const Input: React.FC<SearchProps> = ({ title, ...props }) => {
   return (
     <View style={{ marginTop: 15 }}>
-      <Text fontWeight="bold" fontSize="large">
+      {/* <Text fontWeight="bold" fontSize="large">
         {title}
       </Text>
       <Content>
         <TextInput {...props} />
         {!!props.value && (
-          <CancelTouchArea onPress={() => props.onChangeText("")}>
+          <CancelTouchArea onPress={() => props.onChangeText!("")}>
             <CancelIcon />
           </CancelTouchArea>
         )}
-      </Content>
+      </Content> */}
     </View>
   );
 };
