@@ -9,6 +9,8 @@ import Avatar from "react-native-ui-lib/avatar";
 import { Iconify } from "react-native-iconify";
 import Button from "react-native-ui-lib/button";
 import { Searchbar, IconBtn } from "~components";
+import HomeBanner from "./components/HomeBanner";
+import Categories from "./components/Categories";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -30,7 +32,17 @@ const Home = ({ navigation }: CustomNavigationProp) => {
                 flexDirection: "row",
               }}
             >
-              <Avatar animate useAutoColors label="SO" size={45} />
+              <Avatar
+                animate
+                useAutoColors
+                label="SO"
+                size={45}
+                backgroundColor="green"
+                labelColor="white"
+                source={{
+                  uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+                }}
+              />
               <View style={{ marginLeft: 10 }}>
                 <Description>Location</Description>
                 <Title>New York, USA</Title>
@@ -92,6 +104,8 @@ const Home = ({ navigation }: CustomNavigationProp) => {
             />
           </IconBtn>
         </View>
+        <HomeBanner />
+        <Categories />
       </ScrollView>
     </Container>
   );

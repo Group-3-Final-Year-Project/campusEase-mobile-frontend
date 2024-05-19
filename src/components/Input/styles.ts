@@ -37,11 +37,19 @@ export const TextInput = styled.TextInput.attrs((props: DefaultThemeProps) => ({
 `;
 
 export const IconContainer = styled.View<IInput>`
-  padding: ${(props: DefaultThemeProps) =>
+  padding-left: ${(props: DefaultThemeProps) =>
     props.padding ? props.padding : 15}px;
   align-items: center;
   justify-content: center;
 `;
+
+export const RightIconContainer = styled.View<IInput>`
+  padding-right: ${(props: DefaultThemeProps) =>
+    props.padding ? props.padding : 15}px;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const IconText = styled.Text`
   ${fontStyle}
 `;

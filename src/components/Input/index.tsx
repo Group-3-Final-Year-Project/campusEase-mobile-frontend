@@ -3,15 +3,14 @@ import {
   Container,
   TextInput,
   IconContainer,
-  IconText,
-  Separator,
+  RightIconContainer,
 } from "./styles";
 import { TextInputProps } from "react-native";
 
 interface InputProps extends TextInputProps {
   icon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  padding: number;
+  padding?: number;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -34,7 +33,7 @@ const Input: React.FC<InputProps> = ({
         {...(props as any)}
       />
       {rightIcon && (
-        <IconContainer padding={padding}>{rightIcon}</IconContainer>
+        <RightIconContainer padding={padding}>{rightIcon}</RightIconContainer>
       )}
     </Container>
   );

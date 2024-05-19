@@ -14,6 +14,7 @@ import { ThemeContext } from "styled-components/native";
 import { CustomNavigationProp } from "~src/@types/types";
 import { StatusBar } from "expo-status-bar";
 import { Iconify } from "react-native-iconify";
+import { APP_PAGES } from "~src/shared/constants";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -60,7 +61,12 @@ const VerifyEmail = ({ navigation, route }: CustomNavigationProp) => {
             </FormControl>
 
             <FormControl>
-              <Button loading={loading}>Verify email</Button>
+              <Button
+                loading={loading}
+                onPress={() => navigation.replace(APP_PAGES.USER_TAB)}
+              >
+                Verify email
+              </Button>
             </FormControl>
           </View>
         </ContentCard>
