@@ -1,4 +1,7 @@
-import styled, { css } from "styled-components/native";
+import styled, {
+  css,
+  DefaultTheme as DefaultThemeProps,
+} from "styled-components/native";
 import { StyleSheet } from "react-native";
 import Color from "color";
 
@@ -10,13 +13,13 @@ const fontStyle = css`
 
 export const Container = styled.View`
   border-radius: 20px;
-  border: 1px ${(props) => props.theme.colors.secondaryText2};
+  border: 1px ${(props: DefaultThemeProps) => props.theme.colors.secondaryText2};
   flex-direction: row;
   overflow: hidden;
   /* margin: 25px 0; */
 `;
 
-export const TextInput = styled.TextInput.attrs((props) => ({
+export const TextInput = styled.TextInput.attrs((props: DefaultThemeProps) => ({
   placeholderTextColor: Color(props.theme.colors.secondaryText)
     .fade(0.5)
     .rgb()
@@ -39,5 +42,6 @@ export const CountryCodeText = styled.Text`
 export const Separator = styled.View`
   width: ${StyleSheet.hairlineWidth}px;
   margin: 20px 5px;
-  background-color: ${(props) => props.theme.colors.secondaryText2};
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryText2};
 `;

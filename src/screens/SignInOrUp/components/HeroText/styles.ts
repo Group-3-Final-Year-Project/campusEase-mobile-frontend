@@ -1,4 +1,6 @@
-import styled from "styled-components/native";
+import styled, {
+  DefaultTheme as DefaultThemeProps,
+} from "styled-components/native";
 import Text from "~components/Text";
 
 export const Container = styled.View`
@@ -13,11 +15,11 @@ export const Title = styled(Text).attrs({
   fontSize: "h2",
   fontWeight: "bold",
 })`
-  color: ${(props) => props.theme.colors.text};
+  color: ${(props: DefaultThemeProps) => props.theme.colors.text};
 `;
 
 export const TextHighlight = styled(Title)`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
 `;
 
 export const UnderlineContainer = styled.View`
@@ -30,7 +32,7 @@ export const Line = styled.View`
   left: 0;
   bottom: 3px;
   height: 4px;
-  background-color: ${(props) => props.theme.colors.primary};
+  background-color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
   border-radius: 3px;
 `;
 
@@ -43,6 +45,6 @@ export const RotatedRectangle = styled.View`
   top: 3px;
   height: 34px;
   transform: rotate(-3deg);
-  background-color: ${(props) => props.theme.colors.primary};
+  background-color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
   border-radius: 4px;
 `;

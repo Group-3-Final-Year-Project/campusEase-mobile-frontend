@@ -65,11 +65,12 @@ export const DarkTheme: DefaultThemeProps = {
   dark: true,
   colors: {
     primary: "#5F55FE",
-    text: "#ffffff",
+    text: "#D5D9EB",
     secondaryText: "#D5D9EB",
     secondaryText2: Color("#D5D9EB").fade(0.5).rgb().string(),
-    background: "#07112D",
-    secondaryBackground: "#111D40",
+    background: "#181820",
+    secondaryBackground: "#21212b",
+    // secondaryBackground: "#111214",
     border: "#111D40",
   },
 };

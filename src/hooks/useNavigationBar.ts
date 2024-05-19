@@ -17,7 +17,7 @@ const useNavigationBar = (
       await NavigationBar.setBackgroundColorAsync(
         backgroundColor ||
           theme?.colors.background ||
-          (colorScheme === "dark" ? "#07112D" : "#ffffff")
+          (colorScheme === "dark" ? "#181820" : "#ffffff")
       );
     }
     await NavigationBar.setBorderColorAsync("#00000000");

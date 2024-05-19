@@ -1,5 +1,8 @@
 import React, { useContext } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  createBottomTabNavigator,
+  BottomTabBarProps,
+} from "@react-navigation/bottom-tabs";
 import { Keyboard } from "react-native";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
@@ -10,9 +13,12 @@ import Bookmarks from "~src/screens/Bookmarks";
 import Chats from "~src/screens/Chats";
 import Profile from "~src/screens/Profile";
 import { TabBar } from "~components";
+import Analytics from "~src/screens/Analytics";
+import { useNavigationBar } from "~hooks";
 
 const UserTabNavigator = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
+  const [isServiceProvider, setIsServiceProvider] = React.useState(true);
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
@@ -31,46 +37,72 @@ const UserTabNavigator = () => {
   const Tab = createBottomTabNavigator();
 
   const theme = useContext(ThemeContext);
-  const tabs = [
+  useNavigationBar(false, theme?.colors.secondaryBackground);
+
+  const ServiceProviderTabItems = [
     {
-      name: APP_PAGES.HOME,
-      label: APP_PAGES.HOME,
-      component: Home,
+      name: APP_PAGES.ANALYTICS,
+      label: APP_PAGES.ANALYTICS,
+      component: Analytics,
       activeIconName: (
         <Iconify
-          icon="solar:home-smile-angle-outline"
+          icon="solar:graph-up-bold"
           size={24}
           color={theme?.colors.primary}
-          strokeWidth={24}
+          strokeWidth={10}
         />
       ),
       inactiveIconName: (
         <Iconify
-          icon="solar:home-smile-angle-outline"
+          icon="solar:graph-up-outline"
           size={24}
-          color={theme?.colors.text}
-          strokeWidth={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
         />
       ),
     },
+    {
+      name: APP_PAGES.BOOKINGS,
+      label: APP_PAGES.BOOKINGS,
+      component: Explore,
+      activeIconName: (
+        <Iconify
+          icon="solar:cart-large-bold"
+          size={24}
+          color={theme?.colors.primary}
+          strokeWidth={10}
+        />
+      ),
+      inactiveIconName: (
+        <Iconify
+          icon="solar:cart-large-outline"
+          size={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
+        />
+      ),
+    },
+  ];
+
+  const UserTabItems = [
     {
       name: APP_PAGES.EXPLORE,
       label: APP_PAGES.EXPLORE,
       component: Explore,
       activeIconName: (
         <Iconify
-          icon="solar:map-point-outline"
+          icon="solar:map-point-bold"
           size={24}
           color={theme?.colors.primary}
-          strokeWidth={24}
+          strokeWidth={10}
         />
       ),
       inactiveIconName: (
         <Iconify
           icon="solar:map-point-outline"
           size={24}
-          color={theme?.colors.text}
-          strokeWidth={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
         />
       ),
     },
@@ -80,61 +112,90 @@ const UserTabNavigator = () => {
       component: Bookmarks,
       activeIconName: (
         <Iconify
-          icon="solar:documents-minimalistic-outline"
+          icon="solar:documents-minimalistic-bold"
           size={24}
           color={theme?.colors.primary}
-          strokeWidth={24}
+          strokeWidth={10}
         />
       ),
       inactiveIconName: (
         <Iconify
           icon="solar:documents-minimalistic-outline"
           size={24}
-          color={theme?.colors.text}
-          strokeWidth={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
         />
       ),
     },
+  ];
+
+  const dynamicTabs = isServiceProvider
+    ? ServiceProviderTabItems
+    : UserTabItems;
+
+  const tabs = [
+    {
+      name: APP_PAGES.HOME,
+      label: APP_PAGES.HOME,
+      component: Home,
+      activeIconName: (
+        <Iconify
+          icon="solar:home-smile-angle-bold"
+          size={24}
+          color={theme?.colors.primary}
+          strokeWidth={10}
+        />
+      ),
+      inactiveIconName: (
+        <Iconify
+          icon="solar:home-smile-angle-outline"
+          size={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
+        />
+      ),
+    },
+    ...dynamicTabs,
+
     {
       name: APP_PAGES.CHATS,
       label: APP_PAGES.CHATS,
       component: Chats,
       activeIconName: (
         <Iconify
-          icon="solar:chat-round-line-outline"
+          icon="solar:chat-round-line-bold"
           size={24}
           color={theme?.colors.primary}
-          strokeWidth={24}
+          strokeWidth={10}
         />
       ),
       inactiveIconName: (
         <Iconify
           icon="solar:chat-round-line-outline"
           size={24}
-          color={theme?.colors.text}
-          strokeWidth={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
         />
       ),
     },
-
     {
       name: APP_PAGES.PROFILE,
       label: APP_PAGES.PROFILE,
       component: Profile,
       activeIconName: (
         <Iconify
-          icon="solar:user-rounded-outline"
+          icon="solar:user-rounded-bold"
           size={24}
           color={theme?.colors.primary}
-          strokeWidth={24}
+          strokeWidth={10}
         />
       ),
       inactiveIconName: (
         <Iconify
           icon="solar:user-rounded-outline"
           size={24}
-          color={theme?.colors.text}
-          strokeWidth={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
         />
       ),
     },
@@ -142,7 +203,7 @@ const UserTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      tabBar={(props) => {
+      tabBar={(props: BottomTabBarProps) => {
         return keyboardVisible ? null : <TabBar {...props} />;
       }}
       initialRouteName={APP_PAGES.HOME}
@@ -153,8 +214,9 @@ const UserTabNavigator = () => {
         tabBarHideOnKeyboard: true,
         tabBarAllowFontScaling: true,
         headerShown: true,
+        headerShadowVisible: false,
         headerTitleStyle: {
-          fontFamily: "Urbanist_700Bold",
+          fontFamily: `${theme?.typography.fontFamily.extraBold}`,
         },
       }}
     >

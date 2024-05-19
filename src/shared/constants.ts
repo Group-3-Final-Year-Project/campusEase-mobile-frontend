@@ -21,6 +21,8 @@ export const APP_PAGES = {
   CHATS: "Chats",
   USER_TYPE_SELECTOR: "User Type Selector",
   SERVICE: "Service",
+  ANALYTICS: "Analytics",
+  BOOKINGS: "Bookings",
 };
 
 export const API_URLS = {};

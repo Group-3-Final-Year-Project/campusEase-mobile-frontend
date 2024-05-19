@@ -1,23 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { ThemeContext } from "styled-components/native";
+import { Container, TabItem, TabItemContainer, TabItemLabel } from "./styles";
 
 const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
-  const theme = useContext(ThemeContext);
   return (
-    <Box
-      w="$full"
-      display="flex"
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-      // height="32"
-      backgroundColor={theme?.colors.background}
-      softShadow={"2"}
-      borderTopLeftRadius={10}
-      borderTopRightRadius={10}
-      style={{ height: 70 }}
-    >
+    <Container>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel || route.name;
@@ -45,7 +32,7 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
         };
 
         return (
-          <Pressable
+          <TabItem
             key={`${index}--${route.key}`}
             android_ripple={{ color: "", borderless: false, foreground: true }}
             accessibilityRole="button"
@@ -54,52 +41,15 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            flex={1}
-            alignItems={"center"}
-            justifyContent={"center"}
-            h="$full"
-            w="$full"
           >
-            <Box
-              paddingHorizontal={14}
-              paddingVertical={14}
-              w="$full"
-              h="$full"
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-            >
-              <VStack
-                w="$full"
-                h="$full"
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"center"}
-              >
-                {/* <Icon
-                as={Ionicons}
-                name={isFocused ? activeIconName : inactiveIconName}
-                size={"md"}
-                color={isFocused ? "white" : "coolGray.400"}
-              /> */}
-                {isFocused ? activeIconName : inactiveIconName}
-                <Heading
-                  fontSize={10}
-                  color={
-                    isFocused
-                      ? `${theme?.colors.primary}`
-                      : `${theme?.colors.text}`
-                  }
-                  fontFamily={"Urbanist_400Regular"}
-                >
-                  {label}
-                </Heading>
-              </VStack>
-            </Box>
-          </Pressable>
+            <TabItemContainer>
+              {isFocused ? activeIconName : inactiveIconName}
+              <TabItemLabel isFocused={isFocused}>{label}</TabItemLabel>
+            </TabItemContainer>
+          </TabItem>
         );
       })}
-    </Box>
+    </Container>
   );
 };
 

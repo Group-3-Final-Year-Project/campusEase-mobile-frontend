@@ -5,19 +5,16 @@ import styled, {
 import { StyleSheet } from "react-native";
 import Color from "color";
 
-interface IInput {
-  padding: number;
-}
-
 const fontStyle = css`
-  font-family: ${(props) => props.theme.typography.fontFamily.bold};
-  font-size: ${(props) => props.theme.typography.sizes.large.size}px;
+  font-family: ${(props) => props.theme.typography.fontFamily.medium};
+  font-size: ${(props) => props.theme.typography.sizes.regular.size}px;
   color: ${(props) => props.theme.colors.text};
 `;
 
 export const Container = styled.View`
-  border-radius: 20px;
-  border: 1px ${(props: DefaultThemeProps) => props.theme.colors.secondaryText2};
+  border-radius: 10px;
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
   flex-direction: row;
   overflow: hidden;
   flex-grow: 1;
@@ -29,16 +26,14 @@ export const TextInput = styled.TextInput.attrs((props: DefaultThemeProps) => ({
     .fade(0.5)
     .rgb()
     .string(),
-}))<IInput>`
-  padding: ${(props: DefaultThemeProps) =>
-    props.padding ? props.padding : 15}px;
+}))`
+  padding: 10px 15px;
   flex: 1;
   ${fontStyle}
 `;
 
-export const IconContainer = styled.View<IInput>`
-  padding: ${(props: DefaultThemeProps) =>
-    props.padding ? props.padding : 15}px;
+export const IconContainer = styled.View`
+  padding: 10px 0 10px 15px;
   align-items: center;
   justify-content: center;
 `;

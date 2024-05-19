@@ -1,4 +1,6 @@
-import styled from "styled-components/native";
+import styled, {
+  DefaultTheme as DefaultThemeProps,
+} from "styled-components/native";
 import Text from "~components/Text";
 import Disconnected from "~animations/disconnected.json";
 import Error from "~animations/error.json";
@@ -11,7 +13,8 @@ export const Container = styled.ScrollView.attrs({
 export const Content = styled.View`
   justify-content: center;
   align-items: center;
-  /* background: ${(props) => props.theme.colors.background}; */
+  /* background: ${(props: DefaultThemeProps) =>
+    props.theme.colors.background}; */
   padding: 20px;
   flex-grow: 1;
   flex-shrink: 0;

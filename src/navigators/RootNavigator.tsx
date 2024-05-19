@@ -13,7 +13,7 @@ const RootNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
-      initialRouteName={APP_PAGES.ONBOARD}
+      initialRouteName={APP_PAGES.USER_TAB}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: false,
