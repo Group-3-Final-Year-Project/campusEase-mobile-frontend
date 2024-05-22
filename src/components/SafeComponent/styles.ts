@@ -13,8 +13,8 @@ export const Container = styled.ScrollView.attrs({
 export const Content = styled.View`
   justify-content: center;
   align-items: center;
-  /* background: ${(props: DefaultThemeProps) =>
-    props.theme.colors.background}; */
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.background};
   padding: 20px;
   flex-grow: 1;
   flex-shrink: 0;

@@ -11,7 +11,7 @@ import { Button, Input } from "~components";
 import HeroText from "./components/HeroText";
 import { KeyboardAvoidingView, Platform, Pressable, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
-import { CustomNavigationProp } from "~src/@types/types";
+
 import { StatusBar } from "expo-status-bar";
 import Checkbox from "react-native-ui-lib/checkbox";
 import { Iconify } from "react-native-iconify";
@@ -22,7 +22,7 @@ export const useCustomBottomInset = () => {
   return Math.max(20, insets.bottom + 5);
 };
 
-const SignInOrUp = ({ navigation, route }: CustomNavigationProp) => {
+const SignInOrUp = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
@@ -122,7 +122,10 @@ const SignInOrUp = ({ navigation, route }: CustomNavigationProp) => {
               </FormControl>
             )}
             <FormControl>
-              <Button loading={loading} onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}>
+              <Button
+                loading={loading}
+                onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
+              >
                 {isSignup ? "Continue" : "Sign in"}
               </Button>
             </FormControl>

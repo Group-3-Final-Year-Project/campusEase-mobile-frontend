@@ -18,7 +18,7 @@ import { useNavigationBar } from "~hooks";
 
 const UserTabNavigator = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
-  const [isServiceProvider, setIsServiceProvider] = React.useState(true);
+  const [isServiceProvider] = React.useState(false);
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
@@ -214,7 +214,16 @@ const UserTabNavigator = () => {
         tabBarHideOnKeyboard: true,
         tabBarAllowFontScaling: true,
         headerShown: true,
-        headerShadowVisible: false,
+        headerShadowVisible: true,
+        headerStyle: {
+          elevation: 1,
+          shadowColor: theme?.colors.secondaryBackground,
+          shadowOffset: {
+            height: 6,
+            width: 0,
+          },
+          shadowRadius: 40,
+        },
         headerTitleStyle: {
           fontFamily: `${theme?.typography.fontFamily.extraBold}`,
         },

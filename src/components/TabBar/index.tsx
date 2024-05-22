@@ -8,7 +8,9 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel || route.name;
+        // @ts-ignore
         const activeIconName = options.tabBarActiveIcon;
+        // @ts-ignore
         const inactiveIconName = options.tabBarInactiveIcon;
         const isFocused = state.index === index;
 

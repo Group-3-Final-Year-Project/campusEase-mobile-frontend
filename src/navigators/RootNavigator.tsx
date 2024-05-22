@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ServiceProviderTabNavigator from "./ServiceProviderTabNavigator";
 import UserTabNavigator from "./UserTabNavigator";
 import Onboard from "~src/screens/Onboard";
 import SignInOrUp from "~src/screens/SignInOrUp";
@@ -19,10 +18,6 @@ const RootNavigator = () => {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen
-        name={APP_PAGES.SERVICE_PROVIDER_TAB}
-        component={ServiceProviderTabNavigator}
-      />
       <Stack.Screen name={APP_PAGES.USER_TAB} component={UserTabNavigator} />
       <Stack.Group
         screenOptions={{

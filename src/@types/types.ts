@@ -5,7 +5,7 @@ export type CustomNavigationProp = {
   navigation: NativeStackNavigationProp<ParamListBase, any>;
   route: RouteProp<{
     params: {
-      [x: string]: object | string | object | null | any;
+      [x: string]: any;
     };
   }>;
 };

@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "~components";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
-import { CustomNavigationProp } from "~src/@types/types";
+
 import { StatusBar } from "expo-status-bar";
 import PhoneInput from "./components/PhoneInput";
 
@@ -20,7 +20,7 @@ export const useCustomBottomInset = () => {
   return Math.max(20, insets.bottom + 5);
 };
 
-const EnterPhone = ({ navigation, route }: CustomNavigationProp) => {
+const EnterPhone = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);

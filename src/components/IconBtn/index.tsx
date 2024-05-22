@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, ContainerProps } from "./styles";
+import { Container } from "./styles";
+import { TouchableOpacityProps } from "react-native";
 
-const IconBtn: React.FC<ContainerProps> = (props) => {
-  return <Container {...props}>{props.children}</Container>;
+const IconBtn: React.FC<TouchableOpacityProps> = (props, { children }) => {
+  return <Container {...props}>{children}</Container>;
 };
 export default IconBtn;

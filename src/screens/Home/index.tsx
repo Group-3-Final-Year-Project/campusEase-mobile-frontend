@@ -1,23 +1,23 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import React, { useCallback, useContext } from "react";
-import { Container, Description, Title } from "./styles";
+import { Container, Description, ListLabel, Title } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
-import { CustomNavigationProp } from "~src/@types/types";
+
 import { useFocusEffect } from "@react-navigation/native";
 import Avatar from "react-native-ui-lib/avatar";
 import { Iconify } from "react-native-iconify";
-import Button from "react-native-ui-lib/button";
-import { Searchbar, IconBtn } from "~components";
+import { Searchbar, IconBtn, ServiceCard } from "~components";
 import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
+import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-const Home = ({ navigation }: CustomNavigationProp) => {
+const Home = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
@@ -69,44 +69,77 @@ const Home = ({ navigation }: CustomNavigationProp) => {
 
   return (
     <Container>
-      <ScrollView
+      <VirtualisedContainer
         style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
+        renderItem={undefined}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            width: "100%",
-          }}
-        >
-          <Searchbar
-            placeholder="Search..."
-            icon={
+        <>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+            }}
+          >
+            <Searchbar
+              placeholder="Search..."
+              icon={
+                <Iconify
+                  icon="solar:minimalistic-magnifer-outline"
+                  size={18}
+                  strokeWidth={18}
+                  color={themeContext?.colors.text}
+                />
+              }
+            />
+            <IconBtn
+              style={{
+                marginLeft: 7,
+                backgroundColor: themeContext?.colors.primary,
+                width: 50,
+              }}
+            >
               <Iconify
-                icon="solar:minimalistic-magnifer-outline"
+                icon="solar:tuning-2-outline"
                 size={18}
                 strokeWidth={18}
                 color={themeContext?.colors.text}
               />
-            }
-          />
-          <IconBtn
-            style={{
-              marginLeft: 7,
-              backgroundColor: themeContext?.colors.primary,
-              width: 50,
-            }}
-          >
-            <Iconify
-              icon="solar:tuning-2-outline"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
+            </IconBtn>
+          </View>
+          <HomeBanner />
+          <Categories />
+          <View style={{ marginTop: 20 }}>
+            <ListLabel style={{ marginBottom: 10 }}>Most popular</ListLabel>
+            <FlatList
+              data={[...new Array(5)]}
+              renderItem={({ item, index }) => <ServiceCard service={item} />}
+              horizontal
+              ItemSeparatorComponent={() => (
+                <View style={{ marginHorizontal: 7 }} />
+              )}
+              showsHorizontalScrollIndicator={false}
             />
-          </IconBtn>
-        </View>
-        <HomeBanner />
-        <Categories />
-      </ScrollView>
+          </View>
+          <View style={{ marginTop: 20 }}>
+            <ListLabel style={{ marginBottom: 10 }}>For you</ListLabel>
+            <FlatList
+              data={[...new Array(5)]}
+              renderItem={({ item, index }) => (
+                <ServiceCard
+                  service={item}
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              )}
+              ItemSeparatorComponent={() => (
+                <View style={{ marginVertical: 7 }} />
+              )}
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+        </>
+      </VirtualisedContainer>
     </Container>
   );
 };

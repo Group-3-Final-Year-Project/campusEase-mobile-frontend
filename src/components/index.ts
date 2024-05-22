@@ -6,3 +6,4 @@ export { default as SafeComponent } from "./SafeComponent";
 export { default as TabBar } from "./TabBar";
 export { default as Searchbar } from "./Searchbar";
 export { default as IconBtn } from "./IconBtn";
+export { default as ServiceCard } from "./ServiceCard";

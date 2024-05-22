@@ -1,14 +1,7 @@
 import { StyleSheet, View, Dimensions, Text } from "react-native";
 import React, { useContext } from "react";
-import {
-  Spacings,
-  GridListItem,
-  GridView,
-  GridListItemProps,
-  AnimatedImage,
-  Card,
-} from "react-native-ui-lib";
-import { Description } from "../../styles";
+import { GridView, AnimatedImage, Card } from "react-native-ui-lib";
+import { ListLabel } from "../../styles";
 import { ThemeContext } from "styled-components/native";
 
 const Categories = () => {
@@ -16,7 +9,7 @@ const Categories = () => {
 
   return (
     <View style={{ marginTop: 20 }}>
-      <Description style={{ marginBottom: 10 }}>Categories</Description>
+      <ListLabel style={{ marginBottom: 10 }}>Categories</ListLabel>
       <GridView
         items={[
           { title: "item 1", onPress: () => console.log("item 1 pressed") },

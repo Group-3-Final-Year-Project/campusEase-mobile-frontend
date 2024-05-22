@@ -11,13 +11,14 @@ interface IInput {
 
 const fontStyle = css`
   font-family: ${(props) => props.theme.typography.fontFamily.bold};
-  font-size: ${(props) => props.theme.typography.sizes.large.size}px;
+  font-size: ${(props) => props.theme.typography.sizes.regular.size}px;
   color: ${(props) => props.theme.colors.text};
 `;
 
 export const Container = styled.View`
   border-radius: 20px;
-  border: 1px ${(props: DefaultThemeProps) => props.theme.colors.secondaryText2};
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
   flex-direction: row;
   overflow: hidden;
   flex-grow: 1;

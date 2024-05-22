@@ -9,7 +9,10 @@ import {
 } from "./styles";
 import Loading from "~components/Loading";
 import Button from "~components/Button";
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo, {
+  NetInfoChangeHandler,
+  NetInfoState,
+} from "@react-native-community/netinfo";
 import ErrorBoundary from "react-native-error-boundary";
 
 export const OfflineComponent = ({ refetch }: { refetch: () => void }) => {
@@ -61,8 +64,10 @@ export function useIsOffline() {
     isInternetReachable: true,
   });
 
+  const netInfoChangeHandler: NetInfoChangeHandler = () => setNetInfo;
+
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(setNetInfo);
+    const unsubscribe = NetInfo.addEventListener(netInfoChangeHandler);
     return unsubscribe;
   }, []);
 

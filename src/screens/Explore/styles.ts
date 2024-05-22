@@ -12,17 +12,14 @@ export const Container = styled(SafeAreaView).attrs({
   padding-right: 15px;
 `;
 
+export const HomeScrollView = styled.ScrollView``;
+
 export const Description = styled(Text).attrs({
   fontSize: "small",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.light};
-`;
-
-export const ListLabel = styled(Description)`
-  font-family: ${(props: DefaultThemeProps) =>
-    props.theme.typography.fontFamily.bold};
 `;
 
 export const Title = styled(Text).attrs({

@@ -12,7 +12,7 @@ import Logo from "~images/Logo.svg";
 import { KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
-import { CustomNavigationProp } from "~src/@types/types";
+
 import { StatusBar } from "expo-status-bar";
 
 export const useCustomBottomInset = () => {
@@ -20,7 +20,7 @@ export const useCustomBottomInset = () => {
   return Math.max(20, insets.bottom + 5);
 };
 
-const Onboard = ({ navigation }: CustomNavigationProp) => {
+const Onboard = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
