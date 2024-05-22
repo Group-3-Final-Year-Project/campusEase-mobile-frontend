@@ -11,13 +11,14 @@ import { Searchbar, IconBtn, ServiceCard } from "~components";
 import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
 import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);

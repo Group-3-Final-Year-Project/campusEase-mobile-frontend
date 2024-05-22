@@ -15,13 +15,14 @@ import { ThemeContext } from "styled-components/native";
 import { StatusBar } from "expo-status-bar";
 import { Iconify } from "react-native-iconify";
 import { APP_PAGES } from "~src/shared/constants";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-const VerifyEmail = ({ navigation, route }) => {
+const VerifyEmail = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);

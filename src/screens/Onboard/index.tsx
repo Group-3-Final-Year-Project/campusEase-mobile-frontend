@@ -8,19 +8,19 @@ import {
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "~components";
-import Logo from "~images/Logo.svg";
 import { KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
 
 import { StatusBar } from "expo-status-bar";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-const Onboard = ({ navigation }) => {
+const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);

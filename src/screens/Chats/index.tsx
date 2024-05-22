@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -8,13 +8,14 @@ import { Container } from "./styles";
 import { IconBtn } from "~components";
 import { Iconify } from "react-native-iconify";
 import { useFocusEffect } from "@react-navigation/native";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-const Chats = ({ navigation }) => {
+const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
@@ -71,5 +72,3 @@ const Chats = ({ navigation }) => {
 };
 
 export default Chats;
-
-const styles = StyleSheet.create({});

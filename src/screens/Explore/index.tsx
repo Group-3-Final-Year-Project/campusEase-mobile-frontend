@@ -10,13 +10,14 @@ import { Searchbar, IconBtn, ServiceCard } from "~components";
 import { Container, Description } from "./styles";
 import { Dimensions } from "react-native";
 import MapView from "react-native-maps";
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-const Explore = ({ navigation }) => {
+const Explore = ({ navigation }:BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
