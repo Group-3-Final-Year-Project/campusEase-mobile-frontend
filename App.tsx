@@ -12,7 +12,11 @@ import {
   // Urbanist_600SemiBold,
   // Urbanist_700Bold,
 } from "@expo-google-fonts/urbanist";
-import { setCustomTextInput, setCustomText } from "react-native-global-props";
+import {
+  setCustomTextInput,
+  setCustomText,
+  setCustomScrollView,
+} from "react-native-global-props";
 import { enableScreens } from "react-native-screens";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "styled-components/native";
@@ -21,6 +25,9 @@ import { DarkTheme, DefaultTheme, Font, LightTheme } from "~src/shared/theme";
 import { useDidMountEffect } from "~services/uiService";
 import { SafeComponent } from "~components";
 import RootNavigator from "~src/navigators/RootNavigator";
+import { Provider } from "react-redux";
+import { StatusBar } from "expo-status-bar";
+import store from "~store/store";
 
 enableScreens();
 SplashScreen.preventAutoHideAsync();
@@ -63,13 +70,22 @@ export default function App() {
       fontFamily: Font.GilroyRegular,
     },
   });
+
+  setCustomScrollView({
+    showsHorizontalScrollIndicator: false,
+    showsVerticalScrollIndicator: false,
+  });
+
   return (
     <SafeAreaProvider>
       <ThemeProvider theme={theme}>
         <SafeComponent request={{ loading: !fontsLoaded, data: true }}>
-          <NavigationContainer theme={theme as any}>
-            <RootNavigator />
-          </NavigationContainer>
+          <Provider store={store}>
+            <StatusBar style="dark" />
+            <NavigationContainer theme={theme as any}>
+              <RootNavigator />
+            </NavigationContainer>
+          </Provider>
         </SafeComponent>
       </ThemeProvider>
     </SafeAreaProvider>
