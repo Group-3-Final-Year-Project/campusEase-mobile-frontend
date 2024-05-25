@@ -20,7 +20,7 @@
       "~reducers/*": ["src/store/reducers/*"],
       "~reducers": ["src/store/reducers"],
       "~views/*": ["src/views/*"],
-      "~services/*": ["src/services/*"],
+      "~services": ["src/services"],
       "~assets/*": ["src/assets/*"],
       "~images/*": ["src/assets/images/*"],
       "~animations/*": ["src/assets/animations/*"],

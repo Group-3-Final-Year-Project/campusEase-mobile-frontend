@@ -12,7 +12,7 @@ const RootNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
-      initialRouteName={APP_PAGES.ONBOARD}
+      initialRouteName={APP_PAGES.LANDING}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: false,

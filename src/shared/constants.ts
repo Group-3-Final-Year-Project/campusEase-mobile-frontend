@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 export const APP_PAGES = {
   MAINSTACK: "MainStack",
   USER_TAB: "User Tab",
-  SERVICE_PROVIDER_TAB: "Service Provider Tab",
+  LANDING: "Landing",
   ONBOARD: "Onboard",
   WELCOME: "Welcome",
   SIGNINUP: "Signup/Signin",
@@ -27,18 +27,13 @@ export const APP_PAGES = {
 
 export const API_URLS = {};
 
-export const COMMON_STYLES = StyleSheet.create({
-  heading: {
-    fontFamily: "Urbanist_700Bold",
-    fontSize: 24,
-    lineHeight: 36,
-  },
-  text: {
-    fontFamily: "Urbanist_400Regular",
-    fontSize: 12,
-    lineHeight: 18,
-  },
-});
+export const STORAGE_KEYS = {
+  IS_LOGGED_IN: "is_logged_in",
+  IS_FIRST_TIME_USER: "is_first_time_user",
+  ACTIVE_USER: "active_user",
+};
+
+export const MISC = {};
 
 export const { width, height } = Dimensions.get("screen");
 
