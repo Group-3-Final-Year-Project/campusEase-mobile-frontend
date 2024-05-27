@@ -2,13 +2,12 @@ import React, { useContext } from "react";
 import {
   BottomCard,
   Container,
-  Description,
-  TopCard,
   HighlightedDescription,
+  TopCard,
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "~components";
-import { KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
 
@@ -29,50 +28,14 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
 
   const handleGoToSignup = async () => {
-    navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: true });
+    navigation.navigate(APP_PAGES.SIGNUP);
   };
 
   const handleUserTypeSelection = async (userType: UserType) => {
     await setUserType(userType).then(() => {
-      navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: true });
+      navigation.navigate(APP_PAGES.SIGNUP);
     });
   };
-
-  const bottomCardTabs = [
-    {
-      index: 0,
-      component: (
-        <>
-          <Button onPress={handleGoToSignup}>Get started</Button>
-          <Pressable
-            onPress={() =>
-              navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: false })
-            }
-          >
-            <Description>
-              Already have an account?{" "}
-              <HighlightedDescription>Log in</HighlightedDescription>
-            </Description>
-          </Pressable>
-        </>
-      ),
-    },
-    {
-      index: 1,
-      component: (
-        <>
-          <Button onPress={() => handleUserTypeSelection(UserType.USER)}>
-            User
-          </Button>
-          <Button
-            onPress={() => handleUserTypeSelection(UserType.SERVICE_PROVIDER)}
-          >
-            Service provider
-          </Button>
-        </>
-      ),
-    },
-  ];
 
   return (
     <Container>
@@ -97,15 +60,29 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
           /> */}
         </TopCard>
         <BottomCard style={{ paddingBottom: bottomInset }}>
-          <Carousel
-            loop={false}
-            autoplay={false}
-            allowAccessibleLayout
-            centerContent
-            disableIntervalMomentum
+          <HighlightedDescription>Get Started as ...</HighlightedDescription>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            {bottomCardTabs.map((tab) => tab.component)}
-          </Carousel>
+            <Button
+              onPress={() => handleUserTypeSelection(UserType.USER)}
+              variant="outline"
+              style={{ marginRight: 20, flex: 1 }}
+            >
+              User
+            </Button>
+            <Button
+              onPress={() => handleUserTypeSelection(UserType.SERVICE_PROVIDER)}
+              variant="outline"
+              style={{ flex: 1 }}
+            >
+              Service provi
+            </Button>
+          </View>
         </BottomCard>
       </KeyboardAvoidingView>
     </Container>

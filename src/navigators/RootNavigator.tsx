@@ -7,13 +7,15 @@ import { APP_PAGES } from "~src/shared/constants";
 import { ThemeContext } from "styled-components/native";
 import VerifyEmail from "~src/screens/VerifyEmail";
 import Landing from "~src/screens/Landing";
+import Login from "~src/screens/Login";
+import Service from "~src/screens/Service";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
-      initialRouteName={APP_PAGES.LANDING}
+      initialRouteName={APP_PAGES.USER_TAB}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: false,
@@ -38,7 +40,8 @@ const RootNavigator = () => {
           name={APP_PAGES.ONBOARD}
           component={Onboard}
         />
-        <Stack.Screen name={APP_PAGES.SIGNINUP} component={SignInOrUp} />
+        <Stack.Screen name={APP_PAGES.SIGNUP} component={SignInOrUp} />
+        <Stack.Screen name={APP_PAGES.SIGNIN} component={Login} />
         <Stack.Screen name={APP_PAGES.VERIFY_EMAIL} component={VerifyEmail} />
         {/* <Stack.Screen name={APP_PAGES.VERIFY_PHONE} component={Welcome} />
         <Stack.Screen name={APP_PAGES.SET_LOCATION} component={Welcome} />
@@ -51,7 +54,15 @@ const RootNavigator = () => {
           component={UserTypeSelector}
         /> */}
       </Stack.Group>
-      {/* <Stack.Screen name={APP_PAGES.SERVICE} component={Service} /> */}
+      <Stack.Screen
+        name={APP_PAGES.SERVICE}
+        component={Service}
+        options={{
+          headerShown: true,
+          headerTitle: "",
+          headerTransparent: true,
+        }}
+      />
     </Stack.Navigator>
   );
 };

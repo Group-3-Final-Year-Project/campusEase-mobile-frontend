@@ -113,7 +113,9 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
             <ListLabel style={{ marginBottom: 10 }}>Most popular</ListLabel>
             <FlatList
               data={[...new Array(5)]}
-              renderItem={({ item, index }) => <ServiceCard service={item} />}
+              renderItem={({ item, index }) => (
+                <ServiceCard service={item} navigation={navigation} />
+              )}
               horizontal
               ItemSeparatorComponent={() => (
                 <View style={{ marginHorizontal: 7 }} />
@@ -128,6 +130,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
               renderItem={({ item, index }) => (
                 <ServiceCard
                   service={item}
+                  navigation={navigation}
                   style={{
                     width: "100%",
                   }}

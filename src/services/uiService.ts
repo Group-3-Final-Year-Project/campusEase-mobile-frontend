@@ -58,3 +58,11 @@ export const formatPhoneNumber = (phoneNumber: string) => {
   // will do proper formatting here...
   return phoneNumber;
 };
+
+export const formatCurrency = (value: number) => {
+  const formatter = new Intl.NumberFormat("en-GH", {
+    style: "currency",
+    currency: "GHS",
+  });
+  return formatter.format(Number(value));
+};

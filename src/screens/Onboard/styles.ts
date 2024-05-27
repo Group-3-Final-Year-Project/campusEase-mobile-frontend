@@ -31,8 +31,9 @@ export const BottomCard = styled.View`
   background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.background};
   padding: 22px;
-  border-top-color: ${(props: DefaultThemeProps) => props.theme.colors.border};
-  border-top-width: 1px;
+  /* border-top-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.border}; */
+  /* border-top-width: 1px; */
 `;
 
 export const Description = styled(Text)`
@@ -44,4 +45,5 @@ export const Description = styled(Text)`
 export const HighlightedDescription = styled(Description)`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
+  margin-bottom: 20px;
 `;

@@ -1,78 +1,62 @@
 import React, { useState, useContext } from "react";
-import {
-  Container,
-  Description,
-  FormControl,
-  ContentCard,
-  ErrorLabel,
-  HighlightedDescription,
-} from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Input, AdvancedDialog } from "~components";
-import HeroText from "./components/HeroText";
 import { KeyboardAvoidingView, Platform, Pressable, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
-import Checkbox from "react-native-ui-lib/checkbox";
 import { Iconify } from "react-native-iconify";
 import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { signUserUp } from "~services";
+import { signUserIn } from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import { updateUserData } from "~store/actions/userActions";
 import { User } from "~src/@types/types";
+import {
+  ContentCard,
+  Container,
+  Description,
+  ErrorLabel,
+  FormControl,
+  HighlightedDescription,
+} from "../SignInOrUp/styles";
+import HeroText from "../SignInOrUp/components/HeroText";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-export const signupSchema = yup.object().shape({
-  name: yup.string().min(3, "Name not valid!").required("Name required!"),
+export const signinSchema = yup.object().shape({
   email: yup.string().email("Email not valid!").required("Email required!"),
-  password: yup
-    .string()
-    .min(8, "Password should be 8 characters long!")
-    .required("Password required!"),
-  phoneNumber: yup
-    .string()
-    .min(10, "Phone number not valid!")
-    .required("Phone number required!"),
-  acceptedTerms: yup
-    .boolean()
-    .oneOf([true], "Agree to terms and conditions to continue")
-    .required("Agree to terms and conditions to continue"),
+  password: yup.string().required("Password required!"),
 });
 
-const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
+const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [showPassword, setShowPassword] = useState<boolean>(true);
-
   const dispatch = useAppDispatch();
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
-  const signupInitialValues = {
-    name: "",
+  const signinInitialValues = {
     email: "",
     password: "",
-    phoneNumber: "",
-    acceptedTerms: false,
   };
 
   const formik = useFormik({
-    initialValues: signupInitialValues,
-    validationSchema: signupSchema,
+    initialValues: signinInitialValues,
+    validationSchema: signinSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      await signUserUp(values)
+      await signUserIn(values)
         .then((res) => {
           dispatch(updateUserData(res as User));
           resetForm();
-          navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+
+          navigation.navigate(APP_PAGES.HOME);
         })
         .catch((err) => {
           // will show a toast or modal here for failed auth
@@ -93,32 +77,14 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
         <ContentCard
           style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
         >
-          <HeroText isSignup={true} />
+          <HeroText isSignup={false} />
 
           <Description
             style={{ marginTop: 20, color: themeContext?.colors.secondaryText }}
           >
-            Hey there! Sign up with your email to continue.
+            Hey there! Welcome back. You've been missed.
           </Description>
           <View style={{ marginTop: 40, width: "100%" }}>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("name")}
-                onBlur={formik.handleBlur("name")}
-                value={formik.values?.name}
-                textContentType="name"
-                placeholder="Username"
-                icon={
-                  <Iconify
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:user-rounded-outline"
-                  />
-                }
-              />
-              {formik.touched?.name && formik.errors?.name ? (
-                <ErrorLabel>{formik.errors?.name}</ErrorLabel>
-              ) : null}
-            </FormControl>
             <FormControl>
               <Input
                 onChangeText={formik.handleChange("email")}
@@ -142,7 +108,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 onChangeText={formik.handleChange("password")}
                 onBlur={formik.handleBlur("password")}
                 value={formik.values?.password}
-                textContentType={"newPassword"}
+                textContentType={"password"}
                 secureTextEntry={!showPassword}
                 placeholder="Password"
                 icon={
@@ -172,38 +138,23 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
               ) : null}
             </FormControl>
             <FormControl>
-              <Checkbox
-                value={formik.values?.acceptedTerms}
-                label="I have read and agree to the terms and conditions"
-                labelStyle={{
-                  color: themeContext?.colors.secondaryText,
-                }}
-                color={themeContext?.colors.secondaryBackground}
-                iconColor={themeContext?.colors.primary}
-                onValueChange={(value: boolean) =>
-                  formik.setFieldValue("acceptedTerms", value)
-                }
-                onBlur={formik.handleBlur("acceptedTerms")}
-              />
-            </FormControl>
-            <FormControl>
               <Button
                 loading={formik.isSubmitting}
                 // @ts-ignore
                 onPress={formik.handleSubmit}
                 // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
               >
-                Continue
+                Sign in
               </Button>
             </FormControl>
-            <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNIN)}>
+            <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNUP)}>
               <Description
                 style={{
                   textAlign: "center",
                 }}
               >
-                Already have an account?{" "}
-                <HighlightedDescription>Log in</HighlightedDescription>
+                Don't have an account?{" "}
+                <HighlightedDescription>Sign up</HighlightedDescription>
               </Description>
             </Pressable>
           </View>
@@ -219,4 +170,4 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
   );
 };
 
-export default SignUp;
+export default Login;

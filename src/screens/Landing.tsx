@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   isAlreadyLoggedIn,
-  isFirstTimeUser,
+  isAlreadyUser,
   navigateAndResetStack,
   readLoginDataFromAsyncStorage,
   setAsLoggedOut,
@@ -24,16 +24,16 @@ const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
       const loginData = await readLoginDataFromAsyncStorage();
       console.log("LD: ", loginData);
       if (!loginData) {
-        navigateAndResetStack(navigation, APP_PAGES.SIGNINUP);
+        navigateAndResetStack(navigation, APP_PAGES.SIGNIN);
         setAsLoggedOut();
         return;
       }
       dispatch(updateUserData(loginData));
       navigation.replace(APP_PAGES.HOME);
     } else {
-      const firstTime = await isFirstTimeUser();
-      if (firstTime) navigation.replace(APP_PAGES.ONBOARD);
-      else navigation.replace(APP_PAGES.SIGNINUP);
+      const alreadyUser = await isAlreadyUser();
+      if (alreadyUser) navigation.replace(APP_PAGES.SIGNIN);
+      else navigation.replace(APP_PAGES.ONBOARD);
     }
   };
   return null;

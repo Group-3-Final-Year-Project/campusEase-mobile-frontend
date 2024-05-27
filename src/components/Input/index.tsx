@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Container,
   TextInput,
@@ -19,19 +19,12 @@ const Input: React.FC<InputProps> = ({
   rightIcon,
   ...props
 }) => {
-  const [inputValue, setInputValue] = useState<string>("");
-
   return (
     <Container>
       {icon && <IconContainer padding={padding}>{icon}</IconContainer>}
 
       {/* <Separator /> */}
-      <TextInput
-        value={inputValue}
-        onChangeText={(e: string) => setInputValue(e)}
-        padding={padding}
-        {...(props as any)}
-      />
+      <TextInput padding={padding} {...(props as any)} />
       {rightIcon && (
         <RightIconContainer padding={padding}>{rightIcon}</RightIconContainer>
       )}

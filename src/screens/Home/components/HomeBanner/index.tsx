@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import Carousel from "react-native-ui-lib/carousel";
 import Card from "react-native-ui-lib/card";
-import {Spacings} from "react-native-ui-lib";
+import { Spacings } from "react-native-ui-lib";
+import { ThemeContext } from "styled-components/native";
 
 const HomeBanner = () => {
+  const themeContext = useContext(ThemeContext);
+
   const renderItem = (item: any, index: number) => (
     <Card key={index} flex center onPress={() => console.log("pressed")}>
       <Card.Image
@@ -30,7 +33,10 @@ const HomeBanner = () => {
       loop
       itemSpacings={Spacings.s2}
       showCounter
-      containerStyle={{ marginTop: 20 }}
+      containerStyle={{
+        marginTop: 20,
+        backgroundColor: themeContext?.colors.secondaryBackground,
+      }}
     >
       {[...new Array(5)].map((item, index) => renderItem(item, index))}
     </Carousel>

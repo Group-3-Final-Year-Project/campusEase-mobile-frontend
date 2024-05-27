@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
 
 export const APP_PAGES = {
   MAINSTACK: "MainStack",
@@ -6,7 +6,8 @@ export const APP_PAGES = {
   LANDING: "Landing",
   ONBOARD: "Onboard",
   WELCOME: "Welcome",
-  SIGNINUP: "Signup/Signin",
+  SIGNUP: "Signup",
+  SIGNIN: "Signin",
   HOME: "Home",
   PROFILE: "Profile",
   SETTINGS: "Settings",
@@ -32,7 +33,7 @@ export const API_URLS = {
 
 export const STORAGE_KEYS = {
   IS_LOGGED_IN: "campusEase_is_logged_in",
-  IS_FIRST_TIME_USER: "campusEase_is_first_time_user",
+  IS_ALREADY_USER: "campusEase_is_already_user",
   ACTIVE_USER: "campusEase_active_user",
   USER_TYPE: "campusEase_active_user_type",
 };

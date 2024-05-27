@@ -6,9 +6,16 @@ import { ThemeContext } from "styled-components/native";
 import IconBtn from "~components/IconBtn";
 import { Iconify } from "react-native-iconify";
 import Text from "~components/Text";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { APP_PAGES } from "~src/shared/constants";
 
 interface ServiceCardProps extends CardProps {
   service: any;
+  navigation?: BottomTabNavigationProp<
+    any,
+    string | number | symbol,
+    undefined
+  >;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = (props) => {
@@ -27,6 +34,9 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
         padding: 10,
         position: "relative",
       }}
+      onPress={() =>
+        props?.navigation && props.navigation.navigate(APP_PAGES.SERVICE)
+      }
       {...props}
     >
       <Card.Image

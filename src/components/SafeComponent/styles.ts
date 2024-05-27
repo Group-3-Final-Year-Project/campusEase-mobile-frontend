@@ -8,7 +8,10 @@ import LottieView from "lottie-react-native";
 
 export const Container = styled.ScrollView.attrs({
   contentContainerStyle: { flex: 1 },
-})``;
+})`
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.background};
+`;
 
 export const Content = styled.View`
   justify-content: center;

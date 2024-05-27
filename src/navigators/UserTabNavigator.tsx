@@ -39,6 +39,8 @@ const UserTabNavigator = () => {
   const theme = useContext(ThemeContext);
   useNavigationBar(false, theme?.colors.background);
 
+
+
   const ServiceProviderTabItems = [
     {
       name: APP_PAGES.ANALYTICS,

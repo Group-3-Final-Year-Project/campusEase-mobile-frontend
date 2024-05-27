@@ -3,7 +3,6 @@ import { User, UserType } from "~src/@types/types";
 import { API_URLS, STORAGE_KEYS } from "~src/shared/constants";
 import { apiPost } from "./apiService";
 import { formatPhoneNumber } from "./uiService";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export async function setAsLoggedIn() {
   AsyncStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, "1");
@@ -19,10 +18,17 @@ export const isAlreadyLoggedIn = async () => {
   return false;
 };
 
-export const isFirstTimeUser = async () => {
-  const firstTime = await AsyncStorage.getItem(STORAGE_KEYS.IS_FIRST_TIME_USER);
-  if (firstTime === "1") return true;
-  return false;
+export const setIsAlreadyUser = async () => {
+  AsyncStorage.setItem(STORAGE_KEYS.IS_ALREADY_USER, "1");
+};
+
+export const isAlreadyUser = async () => {
+  const alreadyUser = await AsyncStorage.getItem(STORAGE_KEYS.IS_ALREADY_USER);
+  if (!alreadyUser) return false;
+  else {
+    if (alreadyUser === "1") return true;
+    return false;
+  }
 };
 
 export const setUserType = async (user_type: UserType) => {

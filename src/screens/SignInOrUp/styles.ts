@@ -2,7 +2,7 @@ import styled, {
   DefaultTheme as DefaultThemeProps,
 } from "styled-components/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Text from "~components/Text";
+import { Text } from "~components";
 
 export const Container = styled(SafeAreaView).attrs({
   edges: ["left", "right"],
@@ -50,12 +50,17 @@ export const InputLabel = styled(Text)`
   width: 100%;
 `;
 
-export const ErrorLabel = styled(Text)`
+export const ErrorLabel = styled(Text).attrs({
+  fontSize: "small",
+})`
   margin-top: 10px;
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.regular};
-  font-size: ${(props: DefaultThemeProps) =>
-    props.theme.typography.sizes.small};
   width: 100%;
-  color: "red";
+  color: red;
+`;
+
+export const HighlightedDescription = styled(Description)`
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.bold};
 `;
