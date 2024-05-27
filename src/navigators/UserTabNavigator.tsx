@@ -37,7 +37,7 @@ const UserTabNavigator = () => {
   const Tab = createBottomTabNavigator();
 
   const theme = useContext(ThemeContext);
-  useNavigationBar(false, theme?.colors.secondaryBackground);
+  useNavigationBar(false, theme?.colors.background);
 
   const ServiceProviderTabItems = [
     {

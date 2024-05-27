@@ -25,12 +25,16 @@ export const APP_PAGES = {
   BOOKINGS: "Bookings",
 };
 
-export const API_URLS = {};
+export const API_URLS = {
+  SIGNIN: "/signin",
+  SIGNUP: "/signup",
+};
 
 export const STORAGE_KEYS = {
-  IS_LOGGED_IN: "is_logged_in",
-  IS_FIRST_TIME_USER: "is_first_time_user",
-  ACTIVE_USER: "active_user",
+  IS_LOGGED_IN: "campusEase_is_logged_in",
+  IS_FIRST_TIME_USER: "campusEase_is_first_time_user",
+  ACTIVE_USER: "campusEase_active_user",
+  USER_TYPE: "campusEase_active_user_type",
 };
 
 export const MISC = {};

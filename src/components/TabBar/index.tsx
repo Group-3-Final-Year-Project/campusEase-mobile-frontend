@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Container, TabItem, TabItemContainer, TabItemLabel } from "./styles";
+import { ThemeContext } from "styled-components/native";
+import { useColorScheme } from "react-native";
 
 const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
+  const colorScheme = useColorScheme();
+  const theme = useContext(ThemeContext);
+
   return (
     <Container>
       {state.routes.map((route, index) => {

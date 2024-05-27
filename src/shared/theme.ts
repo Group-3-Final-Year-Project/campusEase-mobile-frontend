@@ -80,11 +80,11 @@ export const LightTheme: DefaultThemeProps = {
   dark: false,
   colors: {
     primary: "#5F55FE",
-    text: "#070F26",
+    text: "#3e4857",
     secondaryText: "#4C5266",
     secondaryText2: Color("#4C5266").fade(0.5).rgb().string(),
     background: "#ffffff",
-    secondaryBackground: "#F8F8F8",
+    secondaryBackground: "#f5f6f8",
     border: "#f2f2f2",
   },
 };

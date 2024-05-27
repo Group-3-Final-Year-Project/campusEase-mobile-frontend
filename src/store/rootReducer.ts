@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
 import UserReducer from "./reducers/userReducer";
-import FilterReducer from "./reducers/filterReducer";
-import ServicesReducer from "./reducers/servicesReducer";
+// import FilterReducer from "./reducers/filterReducer";
+// import ServicesReducer from "./reducers/servicesReducer";
 
 const appReducer = combineReducers({
   user: UserReducer,
-  filters: FilterReducer,
-  services: ServicesReducer,
+  // filters: FilterReducer,
+  // services: ServicesReducer,
 });
 
 export const RootActions = {

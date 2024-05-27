@@ -1,5 +1,6 @@
 import ACTION_TYPES from "~store/actionTypes";
 import INITIAL_STATE from "../initialStates";
+import { createReducer } from "@reduxjs/toolkit";
 
 const UserReducer = (
   state = INITIAL_STATE.user,
@@ -16,5 +17,15 @@ const UserReducer = (
       return state;
   }
 };
+
+// const UserReducer = createReducer(INITIAL_STATE.user, (builder) => {
+//   builder
+//     .addCase(ACTION_TYPES.UPDATE_USER_DATA, (state, action) => {
+//       return { ...state, ...action.payload };
+//     })
+//     .addDefaultCase((state, action) => {
+//       return state;
+//     });
+// });
 
 export default UserReducer;

@@ -49,3 +49,13 @@ export const InputLabel = styled(Text)`
     props.theme.typography.fontFamily.medium};
   width: 100%;
 `;
+
+export const ErrorLabel = styled(Text)`
+  margin-top: 10px;
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.regular};
+  font-size: ${(props: DefaultThemeProps) =>
+    props.theme.typography.sizes.small};
+  width: 100%;
+  color: "red";
+`;

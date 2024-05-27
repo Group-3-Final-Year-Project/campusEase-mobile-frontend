@@ -1,5 +1,4 @@
-import React, { useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect } from "react";
 import {
   isAlreadyLoggedIn,
   isFirstTimeUser,
@@ -13,11 +12,9 @@ import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import { updateUserData } from "~store/actions/userActions";
 
 const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
-  useFocusEffect(
-    useCallback(() => {
-      checkLoginAndNavigate();
-    }, [])
-  );
+  useEffect(() => {
+    checkLoginAndNavigate();
+  }, []);
 
   const dispatch = useAppDispatch();
 
@@ -25,6 +22,7 @@ const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
     const loggedIn = await isAlreadyLoggedIn();
     if (loggedIn) {
       const loginData = await readLoginDataFromAsyncStorage();
+      console.log("LD: ", loginData);
       if (!loginData) {
         navigateAndResetStack(navigation, APP_PAGES.SIGNINUP);
         setAsLoggedOut();

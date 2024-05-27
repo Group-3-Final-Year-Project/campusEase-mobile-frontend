@@ -5,9 +5,9 @@ const INITIAL_STATE: ReduxState = {
     id: 0,
     userType: UserType.USER,
   },
-  services: [],
-  bookings: [],
-  filters: {},
+  // services: [],
+  // bookings: [],
+  // filters: {},
 };
 
 export default INITIAL_STATE;

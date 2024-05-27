@@ -6,6 +6,7 @@ import SignInOrUp from "~src/screens/SignInOrUp";
 import { APP_PAGES } from "~src/shared/constants";
 import { ThemeContext } from "styled-components/native";
 import VerifyEmail from "~src/screens/VerifyEmail";
+import Landing from "~src/screens/Landing";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -18,6 +19,7 @@ const RootNavigator = () => {
         headerShadowVisible: false,
       }}
     >
+      <Stack.Screen name={APP_PAGES.LANDING} component={Landing} />
       <Stack.Screen name={APP_PAGES.USER_TAB} component={UserTabNavigator} />
       <Stack.Group
         screenOptions={{

@@ -1,13 +1,11 @@
 import thunk from "redux-thunk";
 import rootReducer from "./rootReducer";
 import { configureStore } from "@reduxjs/toolkit";
-
-const middlewares: Array<any> = [thunk];
+import INITIAL_STATE from "./initialStates";
 
 const store = configureStore({
+  preloadedState: INITIAL_STATE,
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(...middlewares),
 });
 
 export default store;

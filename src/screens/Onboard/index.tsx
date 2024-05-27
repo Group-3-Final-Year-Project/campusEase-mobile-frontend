@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import {
   BottomCard,
   Container,
@@ -14,6 +14,9 @@ import { APP_PAGES } from "~src/shared/constants";
 
 import { StatusBar } from "expo-status-bar";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Carousel } from "react-native-ui-lib";
+import { setUserType } from "~services";
+import { UserType } from "~src/@types/types";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -24,15 +27,52 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [loading, setLoading] = useState(false);
 
   const handleGoToSignup = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: true });
-      setLoading(false);
-    }, 1000);
+    navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: true });
   };
+
+  const handleUserTypeSelection = async (userType: UserType) => {
+    await setUserType(userType).then(() => {
+      navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: true });
+    });
+  };
+
+  const bottomCardTabs = [
+    {
+      index: 0,
+      component: (
+        <>
+          <Button onPress={handleGoToSignup}>Get started</Button>
+          <Pressable
+            onPress={() =>
+              navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: false })
+            }
+          >
+            <Description>
+              Already have an account?{" "}
+              <HighlightedDescription>Log in</HighlightedDescription>
+            </Description>
+          </Pressable>
+        </>
+      ),
+    },
+    {
+      index: 1,
+      component: (
+        <>
+          <Button onPress={() => handleUserTypeSelection(UserType.USER)}>
+            User
+          </Button>
+          <Button
+            onPress={() => handleUserTypeSelection(UserType.SERVICE_PROVIDER)}
+          >
+            Service provider
+          </Button>
+        </>
+      ),
+    },
+  ];
 
   return (
     <Container>
@@ -57,19 +97,15 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
           /> */}
         </TopCard>
         <BottomCard style={{ paddingBottom: bottomInset }}>
-          <Button loading={loading} onPress={handleGoToSignup}>
-            Get started
-          </Button>
-          <Pressable
-            onPress={() =>
-              navigation.navigate(APP_PAGES.SIGNINUP, { isSignup: false })
-            }
+          <Carousel
+            loop={false}
+            autoplay={false}
+            allowAccessibleLayout
+            centerContent
+            disableIntervalMomentum
           >
-            <Description>
-              Already have an account?{" "}
-              <HighlightedDescription>Log in</HighlightedDescription>
-            </Description>
-          </Pressable>
+            {bottomCardTabs.map((tab) => tab.component)}
+          </Carousel>
         </BottomCard>
       </KeyboardAvoidingView>
     </Container>

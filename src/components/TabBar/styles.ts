@@ -1,3 +1,4 @@
+import { useColorScheme } from "react-native";
 import styled, {
   css,
   DefaultTheme as DefaultThemeProps,
@@ -9,7 +10,7 @@ interface ITabItemLabel {
 
 export const Container = styled.View`
   background-color: ${(props: DefaultThemeProps) =>
-    props.theme.colors.secondaryBackground};
+    props.theme.colors.background};
   display: flex;
   flex-direction: row;
   justify-content: space-between;

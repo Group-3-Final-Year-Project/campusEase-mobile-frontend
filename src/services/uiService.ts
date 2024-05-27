@@ -53,3 +53,8 @@ export function pickRandomAvatarColor(id?: number): string {
 export function extractImageDataFromB64string(base64String: string): string {
   return base64String.split(",")[1];
 }
+
+export const formatPhoneNumber = (phoneNumber: string) => {
+  // will do proper formatting here...
+  return phoneNumber;
+};
