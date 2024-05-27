@@ -3,8 +3,9 @@ import styled, {
 } from "styled-components/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Text from "~components/Text";
+import { Animated } from "react-native";
 
-export const Container = styled(SafeAreaView).attrs({
+export const Container = styled(Animated.View).attrs({
   edges: ["left", "right"],
 })`
   flex: 1;
@@ -12,7 +13,10 @@ export const Container = styled(SafeAreaView).attrs({
   padding-right: 15px; */
 `;
 
-const ServiceInfoContainer = styled.View``;
+export const ServiceInfoContainer = styled.View`
+  margin: 30px 0;
+  padding: 0 15px;
+`;
 
 export const BottomCard = styled.View`
   padding: 15px;
@@ -41,4 +45,21 @@ export const HighlightedDescription = styled(Text).attrs({
   color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
+`;
+
+export const TagLabel = styled(Text).attrs({
+  fontSize: "small",
+})`
+  color: ${(props: DefaultThemeProps) => props.theme.colors.text};
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.regular};
+  font-size: 10px;
+  line-height: 10px;
+`;
+
+export const Title = styled(Text).attrs({
+  fontSize: "h2",
+  fontWeight: "bold",
+})`
+  color: ${(props: DefaultThemeProps) => props.theme.colors.text};
 `;

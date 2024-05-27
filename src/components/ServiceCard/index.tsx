@@ -62,17 +62,19 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
         <IconBtn style={{ flexDirection: "row" }}>
           <Iconify
             icon="fluent-emoji-flat:star"
-            size={18}
-            strokeWidth={18}
+            size={12}
+            strokeWidth={12}
             color={theme?.colors.text}
           />
-          <Text style={{ marginLeft: 5, fontSize: 14 }}>4.8</Text>
+          <Text style={{ marginLeft: 5, fontSize: 12, lineHeight: 14 }}>
+            4.8
+          </Text>
         </IconBtn>
         <IconBtn>
           <Iconify
             icon="solar:bookmark-bold"
-            size={18}
-            strokeWidth={18}
+            size={12}
+            strokeWidth={12}
             color={theme?.colors.primary}
           />
         </IconBtn>

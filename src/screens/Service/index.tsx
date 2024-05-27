@@ -1,5 +1,5 @@
-import { StyleSheet, View } from "react-native";
-import React, { useCallback, useContext } from "react";
+import { StyleSheet, View, Animated } from "react-native";
+import React, { useContext, useRef, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
 import {
@@ -7,8 +7,10 @@ import {
   Container,
   Description,
   HighlightedDescription,
+  ServiceInfoContainer,
+  TagLabel,
+  Title,
 } from "./styles";
-import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 import { Button, IconBtn } from "~components";
 import { Iconify } from "react-native-iconify";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -26,36 +28,99 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
 
-  useFocusEffect(
-    useCallback(() => {
-      navigation.setOptions({
-        // headerTitle: "",
-        // headerTransparent: true,
-        headerRight: () => (
-          <IconBtn>
-            <Iconify
-              icon="solar:bell-bold"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          </IconBtn>
-        ),
+  const yOffset = useRef(new Animated.Value(0)).current;
+  const headerOpacity = yOffset.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, 1],
+    extrapolate: "clamp",
+  });
+
+  useEffect(() => {
+    navigation.setOptions({
+      // headerTitle: "",
+      // headerTransparent: true,
+      headerStyle: {
         // @ts-ignore
-        headerRightContainerStyle: {
-          marginRight: 15,
-        },
-      });
-    }, [])
-  );
+        opacity: headerOpacity,
+      },
+      headerRight: () => (
+        <IconBtn>
+          <Iconify
+            icon="solar:bell-bold"
+            size={18}
+            strokeWidth={18}
+            color={themeContext?.colors.text}
+          />
+        </IconBtn>
+      ),
+      // @ts-ignore
+      headerRightContainerStyle: {
+        marginRight: 15,
+      },
+      headerBackground: () => (
+        <Animated.View
+          style={{
+            backgroundColor: themeContext?.colors.background,
+            ...StyleSheet.absoluteFillObject,
+            opacity: headerOpacity,
+          }}
+        />
+      ),
+    });
+  }, [headerOpacity, navigation]);
+
   return (
     <Container>
-      <VirtualisedContainer
+      <Animated.ScrollView
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  y: yOffset,
+                },
+              },
+            },
+          ],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
         style={{ paddingBottom: bottomInset }}
-        renderItem={undefined}
       >
         <ServiceBanner />
-      </VirtualisedContainer>
+        <ServiceInfoContainer>
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <IconBtn style={{ marginRight: 5 }}>
+              <TagLabel>Home</TagLabel>
+            </IconBtn>
+            <IconBtn
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <Iconify
+                icon="fluent-emoji-flat:star"
+                size={10}
+                strokeWidth={10}
+              />
+              <TagLabel> 4.8 (354 reviews)</TagLabel>
+            </IconBtn>
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Title style={{ marginBottom: 4 }}>Jeron Plumbing Works</Title>
+            <Description>1012 Ocean avenue, New York, USA</Description>
+          </View>
+        </ServiceInfoContainer>
+      </Animated.ScrollView>
       <BottomCard>
         <View>
           <Description style={{ marginBottom: 10 }}>Starting Price</Description>
