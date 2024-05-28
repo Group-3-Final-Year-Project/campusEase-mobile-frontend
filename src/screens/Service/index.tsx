@@ -1,4 +1,4 @@
-import { StyleSheet, View, Animated } from "react-native";
+import { StyleSheet, View, Animated, FlatList } from "react-native";
 import React, { useContext, useRef, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -8,15 +8,17 @@ import {
   Description,
   HighlightedDescription,
   ServiceInfoContainer,
+  ServiceInfoHeaderLabel,
+  ServiceProviderCard,
   TagLabel,
   Title,
 } from "./styles";
-import { Button, IconBtn } from "~components";
+import { Button, IconBtn, ServiceCard } from "~components";
 import { Iconify } from "react-native-iconify";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useFocusEffect } from "@react-navigation/native";
 import ServiceBanner from "./components/ServiceBanner";
 import { formatCurrency } from "../../services/uiService";
+import Avatar from "react-native-ui-lib/avatar";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -37,7 +39,7 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
 
   useEffect(() => {
     navigation.setOptions({
-      // headerTitle: "",
+      headerTitle: "",
       // headerTransparent: true,
       headerStyle: {
         // @ts-ignore
@@ -69,6 +71,57 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
     });
   }, [headerOpacity, navigation]);
 
+  const serviceSocialItems = [
+    {
+      name: "Call",
+      icon: (
+        <Iconify
+          icon="solar:phone-calling-outline"
+          size={18}
+          strokeWidth={18}
+          color={themeContext?.colors.text}
+        />
+      ),
+      action: "",
+    },
+    {
+      name: "Chat",
+      icon: (
+        <Iconify
+          icon="solar:chat-round-line-outline"
+          size={18}
+          strokeWidth={18}
+          color={themeContext?.colors.text}
+        />
+      ),
+      action: "",
+    },
+    {
+      name: "Website",
+      icon: (
+        <Iconify
+          icon="solar:global-outline"
+          size={18}
+          strokeWidth={18}
+          color={themeContext?.colors.text}
+        />
+      ),
+      action: "",
+    },
+    {
+      name: "Map",
+      icon: (
+        <Iconify
+          icon="solar:map-outline"
+          size={18}
+          strokeWidth={18}
+          color={themeContext?.colors.text}
+        />
+      ),
+      action: "",
+    },
+  ];
+
   return (
     <Container>
       <Animated.ScrollView
@@ -93,7 +146,7 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
         <ServiceInfoContainer>
           <View
             style={{
-              width: "100%",
+              width: "80%",
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center",
@@ -117,8 +170,89 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
           </View>
           <View style={{ marginTop: 10 }}>
             <Title style={{ marginBottom: 4 }}>Jeron Plumbing Works</Title>
-            <Description>1012 Ocean avenue, New York, USA</Description>
+            <Description style={{ color: themeContext?.colors.secondaryText }}>
+              1012 Ocean avenue, New York, USA
+            </Description>
           </View>
+        </ServiceInfoContainer>
+        <ServiceInfoContainer>
+          <ServiceInfoHeaderLabel>About Service</ServiceInfoHeaderLabel>
+          <Description style={{ lineHeight: 24 }}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Est eveniet
+            tempore quibusdam, numquam nobis iste? Dolor vel est sunt minus
+            maiores voluptas assumenda harum ratione, cum, facere unde nobis?
+            Quis!
+          </Description>
+        </ServiceInfoContainer>
+        <ServiceInfoContainer
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {serviceSocialItems.map((item, index) => (
+            <IconBtn key={index} style={{ height: 80, width: 80 }}>
+              <>{item.icon}</>
+              <Description style={{ marginTop: 10, fontSize: 12 }}>
+                {item.name}
+              </Description>
+            </IconBtn>
+          ))}
+        </ServiceInfoContainer>
+        <ServiceInfoContainer>
+          <ServiceInfoHeaderLabel>
+            About Service Provider
+          </ServiceInfoHeaderLabel>
+          <ServiceProviderCard>
+            <Avatar
+              animate
+              useAutoColors
+              label="SO"
+              size={45}
+              backgroundColor="green"
+              labelColor="white"
+              source={{
+                uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+              }}
+            />
+            <View style={{ marginLeft: 15 }}>
+              <ServiceInfoHeaderLabel style={{}}>
+                Sam Smith
+              </ServiceInfoHeaderLabel>
+              <Description
+                style={{
+                  fontSize: 12,
+                  color: themeContext?.colors.secondaryText,
+                }}
+              >
+                Service provider
+              </Description>
+            </View>
+          </ServiceProviderCard>
+        </ServiceInfoContainer>
+        {/* Galllery goes here... */}
+        <ServiceInfoContainer>
+          <ServiceInfoHeaderLabel>Gallery</ServiceInfoHeaderLabel>
+        </ServiceInfoContainer>
+        {/* Reviews goes here... */}
+        <ServiceInfoContainer>
+          <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
+        </ServiceInfoContainer>
+        {/* More for you goes here... */}
+        <ServiceInfoContainer>
+          <ServiceInfoHeaderLabel>More for you</ServiceInfoHeaderLabel>
+          <FlatList
+            data={[...new Array(5)]}
+            renderItem={({ item, index }) => (
+              <ServiceCard service={item} navigation={navigation} />
+            )}
+            horizontal
+            ItemSeparatorComponent={() => (
+              <View style={{ marginHorizontal: 7 }} />
+            )}
+            showsHorizontalScrollIndicator={false}
+          />
         </ServiceInfoContainer>
       </Animated.ScrollView>
       <BottomCard>

@@ -14,7 +14,7 @@ export const Container = styled(Animated.View).attrs({
 `;
 
 export const ServiceInfoContainer = styled.View`
-  margin: 30px 0;
+  margin-top: 30px;
   padding: 0 15px;
 `;
 
@@ -62,4 +62,20 @@ export const Title = styled(Text).attrs({
   fontWeight: "bold",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
+`;
+
+export const ServiceInfoHeaderLabel = styled(Text).attrs({})`
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.extraBold};
+  padding-bottom: 10px;
+`;
+
+export const ServiceProviderCard = styled.TouchableOpacity`
+  border-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
+  border-width: 0.8px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  padding: 15px;
 `;
