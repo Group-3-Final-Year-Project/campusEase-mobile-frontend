@@ -7,7 +7,12 @@ import { ThemeContext } from "styled-components/native";
 import { useFocusEffect } from "@react-navigation/native";
 import Avatar from "react-native-ui-lib/avatar";
 import { Iconify } from "react-native-iconify";
-import { Searchbar, IconBtn, ServiceCard } from "~components";
+import {
+  Searchbar,
+  IconBtn,
+  ServiceCard,
+  SecondaryServiceCard,
+} from "~components";
 import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
 import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
@@ -128,9 +133,9 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
             <FlatList
               data={[...new Array(5)]}
               renderItem={({ item, index }) => (
-                <ServiceCard
+                <SecondaryServiceCard
                   service={item}
-                  navigation={navigation}
+                  navigation={navigation as NavigationProp<any>}
                   style={{
                     width: "100%",
                   }}

@@ -38,7 +38,7 @@ export const Description = styled(Text)`
 `;
 
 export const FormControl = styled.View`
-  margin: 20px 0;
+  margin: 15px 0;
   width: 100%;
 `;
 

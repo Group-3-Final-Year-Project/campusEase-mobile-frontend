@@ -196,6 +196,28 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 Continue
               </Button>
             </FormControl>
+            <FormControl>
+              <Button
+                // @ts-ignore
+                // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "transparent",
+                  borderColor: themeContext?.colors.secondaryBackground,
+                }}
+              >
+                <Iconify
+                  icon="devicon:google"
+                  size={18}
+                  strokeWidth={18}
+                  color={themeContext?.colors.text}
+                />
+                <Description style={{ marginLeft: 15 }}>
+                  Continue with Google
+                </Description>
+              </Button>
+            </FormControl>
             <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNIN)}>
               <Description
                 style={{
