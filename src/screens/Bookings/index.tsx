@@ -1,23 +1,18 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
-
-import { useFocusEffect } from "@react-navigation/native";
-import Avatar from "react-native-ui-lib/avatar";
 import { Iconify } from "react-native-iconify";
-import { Searchbar, IconBtn, ServiceCard } from "~components";
-import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { Container } from "./styles";
 import BookingCard from "./components/BookingCard";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
   return Math.max(20, insets.bottom + 5);
 };
 
-const Bookings = ({ navigation }: BottomTabScreenProps<any>) => {
+const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);

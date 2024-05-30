@@ -28,7 +28,7 @@ export const BookingStatusTag = styled(Text).attrs({
   border-radius: 10px;
   background-color: rgba(50, 205, 50, 0.1);
   max-width: 72px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 `;
 
 export const BookingTitle = styled(Text).attrs({
@@ -36,5 +36,5 @@ export const BookingTitle = styled(Text).attrs({
   fontWeight: "bold",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
-  padding: 15px 0;
+  padding: 7px 0;
 `;

@@ -10,11 +10,10 @@ import {
   ReviewCard,
   ServiceInfoContainer,
   ServiceInfoHeaderLabel,
-  ServiceProviderCard,
   TagLabel,
   Title,
 } from "./styles";
-import { Button, IconBtn, ServiceCard } from "~components";
+import { Button, IconBtn, ServiceCard, ServiceProviderCard } from "~components";
 import { Iconify } from "react-native-iconify";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ServiceBanner from "./components/ServiceBanner";
@@ -260,32 +259,7 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
           <ServiceInfoHeaderLabel>
             About Service Provider
           </ServiceInfoHeaderLabel>
-          <ServiceProviderCard>
-            <Avatar
-              animate
-              useAutoColors
-              label="SO"
-              size={45}
-              backgroundColor="green"
-              labelColor="white"
-              source={{
-                uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
-              }}
-            />
-            <View style={{ marginLeft: 15 }}>
-              <ServiceInfoHeaderLabel style={{}}>
-                Sam Smith
-              </ServiceInfoHeaderLabel>
-              <Description
-                style={{
-                  fontSize: 12,
-                  color: themeContext?.colors.secondaryText,
-                }}
-              >
-                Service provider
-              </Description>
-            </View>
-          </ServiceProviderCard>
+          <ServiceProviderCard />
         </ServiceInfoContainer>
         {/* Galllery goes here... */}
         <ServiceInfoContainer>

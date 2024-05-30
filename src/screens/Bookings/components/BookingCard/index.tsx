@@ -7,6 +7,7 @@ import { Iconify } from "react-native-iconify";
 import { formatCurrency } from "~services";
 import { Button } from "~components";
 import { ThemeContext } from "styled-components/native";
+import { APP_PAGES } from "~src/shared/constants";
 
 interface IBookingCard {
   booking: any;
@@ -17,7 +18,9 @@ const BookingCard = (props: IBookingCard) => {
   const themeContext = useContext(ThemeContext);
 
   return (
-    <BookingCardContainer>
+    <BookingCardContainer
+      onPress={() => props.navigation.navigate(APP_PAGES.BOOKING_DETAILS)}
+    >
       <BookingStatusTag>COMPLETED</BookingStatusTag>
       <View
         style={{

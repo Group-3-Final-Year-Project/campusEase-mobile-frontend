@@ -24,6 +24,8 @@ export const APP_PAGES = {
   SERVICE: "Service",
   ANALYTICS: "Analytics",
   BOOKINGS: "Bookings",
+  BOOKING_SUMMARY: "Booking Summary",
+  BOOKING_DETAILS: "Booking Details",
 };
 
 export const API_URLS = {

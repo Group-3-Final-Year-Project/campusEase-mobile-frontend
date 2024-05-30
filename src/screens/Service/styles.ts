@@ -70,16 +70,6 @@ export const ServiceInfoHeaderLabel = styled(Text).attrs({})`
   padding-bottom: 10px;
 `;
 
-export const ServiceProviderCard = styled.TouchableOpacity`
-  border-color: ${(props: DefaultThemeProps) =>
-    props.theme.colors.secondaryBackground};
-  border-width: 0.8px;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: row;
-  padding: 15px;
-`;
-
 export const ReviewCard = styled.TouchableOpacity`
   border-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};

@@ -10,6 +10,8 @@ import Landing from "~src/screens/Landing";
 import Login from "~src/screens/Login";
 import Service from "~src/screens/Service";
 import Bookings from "~src/screens/Bookings";
+import BookingSummary from "~src/screens/BookingSummary";
+import BookingDetail from "~src/screens/BookingDetail";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -41,10 +43,6 @@ const RootNavigator = () => {
       <Stack.Group
         screenOptions={{
           headerShown: true,
-          headerStyle: {
-            backgroundColor: theme?.colors.background,
-          },
-          headerTintColor: theme?.colors.text,
           headerTitle: "",
         }}
       >
@@ -69,22 +67,29 @@ const RootNavigator = () => {
           component={UserTypeSelector}
         /> */}
       </Stack.Group>
-      <Stack.Screen
-        name={APP_PAGES.SERVICE}
-        component={Service}
-        options={{
-          headerShown: true,
-          headerTitle: "",
-          headerTransparent: true,
-        }}
-      />
-      <Stack.Screen
-        name={APP_PAGES.BOOKINGS}
-        component={Bookings}
-        options={{
+      <Stack.Group
+        screenOptions={{
           headerShown: true,
         }}
-      />
+      >
+        <Stack.Screen
+          name={APP_PAGES.SERVICE}
+          component={Service}
+          options={{
+            headerTitle: "",
+            headerTransparent: true,
+          }}
+        />
+        <Stack.Screen name={APP_PAGES.BOOKINGS} component={Bookings} />
+        <Stack.Screen
+          name={APP_PAGES.BOOKING_SUMMARY}
+          component={BookingSummary}
+        />
+        <Stack.Screen
+          name={APP_PAGES.BOOKING_DETAILS}
+          component={BookingDetail}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

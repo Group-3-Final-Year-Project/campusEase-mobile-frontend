@@ -9,3 +9,6 @@ export { default as IconBtn } from "./IconBtn";
 export { default as ServiceCard } from "./ServiceCard";
 export { default as SecondaryServiceCard } from "./SecondaryServiceCard";
 export { default as AdvancedDialog } from "./AdvancedDialog";
+export { default as StarRating } from "./StarRating";
+export { default as TertiaryServiceCard } from "./TertiaryServiceCard";
+export { default as ServiceProviderCard } from "./ServiceProviderCard";
