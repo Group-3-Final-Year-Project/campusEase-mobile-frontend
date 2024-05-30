@@ -5,7 +5,7 @@ import { Dimensions } from "react-native";
 
 const getBannerCardProps = (props: DefaultThemeProps) => ({
   imageStyle: {
-    opacity: 0.7,
+    // opacity: 0.7,
     backgroundColor: props.theme.colors.secondaryBackground,
     resizeMode: "cover",
     resizeMethod: "scale",

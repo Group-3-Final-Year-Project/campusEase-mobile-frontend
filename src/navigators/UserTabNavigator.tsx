@@ -39,8 +39,6 @@ const UserTabNavigator = () => {
   const theme = useContext(ThemeContext);
   useNavigationBar(false, theme?.colors.background);
 
-
-
   const ServiceProviderTabItems = [
     {
       name: APP_PAGES.ANALYTICS,
@@ -219,6 +217,7 @@ const UserTabNavigator = () => {
         headerShadowVisible: true,
         headerStyle: {
           elevation: 1,
+          backgroundColor: theme?.colors.background,
           shadowColor: theme?.colors.secondaryBackground,
           shadowOffset: {
             height: 6,

@@ -21,9 +21,9 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
   align-items: center;
 
   overflow: hidden;
-  height: 68px;
+  /* height: 68px; */
 
-  border: 3px ${(props: DefaultThemeProps) => props.theme.colors.primary};
+  border: 1px ${(props: DefaultThemeProps) => props.theme.colors.primary};
 
   ${(props: DefaultThemeProps) =>
     props.variant !== "outline" &&

@@ -27,8 +27,14 @@ export const APP_PAGES = {
 };
 
 export const API_URLS = {
-  SIGNIN: "/signin",
-  SIGNUP: "/signup",
+  SIGNIN: "/auth/signin",
+  SIGNUP: "/auth/signup",
+  GENERATE_EMAIL_OTP: "/auth/generate_email_otp",
+  VALIDATE_EMAIL_OTP: "/auth/validate_email_otp",
+  ACCOUNTS: "/accounts",
+  SERVICES: "/services",
+  BOOKINGS: "/bookings",
+  REVIEWS: "/reviews",
 };
 
 export const STORAGE_KEYS = {

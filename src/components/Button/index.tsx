@@ -2,7 +2,12 @@ import React from "react";
 import { Container, ButtonText, ContainerProps } from "./styles";
 import Loading from "~components/Loading";
 
-const Button: React.FC<ContainerProps> = (props) => {
+interface IButtonProps extends ContainerProps {
+  buttonTextWeight?: string;
+  buttonTextSize?: string;
+}
+
+const Button: React.FC<IButtonProps> = (props) => {
   const enabled = !props.loading && !props.disabled;
 
   return (
@@ -14,7 +19,11 @@ const Button: React.FC<ContainerProps> = (props) => {
     >
       {props.loading && <Loading />}
       {!props.loading && (
-        <ButtonText fontWeight="bold" fontSize="large" variant={props.variant}>
+        <ButtonText
+          fontWeight={props.buttonTextWeight || "bold"}
+          fontSize={props.buttonTextSize || "large"}
+          variant={props.variant}
+        >
           {props.children}
         </ButtonText>
       )}

@@ -1,4 +1,4 @@
-import { StyleSheet, View, Animated, FlatList } from "react-native";
+import { StyleSheet, View, Animated, FlatList, Image } from "react-native";
 import React, { useContext, useRef, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -7,6 +7,7 @@ import {
   Container,
   Description,
   HighlightedDescription,
+  ReviewCard,
   ServiceInfoContainer,
   ServiceInfoHeaderLabel,
   ServiceProviderCard,
@@ -19,6 +20,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ServiceBanner from "./components/ServiceBanner";
 import { formatCurrency } from "../../services/uiService";
 import Avatar from "react-native-ui-lib/avatar";
+import GridView from "react-native-ui-lib/gridView";
+import StackAggregator from "react-native-ui-lib/stackAggregator";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -121,6 +124,59 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
       action: "",
     },
   ];
+
+  const renderReviewCard = (review) => {
+    return (
+      <ReviewCard>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 10,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              animate
+              useAutoColors
+              label="SO"
+              size={45}
+              backgroundColor="green"
+              labelColor="white"
+              source={{
+                uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+              }}
+            />
+            <View style={{ marginLeft: 15 }}>
+              <ServiceInfoHeaderLabel style={{ paddingBottom: 5 }}>
+                Sam Smith
+              </ServiceInfoHeaderLabel>
+              <Description
+                style={{
+                  fontSize: 12,
+                  color: themeContext?.colors.secondaryText,
+                }}
+              >
+                Service provider
+              </Description>
+            </View>
+          </View>
+          <TagLabel>04 April 2024</TagLabel>
+        </View>
+        <Description style={{ lineHeight: 24 }}>
+          It is a long established fact that a read will be distracted by the
+          long readable content of a page when looking at its content or layout
+        </Description>
+      </ReviewCard>
+    );
+  };
 
   return (
     <Container>
@@ -234,10 +290,57 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
         {/* Galllery goes here... */}
         <ServiceInfoContainer>
           <ServiceInfoHeaderLabel>Gallery</ServiceInfoHeaderLabel>
+          <GridView
+            items={[
+              {
+                imageProps: {
+                  source: {
+                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                  },
+                },
+              },
+              {
+                imageProps: {
+                  source: {
+                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                  },
+                },
+              },
+              {
+                imageProps: {
+                  source: {
+                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                  },
+                },
+              },
+              {
+                imageProps: {
+                  source: {
+                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                  },
+                },
+              },
+            ]}
+            itemSpacing={2}
+            numColumns={2}
+          />
         </ServiceInfoContainer>
         {/* Reviews goes here... */}
+        <GridView />
         <ServiceInfoContainer>
           <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
+          <StackAggregator
+            bg-transparent
+            contentContainerStyle={{
+              backgroundColor: "transparent",
+            }}
+            buttonProps={{
+              "bg-transparent": true,
+              bottom: true,
+            }}
+          >
+            {[...new Array(8)].map((item) => renderReviewCard(item))}
+          </StackAggregator>
         </ServiceInfoContainer>
         {/* More for you goes here... */}
         <ServiceInfoContainer>

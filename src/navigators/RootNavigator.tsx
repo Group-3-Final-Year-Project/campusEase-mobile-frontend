@@ -9,6 +9,7 @@ import VerifyEmail from "~src/screens/VerifyEmail";
 import Landing from "~src/screens/Landing";
 import Login from "~src/screens/Login";
 import Service from "~src/screens/Service";
+import Bookings from "~src/screens/Bookings";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -18,7 +19,21 @@ const RootNavigator = () => {
       initialRouteName={APP_PAGES.USER_TAB}
       screenOptions={{
         headerShown: false,
-        headerShadowVisible: false,
+        headerShadowVisible: true,
+        headerStyle: {
+          elevation: 1,
+          backgroundColor: theme?.colors.background,
+          shadowColor: theme?.colors.secondaryBackground,
+          shadowOffset: {
+            height: 6,
+            width: 0,
+          },
+          shadowRadius: 40,
+        },
+        headerTitleStyle: {
+          fontFamily: `${theme?.typography.fontFamily.extraBold}`,
+        },
+        headerTintColor: theme?.colors.text,
       }}
     >
       <Stack.Screen name={APP_PAGES.LANDING} component={Landing} />
@@ -61,6 +76,13 @@ const RootNavigator = () => {
           headerShown: true,
           headerTitle: "",
           headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name={APP_PAGES.BOOKINGS}
+        component={Bookings}
+        options={{
+          headerShown: true,
         }}
       />
     </Stack.Navigator>

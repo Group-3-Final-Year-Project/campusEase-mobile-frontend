@@ -19,6 +19,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "@reduxjs/toolkit": "^2.2.5",
+    "@shopify/flash-list": "1.6.4",
     "@types/color": "^3.0.6",
     "@types/lodash": "^4.17.3",
     "@types/react-native-global-props": "^1.1.6",

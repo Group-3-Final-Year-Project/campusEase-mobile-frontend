@@ -66,7 +66,7 @@ export const Title = styled(Text).attrs({
 
 export const ServiceInfoHeaderLabel = styled(Text).attrs({})`
   font-family: ${(props: DefaultThemeProps) =>
-    props.theme.typography.fontFamily.extraBold};
+    props.theme.typography.fontFamily.bold};
   padding-bottom: 10px;
 `;
 
@@ -77,5 +77,14 @@ export const ServiceProviderCard = styled.TouchableOpacity`
   border-radius: 15px;
   display: flex;
   flex-direction: row;
+  padding: 15px;
+`;
+
+export const ReviewCard = styled.TouchableOpacity`
+  border-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
+  border-width: 0.8px;
+  border-radius: 15px;
+  display: flex;
   padding: 15px;
 `;

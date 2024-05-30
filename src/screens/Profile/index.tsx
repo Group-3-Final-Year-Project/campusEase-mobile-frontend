@@ -17,6 +17,7 @@ import { Iconify } from "react-native-iconify";
 import Switch from "react-native-ui-lib/switch";
 import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { APP_PAGES } from "~src/shared/constants";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -85,7 +86,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: "",
+      toPage: APP_PAGES.BOOKINGS,
       showRightIcon: true,
     },
     {
@@ -194,7 +195,9 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
     rightIcon: Element | undefined;
   }> = ({ item }) => {
     return (
-      <ProfileItemCard>
+      <ProfileItemCard
+        onPress={() => item.toPage && navigation.navigate(item.toPage)}
+      >
         <View style={{ flexDirection: "row" }}>
           <>{item.icon}</>
           <ProfileItemLabel
@@ -231,6 +234,14 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           // @ts-ignore
           data={profileItems}
           renderItem={renderProfileItem}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 0.8,
+                backgroundColor: themeContext?.colors.secondaryBackground,
+              }}
+            />
+          )}
         />
       </VirtualisedContainer>
     </Container>
