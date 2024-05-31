@@ -60,11 +60,13 @@ export const signUserUp = async (signUpData: {
   phoneNumber: string;
   acceptedTerms?: boolean;
 }) => {
+  const userType = await getUserType();
   const data = {
     username: signUpData.name,
-    email: signUpData.email,
+    email: signUpData.email.toLowerCase(),
     password: signUpData.password,
-    phone_number: formatPhoneNumber(signUpData.phoneNumber),
+    phoneNumber: formatPhoneNumber(signUpData.phoneNumber),
+    userType,
   };
   try {
     const response = await apiPost(API_URLS.SIGNUP, data, true, false);

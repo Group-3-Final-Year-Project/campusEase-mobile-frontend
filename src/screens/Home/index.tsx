@@ -4,7 +4,7 @@ import { Container, Description, ListLabel, Title } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
 
-import { useFocusEffect } from "@react-navigation/native";
+import { NavigationProp, useFocusEffect } from "@react-navigation/native";
 import Avatar from "react-native-ui-lib/avatar";
 import { Iconify } from "react-native-iconify";
 import {
@@ -119,7 +119,10 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
             <FlatList
               data={[...new Array(5)]}
               renderItem={({ item, index }) => (
-                <ServiceCard service={item} navigation={navigation} />
+                <ServiceCard
+                  service={item}
+                  navigation={navigation as NavigationProp<any>}
+                />
               )}
               horizontal
               ItemSeparatorComponent={() => (

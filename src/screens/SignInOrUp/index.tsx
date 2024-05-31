@@ -6,11 +6,18 @@ import {
   ContentCard,
   ErrorLabel,
   HighlightedDescription,
+  CountryCodeText,
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Input, AdvancedDialog } from "~components";
 import HeroText from "./components/HeroText";
-import { KeyboardAvoidingView, Platform, Pressable, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  View,
+} from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
@@ -24,6 +31,7 @@ import { signUserUp } from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import { updateUserData } from "~store/actions/userActions";
 import { User } from "~src/@types/types";
+import { ScrollView } from "react-native";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -39,7 +47,8 @@ export const signupSchema = yup.object().shape({
     .required("Password required!"),
   phoneNumber: yup
     .string()
-    .min(10, "Phone number not valid!")
+    .min(9, "Phone number not valid!")
+    .max(10, "Phone number not valid!")
     .required("Phone number required!"),
   acceptedTerms: yup
     .boolean()
@@ -68,11 +77,13 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
     initialValues: signupInitialValues,
     validationSchema: signupSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log("Res: ", values);
       await signUserUp(values)
         .then((res) => {
-          dispatch(updateUserData(res as User));
-          resetForm();
-          navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+          // dispatch(updateUserData(res as User));
+          console.log("Res after submit: ", res);
+          // resetForm();
+          // navigation.navigate(APP_PAGES.VERIFY_EMAIL);
         })
         .catch((err) => {
           // will show a toast or modal here for failed auth
@@ -89,147 +100,167 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flexGrow: 1 }}
       >
-        <StatusBar style={themeContext?.dark ? "light" : "dark"} />
-        <ContentCard
-          style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
-        >
-          <HeroText isSignup={true} />
-
-          <Description
-            style={{ marginTop: 20, color: themeContext?.colors.secondaryText }}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <StatusBar style={themeContext?.dark ? "light" : "dark"} />
+          <ContentCard
+            style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
           >
-            Hey there! Sign up with your email to continue.
-          </Description>
-          <View style={{ marginTop: 40, width: "100%" }}>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("name")}
-                onBlur={formik.handleBlur("name")}
-                value={formik.values?.name}
-                textContentType="name"
-                placeholder="Username"
-                icon={
-                  <Iconify
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:user-rounded-outline"
-                  />
-                }
-              />
-              {formik.touched?.name && formik.errors?.name ? (
-                <ErrorLabel>{formik.errors?.name}</ErrorLabel>
-              ) : null}
-            </FormControl>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("email")}
-                onBlur={formik.handleBlur("email")}
-                value={formik.values?.email}
-                textContentType="emailAddress"
-                placeholder="Email"
-                icon={
-                  <Iconify
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:letter-outline"
-                  />
-                }
-              />
-              {formik.touched?.email && formik.errors?.email ? (
-                <ErrorLabel>{formik.errors?.email}</ErrorLabel>
-              ) : null}
-            </FormControl>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("password")}
-                onBlur={formik.handleBlur("password")}
-                value={formik.values?.password}
-                textContentType={"newPassword"}
-                secureTextEntry={!showPassword}
-                placeholder="Password"
-                icon={
-                  <Iconify
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:shield-keyhole-outline"
-                  />
-                }
-                rightIcon={
-                  <Pressable onPress={() => setShowPassword(!showPassword)}>
-                    {showPassword ? (
-                      <Iconify
-                        color={themeContext?.colors.secondaryText2}
-                        icon="solar:eye-closed-outline"
-                      />
-                    ) : (
-                      <Iconify
-                        color={themeContext?.colors.secondaryText2}
-                        icon="solar:eye-outline"
-                      />
-                    )}
-                  </Pressable>
-                }
-              />
-              {formik.touched?.password && formik.errors?.password ? (
-                <ErrorLabel>{formik.errors?.password}</ErrorLabel>
-              ) : null}
-            </FormControl>
-            <FormControl>
-              <Checkbox
-                value={formik.values?.acceptedTerms}
-                label="I have read and agree to the terms and conditions"
-                labelStyle={{
-                  color: themeContext?.colors.secondaryText,
-                }}
-                color={themeContext?.colors.secondaryBackground}
-                iconColor={themeContext?.colors.primary}
-                onValueChange={(value: boolean) =>
-                  formik.setFieldValue("acceptedTerms", value)
-                }
-                onBlur={formik.handleBlur("acceptedTerms")}
-              />
-            </FormControl>
-            <FormControl>
-              <Button
-                loading={formik.isSubmitting}
-                // @ts-ignore
-                onPress={formik.handleSubmit}
-                // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
-              >
-                Continue
-              </Button>
-            </FormControl>
-            <FormControl>
-              <Button
-                // @ts-ignore
-                // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "transparent",
-                  borderColor: themeContext?.colors.secondaryBackground,
-                }}
-              >
-                <Iconify
-                  icon="devicon:google"
-                  size={18}
-                  strokeWidth={18}
-                  color={themeContext?.colors.text}
+            <HeroText isSignup={true} />
+
+            <Description
+              style={{
+                marginTop: 20,
+                color: themeContext?.colors.secondaryText,
+              }}
+            >
+              Hey there! Sign up with your email to continue.
+            </Description>
+            <View style={{ marginTop: 40, width: "100%" }}>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("name")}
+                  onBlur={formik.handleBlur("name")}
+                  value={formik.values?.name}
+                  textContentType="name"
+                  placeholder="Username"
+                  icon={
+                    <Iconify
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:user-rounded-outline"
+                    />
+                  }
                 />
-                <Description style={{ marginLeft: 15 }}>
-                  Continue with Google
+                {formik.touched?.name && formik.errors?.name ? (
+                  <ErrorLabel>{formik.errors?.name}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("email")}
+                  onBlur={formik.handleBlur("email")}
+                  value={formik.values?.email}
+                  textContentType="emailAddress"
+                  placeholder="Email"
+                  icon={
+                    <Iconify
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:letter-outline"
+                    />
+                  }
+                />
+                {formik.touched?.email && formik.errors?.email ? (
+                  <ErrorLabel>{formik.errors?.email}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("phoneNumber")}
+                  onBlur={formik.handleBlur("phoneNumber")}
+                  value={formik.values?.phoneNumber}
+                  textContentType="telephoneNumber"
+                  keyboardType="phone-pad"
+                  placeholder="Phone number"
+                  icon={<CountryCodeText>🇬🇭 +233</CountryCodeText>}
+                />
+                {/* <PhoneInput /> */}
+                {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
+                  <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("password")}
+                  onBlur={formik.handleBlur("password")}
+                  value={formik.values?.password}
+                  textContentType={"newPassword"}
+                  secureTextEntry={!showPassword}
+                  placeholder="Password"
+                  icon={
+                    <Iconify
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:shield-keyhole-outline"
+                    />
+                  }
+                  rightIcon={
+                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <Iconify
+                          color={themeContext?.colors.secondaryText2}
+                          icon="solar:eye-closed-outline"
+                        />
+                      ) : (
+                        <Iconify
+                          color={themeContext?.colors.secondaryText2}
+                          icon="solar:eye-outline"
+                        />
+                      )}
+                    </Pressable>
+                  }
+                />
+                {formik.touched?.password && formik.errors?.password ? (
+                  <ErrorLabel>{formik.errors?.password}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Checkbox
+                  value={formik.values?.acceptedTerms}
+                  label="I have read and agree to the terms and conditions"
+                  labelStyle={{
+                    color: themeContext?.colors.secondaryText,
+                  }}
+                  color={themeContext?.colors.secondaryBackground}
+                  iconColor={themeContext?.colors.primary}
+                  onValueChange={(value: boolean) =>
+                    formik.setFieldValue("acceptedTerms", value)
+                  }
+                  onBlur={formik.handleBlur("acceptedTerms")}
+                />
+              </FormControl>
+              <FormControl>
+                <Button
+                  loading={formik.isSubmitting}
+                  // @ts-ignore
+                  onPress={formik.handleSubmit}
+                  // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
+                >
+                  Continue
+                </Button>
+              </FormControl>
+              <FormControl>
+                <Button
+                  // @ts-ignore
+                  // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "transparent",
+                    borderColor: themeContext?.colors.secondaryBackground,
+                  }}
+                >
+                  <Iconify
+                    icon="devicon:google"
+                    size={18}
+                    strokeWidth={18}
+                    color={themeContext?.colors.text}
+                  />
+                  <Description style={{ marginLeft: 15 }}>
+                    Continue with Google
+                  </Description>
+                </Button>
+              </FormControl>
+              <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNIN)}>
+                <Description
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  Already have an account?{" "}
+                  <HighlightedDescription>Log in</HighlightedDescription>
                 </Description>
-              </Button>
-            </FormControl>
-            <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNIN)}>
-              <Description
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                Already have an account?{" "}
-                <HighlightedDescription>Log in</HighlightedDescription>
-              </Description>
-            </Pressable>
-          </View>
-        </ContentCard>
+              </Pressable>
+            </View>
+          </ContentCard>
+        </ScrollView>
       </KeyboardAvoidingView>
       <AdvancedDialog
         centerH

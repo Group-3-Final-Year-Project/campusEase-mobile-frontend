@@ -7,21 +7,23 @@ export const axiosInstance = axios.create({
 export const apiPost = async (
   url: string,
   data?: any,
-  returnDataExpected: boolean = false,
+  returnDataExpected: boolean = true,
   throwOnError: boolean = false
 ) => {
   try {
     const response = await axiosInstance.post(url, data);
-    if (returnDataExpected)
+    if (returnDataExpected) {
+      console.log("From server: ", response);
       return {
         data: response.data.data,
         metadata: response.data.metadata || {},
         headers: response.headers || {},
       };
+    }
     return { success: true };
   } catch (error) {
     if (throwOnError) throw error;
-    // return error
+    return error;
     // will do a processError function to properly display error
     // return processErrorResponse(error)
   }

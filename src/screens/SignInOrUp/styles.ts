@@ -64,3 +64,11 @@ export const HighlightedDescription = styled(Description)`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
 `;
+
+export const CountryCodeText = styled.Text`
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.bold};
+  font-size: ${(props: DefaultThemeProps) =>
+    props.theme.typography.sizes.regular.size}px;
+  color: ${(props: DefaultThemeProps) => props.theme.colors.text};
+`;

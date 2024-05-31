@@ -56,7 +56,9 @@ export function extractImageDataFromB64string(base64String: string): string {
 
 export const formatPhoneNumber = (phoneNumber: string) => {
   // will do proper formatting here...
-  return phoneNumber;
+  let num = "+233";
+  num += phoneNumber.startsWith("0") ? phoneNumber.slice(1) : phoneNumber;
+  return num;
 };
 
 export const formatCurrency = (value: number) => {
