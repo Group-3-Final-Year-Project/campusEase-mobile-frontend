@@ -1,8 +1,38 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { User, UserType } from "~src/@types/types";
+import {
+  ErrorObject,
+  StringError,
+  User,
+  UserType,
+  VerifiedUser,
+} from "~src/@types/types";
 import { API_URLS, STORAGE_KEYS } from "~src/shared/constants";
 import { apiPost } from "./apiService";
 import { formatPhoneNumber } from "./uiService";
+import axios from "axios";
+import { processErrorResponse } from "./errorService";
+
+let LOGGED_IN_USER: VerifiedUser | null | undefined;
+
+export const saveCurrentlyLoggedInUser = (userData: VerifiedUser) => {
+  LOGGED_IN_USER = userData;
+};
+
+export const getCurrentlyLoggedInUser = () => {
+  return LOGGED_IN_USER;
+};
+
+export const getSecureAxiosInstance = () => {
+  if (!LOGGED_IN_USER) {
+    throw new Error(
+      `Attempting to securely connect to api when there is no token!`
+    );
+  }
+  return axios.create({
+    baseURL: process.env.EXPO_PUBLIC_API_URL,
+    headers: { Authorization: `Bearer ${LOGGED_IN_USER.token}` },
+  });
+};
 
 export async function setAsLoggedIn() {
   AsyncStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, "1");
@@ -42,14 +72,14 @@ export const getUserType = async () => {
 
 export const changePassword = async () => {};
 
-export const readLoginDataFromAsyncStorage: () => Promise<User | null> =
+export const readLoginDataFromAsyncStorage: () => Promise<VerifiedUser | null> =
   async () => {
     const loginData = await AsyncStorage.getItem(STORAGE_KEYS.ACTIVE_USER);
     console.log("login: ", loginData);
     return loginData && JSON.parse(loginData);
   };
 
-export const setLoginDataToAsyncStorage = async (loginData: object) => {
+export const setLoginDataToAsyncStorage = async (loginData: VerifiedUser) => {
   AsyncStorage.setItem(STORAGE_KEYS.ACTIVE_USER, JSON.stringify(loginData));
 };
 
@@ -59,7 +89,7 @@ export const signUserUp = async (signUpData: {
   password: string;
   phoneNumber: string;
   acceptedTerms?: boolean;
-}) => {
+}): Promise<VerifiedUser> => {
   const userType = await getUserType();
   const data = {
     username: signUpData.name,
@@ -68,29 +98,36 @@ export const signUserUp = async (signUpData: {
     phoneNumber: formatPhoneNumber(signUpData.phoneNumber),
     userType,
   };
+
   try {
-    const response = await apiPost(API_URLS.SIGNUP, data, true, false);
-    if (response?.data) {
-      await setLoginDataToAsyncStorage(response.data || null);
-      return response.data;
-    }
+    const url = `${process.env.EXPO_PUBLIC_API_URL}${API_URLS.SIGNUP}`;
+    const response = await axios.post(url, data);
+    saveCurrentlyLoggedInUser(response.data.data as VerifiedUser);
+    await setLoginDataToAsyncStorage(response.data.data as VerifiedUser);
+    await setIsAlreadyUser();
+    return response.data.data as VerifiedUser;
   } catch (error) {
-    return error;
-    // return processErrorResponse(err as any, "Error logging in user");
+    return processErrorResponse(error as any, "Error signing up user");
   }
 };
+
 export const signUserIn = async (signInData: {
+  username: string;
   email: string;
   password: string;
-}) => {
+}): Promise<VerifiedUser> => {
   try {
-    const response = await apiPost(API_URLS.SIGNIN, signInData, true, false);
-    if (response?.data) {
-      await setLoginDataToAsyncStorage(response.data || null);
-      return response.data;
-    }
+    const url = `${process.env.EXPO_PUBLIC_API_URL}${API_URLS.SIGNIN}`;
+    const response = await axios.post(url, signInData);
+    const userData: User = {
+      token: response.data.data.token,
+      ...response.data.data.authorized_account,
+    };
+    saveCurrentlyLoggedInUser(response.data.data as VerifiedUser);
+    await setLoginDataToAsyncStorage(response.data.data as VerifiedUser);
+    await setIsAlreadyUser();
+    return response.data.data as VerifiedUser;
   } catch (error) {
-    return error;
-    // return processErrorResponse(err as any, "Error logging in user");
+    return processErrorResponse(error as any, "Error logging in user");
   }
 };

@@ -77,20 +77,18 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
     initialValues: signupInitialValues,
     validationSchema: signupSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      console.log("Res: ", values);
-      await signUserUp(values)
-        .then((res) => {
-          // dispatch(updateUserData(res as User));
-          console.log("Res after submit: ", res);
-          // resetForm();
-          // navigation.navigate(APP_PAGES.VERIFY_EMAIL);
-        })
-        .catch((err) => {
-          // will show a toast or modal here for failed auth
-          setDialogVisible(true);
-          throw Error(err);
-        })
-        .finally(() => setSubmitting(false));
+      try {
+        const res = await signUserUp(values);
+        console.log("Res after submit: ", res);
+        dispatch(updateUserData(res));
+        resetForm();
+        navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+      } catch (error) {
+        setDialogVisible(true);
+        throw Error(error as any);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 

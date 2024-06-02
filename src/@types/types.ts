@@ -15,18 +15,29 @@ export type NullableNumber = number | null;
 export type NullableArray<T> = T[] | null;
 export type NonEmptyArray<T> = [T, ...T[]];
 
+export type ErrorObject = {
+  error: Error;
+  status?: number;
+};
+
+export type StringError = {
+  error: string;
+  status?: number;
+};
+
 export enum TransformCase {
   CamelCase = "camel_case",
   SnakeCase = "snake_case",
 }
 
 export enum UserType {
-  USER = "User",
-  SERVICE_PROVIDER = "Service Provider",
+  USER = "user",
+  SERVICE_PROVIDER = "service_provider",
 }
 
 export type User = {
   id: number;
+  token: NullableString;
   userType: UserType.SERVICE_PROVIDER | UserType.USER;
   username: string;
   email: string;
@@ -36,8 +47,13 @@ export type User = {
   isVerified: boolean;
   isActive: boolean;
   isLoggedIn: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type VerifiedUser = {
+  token: string;
+  authorized_account: User;
 };
 
 export type Service = {};
@@ -45,8 +61,20 @@ export type Service = {};
 export type Booking = {};
 
 export type ReduxState = {
-  user: User;
-  services: Service[];
-  bookings: Booking[];
-  filters: {};
+  user: VerifiedUser;
+  // services: Service[];
+  // bookings: Booking[];
+  // filters: {};
+};
+
+export type ApiRequestResult<TData = any, SData = any> = {
+  error?: boolean | string | null;
+  success?: boolean;
+  data?: TData;
+  metadata?: SData;
+  status?: number | null;
+  message?: string;
+  errorData?: any;
+  count?: number;
+  headers?: any;
 };

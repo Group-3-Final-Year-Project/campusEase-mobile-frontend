@@ -1,31 +1,28 @@
-import axios, { AxiosPromise, AxiosResponse } from "axios";
+import { ApiRequestResult } from "~src/@types/types";
+import { getSecureAxiosInstance } from "./authService";
+import { processErrorResponse } from "./errorService";
 
-export const axiosInstance = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
-});
-
-export const apiPost = async (
+export const apiPost = async <T, S>(
   url: string,
   data?: any,
+  action?: string,
   returnDataExpected: boolean = true,
   throwOnError: boolean = false
-) => {
+): Promise<ApiRequestResult<T, S>> => {
   try {
-    const response = await axiosInstance.post(url, data);
+    const axiosSecureInstance = getSecureAxiosInstance();
+    const response = await axiosSecureInstance.post(url, data);
     if (returnDataExpected) {
-      console.log("From server: ", response);
       return {
         data: response.data.data,
-        metadata: response.data.metadata || {},
+        metadata: (response.data.metadata || {}) as S,
         headers: response.headers || {},
       };
     }
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     if (throwOnError) throw error;
-    return error;
-    // will do a processError function to properly display error
-    // return processErrorResponse(error)
+    return processErrorResponse(error, action);
   }
 };
 
