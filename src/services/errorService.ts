@@ -3,5 +3,5 @@ export function processErrorResponse(
   errorDescription?: string
 ): any {
   //do proper logic here...
-  return error;
+  throw Error(error as any);
 }

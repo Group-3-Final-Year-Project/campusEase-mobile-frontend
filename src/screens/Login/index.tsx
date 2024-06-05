@@ -30,6 +30,7 @@ export const useCustomBottomInset = () => {
 };
 
 export const signinSchema = yup.object().shape({
+  username: yup.string().required("Username required!"),
   email: yup.string().email("Email not valid!").required("Email required!"),
   password: yup.string().required("Password required!"),
 });
@@ -43,6 +44,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
   const signinInitialValues = {
+    username: "",
     email: "",
     password: "",
   };
@@ -51,19 +53,18 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
     initialValues: signinInitialValues,
     validationSchema: signinSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      await signUserIn(values)
-        .then((res) => {
-          dispatch(updateUserData(res as User));
-          resetForm();
-
-          navigation.navigate(APP_PAGES.HOME);
-        })
-        .catch((err) => {
-          // will show a toast or modal here for failed auth
-          setDialogVisible(true);
-          throw Error(err);
-        })
-        .finally(() => setSubmitting(false));
+      try {
+        const res = await signUserIn(values);
+        console.log("Res after submit: ", res);
+        dispatch(updateUserData(res));
+        resetForm();
+        navigation.navigate(APP_PAGES.HOME);
+      } catch (error) {
+        setDialogVisible(true);
+        throw Error(error as any);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
@@ -85,6 +86,24 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
             Hey there! Welcome back. You've been missed.
           </Description>
           <View style={{ marginTop: 40, width: "100%" }}>
+            <FormControl>
+              <Input
+                onChangeText={formik.handleChange("username")}
+                onBlur={formik.handleBlur("username")}
+                value={formik.values?.username}
+                textContentType="username"
+                placeholder="Username"
+                icon={
+                  <Iconify
+                    color={themeContext?.colors.secondaryText2}
+                    icon="solar:user-rounded-outline"
+                  />
+                }
+              />
+              {formik.touched?.username && formik.errors?.username ? (
+                <ErrorLabel>{formik.errors?.username}</ErrorLabel>
+              ) : null}
+            </FormControl>
             <FormControl>
               <Input
                 onChangeText={formik.handleChange("email")}
@@ -151,10 +170,20 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
               <Description
                 style={{
                   textAlign: "center",
+                  marginTop: 20,
+                  fontSize: 12,
                 }}
               >
                 Don't have an account?{" "}
-                <HighlightedDescription>Sign up</HighlightedDescription>
+                <HighlightedDescription
+                  style={{
+                    textAlign: "center",
+                    marginTop: 20,
+                    fontSize: 12,
+                  }}
+                >
+                  Sign up
+                </HighlightedDescription>
               </Description>
             </Pressable>
           </View>

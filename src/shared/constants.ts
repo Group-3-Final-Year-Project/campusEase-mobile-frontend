@@ -29,6 +29,7 @@ export const APP_PAGES = {
 };
 
 export const API_URLS = {
+  BASE_URL: "http://127.0.0.1:8000/api",
   SIGNIN: "/auth/signin",
   SIGNUP: "/auth/signup",
   GENERATE_EMAIL_OTP: "/auth/generate_email_otp",

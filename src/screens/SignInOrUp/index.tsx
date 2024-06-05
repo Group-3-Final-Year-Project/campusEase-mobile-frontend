@@ -78,13 +78,15 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
     validationSchema: signupSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
+        console.log("Res:", values);
         const res = await signUserUp(values);
         console.log("Res after submit: ", res);
-        dispatch(updateUserData(res));
-        resetForm();
-        navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+        // dispatch(updateUserData(res));
+        // resetForm();
+        // navigation.navigate(APP_PAGES.VERIFY_EMAIL);
       } catch (error) {
-        setDialogVisible(true);
+        // setDialogVisible(true);
+        console.log("ERRORRR!!");
         throw Error(error as any);
       } finally {
         setSubmitting(false);
@@ -205,6 +207,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   label="I have read and agree to the terms and conditions"
                   labelStyle={{
                     color: themeContext?.colors.secondaryText,
+                    fontFamily: themeContext?.typography.fontFamily.regular,
                   }}
                   color={themeContext?.colors.secondaryBackground}
                   iconColor={themeContext?.colors.primary}
@@ -219,7 +222,6 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   loading={formik.isSubmitting}
                   // @ts-ignore
                   onPress={formik.handleSubmit}
-                  // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
                 >
                   Continue
                 </Button>
@@ -227,7 +229,6 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
               <FormControl>
                 <Button
                   // @ts-ignore
-                  // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
@@ -240,6 +241,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                     size={18}
                     strokeWidth={18}
                     color={themeContext?.colors.text}
+                    style={{ marginRight: 10 }}
                   />
                   <Description style={{ marginLeft: 15 }}>
                     Continue with Google
@@ -250,10 +252,19 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 <Description
                   style={{
                     textAlign: "center",
+                    marginTop: 20,
+                    fontSize: 12,
                   }}
                 >
                   Already have an account?{" "}
-                  <HighlightedDescription>Log in</HighlightedDescription>
+                  <HighlightedDescription
+                    style={{
+                      textAlign: "center",
+                      fontSize: 12,
+                    }}
+                  >
+                    Log in
+                  </HighlightedDescription>
                 </Description>
               </Pressable>
             </View>
@@ -265,7 +276,9 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
         centerV
         ignoreBackgroundPress={false}
         visible={dialogVisible}
-      ></AdvancedDialog>
+      >
+        <Description>Hello world</Description>
+      </AdvancedDialog>
     </Container>
   );
 };

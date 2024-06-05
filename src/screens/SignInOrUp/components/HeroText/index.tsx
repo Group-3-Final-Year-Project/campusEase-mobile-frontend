@@ -28,16 +28,16 @@ export const RectangleHighLight = ({ children }) => (
 const HeroText: React.FC<HeroProps> = ({ isSignup, ...props }: HeroProps) => {
   return (
     <Container>
-      <Title>{isSignup ? "Create" : "Sign"} </Title>
+      <Title>{isSignup ? "Create" : ""} </Title>
       <RectangleHighLight>
         <Title style={{ color: "white" }}>
-          {isSignup ? "account" : "in to"}
+          {isSignup ? "account" : "Sign in"}
         </Title>
       </RectangleHighLight>
-      <Title>{isSignup ? "to enjoy" : " your"} </Title>
+      <Title>{isSignup ? "to enjoy" : " to access"} </Title>
       <RectangleHighLight>
         <Title style={{ color: "white" }}>
-          {isSignup ? "our services" : "account"}
+          {isSignup ? "our services" : "your account"}
         </Title>
       </RectangleHighLight>
     </Container>

@@ -29,7 +29,7 @@ export const getSecureAxiosInstance = () => {
     );
   }
   return axios.create({
-    baseURL: process.env.EXPO_PUBLIC_API_URL,
+    baseURL: API_URLS.BASE_URL,
     headers: { Authorization: `Bearer ${LOGGED_IN_USER.token}` },
   });
 };
@@ -67,7 +67,7 @@ export const setUserType = async (user_type: UserType) => {
 
 export const getUserType = async () => {
   const userType = await AsyncStorage.getItem(STORAGE_KEYS.USER_TYPE);
-  return userType && JSON.parse(userType);
+  return userType;
 };
 
 export const changePassword = async () => {};
@@ -98,9 +98,9 @@ export const signUserUp = async (signUpData: {
     phoneNumber: formatPhoneNumber(signUpData.phoneNumber),
     userType,
   };
-
   try {
-    const url = `${process.env.EXPO_PUBLIC_API_URL}${API_URLS.SIGNUP}`;
+    const url = `${API_URLS.BASE_URL}${API_URLS.SIGNUP}`;
+    console.log("url: ", url);
     const response = await axios.post(url, data);
     saveCurrentlyLoggedInUser(response.data.data as VerifiedUser);
     await setLoginDataToAsyncStorage(response.data.data as VerifiedUser);
@@ -117,7 +117,7 @@ export const signUserIn = async (signInData: {
   password: string;
 }): Promise<VerifiedUser> => {
   try {
-    const url = `${process.env.EXPO_PUBLIC_API_URL}${API_URLS.SIGNIN}`;
+    const url = `${API_URLS.BASE_URL}${API_URLS.SIGNIN}`;
     const response = await axios.post(url, signInData);
     const userData: User = {
       token: response.data.data.token,
