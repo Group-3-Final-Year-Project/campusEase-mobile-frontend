@@ -42,6 +42,7 @@ export const IconContainer = styled.View<IInput>`
     props.padding ? props.padding : 15}px;
   align-items: center;
   justify-content: center;
+  vertical-align: top;
 `;
 
 export const RightIconContainer = styled.View<IInput>`
@@ -49,6 +50,7 @@ export const RightIconContainer = styled.View<IInput>`
     props.padding ? props.padding : 15}px;
   align-items: center;
   justify-content: center;
+  /* vertical-align: top; */
 `;
 
 export const IconText = styled.Text`

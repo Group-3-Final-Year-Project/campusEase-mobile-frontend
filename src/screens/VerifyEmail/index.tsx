@@ -16,6 +16,8 @@ import { StatusBar } from "expo-status-bar";
 import { Iconify } from "react-native-iconify";
 import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NumberInput, NumberInputData } from "react-native-ui-lib";
+import { OtpInput } from "react-native-otp-entry";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -48,16 +50,26 @@ const VerifyEmail = ({ navigation, route }: NativeStackScreenProps<any>) => {
           </Description>
           <View style={{ marginTop: 40, width: "100%" }}>
             <FormControl>
-              <InputLabel>Verification code</InputLabel>
-              <Input
-                textContentType="oneTimeCode"
-                placeholder="134242"
-                icon={
-                  <Iconify
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:shield-keyhole-outline"
-                  />
-                }
+              <OtpInput
+                numberOfDigits={6}
+                focusColor={themeContext?.colors.primary}
+                focusStickBlinkingDuration={500}
+                onTextChange={(text) => console.log(text)}
+                onFilled={(text) => console.log(`OTP is ${text}`)}
+                textInputProps={{
+                  accessibilityLabel: "One-Time Password",
+                }}
+                theme={{
+                  // containerStyle: styles.container,
+                  pinCodeContainerStyle: {
+                    borderColor: themeContext?.colors.text,
+                  },
+                  pinCodeTextStyle: {
+                    color: themeContext?.colors.text,
+                  },
+                  // focusStickStyle: styles.focusStick,
+                  // focusedPinCodeContainerStyle: styles.activePinCodeContainer,
+                }}
               />
             </FormControl>
 

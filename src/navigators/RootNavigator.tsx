@@ -12,13 +12,15 @@ import Service from "~src/screens/Service";
 import Bookings from "~src/screens/Bookings";
 import BookingSummary from "~src/screens/BookingSummary";
 import BookingDetail from "~src/screens/BookingDetail";
+import RegisterService from "~src/screens/RegisterService";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
   return (
+    //will set it to landing
     <Stack.Navigator
-      initialRouteName={APP_PAGES.ONBOARD}
+      initialRouteName={APP_PAGES.REGISTER_SERVICE}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: true,
@@ -56,6 +58,10 @@ const RootNavigator = () => {
         <Stack.Screen name={APP_PAGES.SIGNUP} component={SignInOrUp} />
         <Stack.Screen name={APP_PAGES.SIGNIN} component={Login} />
         <Stack.Screen name={APP_PAGES.VERIFY_EMAIL} component={VerifyEmail} />
+        <Stack.Screen
+          name={APP_PAGES.REGISTER_SERVICE}
+          component={RegisterService}
+        />
         {/* <Stack.Screen name={APP_PAGES.VERIFY_PHONE} component={Welcome} />
         <Stack.Screen name={APP_PAGES.SET_LOCATION} component={Welcome} />
         <Stack.Screen

@@ -8,7 +8,8 @@ import {
 } from "./styles";
 
 interface HeroProps {
-  isSignup: boolean;
+  isSignup?: boolean;
+  isServiceRegistration?: boolean;
 }
 
 export const Underline = ({ children }) => (
@@ -25,19 +26,33 @@ export const RectangleHighLight = ({ children }) => (
   </UnderlineContainer>
 );
 
-const HeroText: React.FC<HeroProps> = ({ isSignup, ...props }: HeroProps) => {
+const HeroText: React.FC<HeroProps> = ({
+  isSignup,
+  isServiceRegistration,
+  ...props
+}: HeroProps) => {
   return (
     <Container>
-      <Title>{isSignup ? "Create" : ""} </Title>
+      <Title>{isServiceRegistration ? "" : isSignup ? "Create" : ""} </Title>
       <RectangleHighLight>
         <Title style={{ color: "white" }}>
-          {isSignup ? "account" : "Sign in"}
+          {isServiceRegistration ? "Let's" : isSignup ? "account" : "Sign in"}
         </Title>
       </RectangleHighLight>
-      <Title>{isSignup ? "to enjoy" : " to access"} </Title>
+      <Title>
+        {isServiceRegistration
+          ? " set up"
+          : isSignup
+          ? "to enjoy"
+          : " to access"}{" "}
+      </Title>
       <RectangleHighLight>
         <Title style={{ color: "white" }}>
-          {isSignup ? "our services" : "your account"}
+          {isServiceRegistration
+            ? "your service"
+            : isSignup
+            ? "our services"
+            : "your account"}
         </Title>
       </RectangleHighLight>
     </Container>

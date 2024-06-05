@@ -12,3 +12,4 @@ export { default as AdvancedDialog } from "./AdvancedDialog";
 export { default as StarRating } from "./StarRating";
 export { default as TertiaryServiceCard } from "./TertiaryServiceCard";
 export { default as ServiceProviderCard } from "./ServiceProviderCard";
+export { default as SelectPicker } from "./SelectPicker";

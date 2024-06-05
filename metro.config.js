@@ -1,4 +1,4 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
+// // Learn more https://docs.expo.io/guides/customizing-metro
 const { getDefaultConfig, mergeConfig } = require("expo/metro-config");
 
 /** @type {import('expo/metro-config').MetroConfig} */

@@ -26,6 +26,7 @@ export const APP_PAGES = {
   BOOKINGS: "Bookings",
   BOOKING_SUMMARY: "Booking Summary",
   BOOKING_DETAILS: "Booking Details",
+  REGISTER_SERVICE: "Register Service",
 };
 
 export const API_URLS = {
