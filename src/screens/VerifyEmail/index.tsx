@@ -76,7 +76,7 @@ const VerifyEmail = ({ navigation, route }: NativeStackScreenProps<any>) => {
             <FormControl>
               <Button
                 loading={loading}
-                onPress={() => navigation.replace(APP_PAGES.USER_TAB)}
+                onPress={() => navigation.navigate(APP_PAGES.SET_LOCATION)}
               >
                 Verify email
               </Button>

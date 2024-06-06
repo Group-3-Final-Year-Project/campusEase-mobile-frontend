@@ -48,14 +48,24 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
         opacity: headerOpacity,
       },
       headerRight: () => (
-        <IconBtn>
-          <Iconify
-            icon="solar:bell-bold"
-            size={18}
-            strokeWidth={18}
-            color={themeContext?.colors.text}
-          />
-        </IconBtn>
+        <View style={{ flexDirection: "row" }}>
+          <IconBtn style={{ marginRight: 7 }}>
+            <Iconify
+              icon="solar:share-bold"
+              size={18}
+              strokeWidth={18}
+              color={themeContext?.colors.text}
+            />
+          </IconBtn>
+          <IconBtn>
+            <Iconify
+              icon="solar:bookmark-bold"
+              size={18}
+              strokeWidth={18}
+              color={themeContext?.colors.text}
+            />
+          </IconBtn>
+        </View>
       ),
       // @ts-ignore
       headerRightContainerStyle: {

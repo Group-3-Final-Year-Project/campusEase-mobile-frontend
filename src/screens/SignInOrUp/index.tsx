@@ -77,20 +77,21 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
     initialValues: signupInitialValues,
     validationSchema: signupSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      try {
-        console.log("Res:", values);
-        const res = await signUserUp(values);
-        console.log("Res after submit: ", res);
-        // dispatch(updateUserData(res));
-        // resetForm();
-        // navigation.navigate(APP_PAGES.VERIFY_EMAIL);
-      } catch (error) {
-        // setDialogVisible(true);
-        console.log("ERRORRR!!");
-        throw Error(error as any);
-      } finally {
-        setSubmitting(false);
-      }
+      navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+      // try {
+      //   console.log("Res:", values);
+      //   const res = await signUserUp(values);
+      //   console.log("Res after submit: ", res);
+      //   // dispatch(updateUserData(res));
+      //   // resetForm();
+      //   // navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+      // } catch (error) {
+      //   // setDialogVisible(true);
+      //   console.log("ERRORRR!!");
+      //   throw Error(error as any);
+      // } finally {
+      //   setSubmitting(false);
+      // }
     },
   });
 
@@ -248,7 +249,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   </Description>
                 </Button>
               </FormControl>
-              <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNIN)}>
+              <Pressable onPress={() => navigation.replace(APP_PAGES.SIGNIN)}>
                 <Description
                   style={{
                     textAlign: "center",

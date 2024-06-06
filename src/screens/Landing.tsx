@@ -29,7 +29,7 @@ const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
         return;
       }
       dispatch(updateUserData(loginData));
-      navigation.replace(APP_PAGES.HOME);
+      navigation.replace(APP_PAGES.USER_TAB);
     } else {
       const alreadyUser = await isAlreadyUser();
       if (alreadyUser) navigation.replace(APP_PAGES.SIGNIN);

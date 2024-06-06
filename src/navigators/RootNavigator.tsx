@@ -13,6 +13,7 @@ import Bookings from "~src/screens/Bookings";
 import BookingSummary from "~src/screens/BookingSummary";
 import BookingDetail from "~src/screens/BookingDetail";
 import RegisterService from "~src/screens/RegisterService";
+import SetLocation from "~src/screens/SetLocation";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -20,7 +21,7 @@ const RootNavigator = () => {
   return (
     //will set it to landing
     <Stack.Navigator
-      initialRouteName={APP_PAGES.REGISTER_SERVICE}
+      initialRouteName={APP_PAGES.LANDING}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: true,
@@ -62,16 +63,7 @@ const RootNavigator = () => {
           name={APP_PAGES.REGISTER_SERVICE}
           component={RegisterService}
         />
-        {/* <Stack.Screen name={APP_PAGES.VERIFY_PHONE} component={Welcome} />
-        <Stack.Screen name={APP_PAGES.SET_LOCATION} component={Welcome} />
-        <Stack.Screen
-          name={APP_PAGES.SET_LOCATION_PROMPT}
-          component={SetLocationPrompt}
-        />
-        <Stack.Screen
-          name={APP_PAGES.USER_TYPE_SELECTOR}
-          component={UserTypeSelector}
-        /> */}
+        <Stack.Screen name={APP_PAGES.SET_LOCATION} component={SetLocation} />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

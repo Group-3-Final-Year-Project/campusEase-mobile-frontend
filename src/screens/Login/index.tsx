@@ -10,7 +10,7 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { signUserIn } from "~services";
+import { signUserIn, navigateAndResetStack } from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import { updateUserData } from "~store/actions/userActions";
 import { User } from "~src/@types/types";
@@ -53,18 +53,19 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
     initialValues: signinInitialValues,
     validationSchema: signinSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      try {
-        const res = await signUserIn(values);
-        console.log("Res after submit: ", res);
-        dispatch(updateUserData(res));
-        resetForm();
-        navigation.navigate(APP_PAGES.HOME);
-      } catch (error) {
-        setDialogVisible(true);
-        throw Error(error as any);
-      } finally {
-        setSubmitting(false);
-      }
+      navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+      // try {
+      //   const res = await signUserIn(values);
+      //   console.log("Res after submit: ", res);
+      //   dispatch(updateUserData(res));
+      //   resetForm();
+      //navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+      // } catch (error) {
+      //   setDialogVisible(true);
+      //   throw Error(error as any);
+      // } finally {
+      //   setSubmitting(false);
+      // }
     },
   });
 
@@ -166,7 +167,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 Sign in
               </Button>
             </FormControl>
-            <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNUP)}>
+            <Pressable onPress={() => navigation.replace(APP_PAGES.SIGNUP)}>
               <Description
                 style={{
                   textAlign: "center",

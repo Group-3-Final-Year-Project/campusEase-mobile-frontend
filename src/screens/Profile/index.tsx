@@ -11,7 +11,6 @@ import {
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
-import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 import { IconBtn } from "~components";
 import { Iconify } from "react-native-iconify";
 import Switch from "react-native-ui-lib/switch";
@@ -225,25 +224,21 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
 
   return (
     <Container>
-      <VirtualisedContainer
+      <FlatList
+        ListHeaderComponent={<ProfileHeader />}
+        // @ts-ignore
+        data={profileItems}
+        renderItem={renderProfileItem}
+        ItemSeparatorComponent={() => (
+          <View
+            style={{
+              height: 0.8,
+              backgroundColor: themeContext?.colors.secondaryBackground,
+            }}
+          />
+        )}
         style={{ paddingBottom: bottomInset }}
-        renderItem={undefined}
-      >
-        <FlatList
-          ListHeaderComponent={<ProfileHeader />}
-          // @ts-ignore
-          data={profileItems}
-          renderItem={renderProfileItem}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{
-                height: 0.8,
-                backgroundColor: themeContext?.colors.secondaryBackground,
-              }}
-            />
-          )}
-        />
-      </VirtualisedContainer>
+      />
     </Container>
   );
 };
