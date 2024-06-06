@@ -34,6 +34,7 @@ const Bookmarks = ({ navigation }: BottomTabScreenProps<any>) => {
         ItemSeparatorComponent={() => <View style={{ marginVertical: 7 }} />}
         showsHorizontalScrollIndicator={false}
         style={{ paddingBottom: bottomInset }}
+        ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
       />
     </Container>
   );

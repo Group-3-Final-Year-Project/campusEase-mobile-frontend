@@ -14,6 +14,7 @@ import BookingSummary from "~src/screens/BookingSummary";
 import BookingDetail from "~src/screens/BookingDetail";
 import RegisterService from "~src/screens/RegisterService";
 import SetLocation from "~src/screens/SetLocation";
+import ManageAddresses from "~src/screens/ManageAddresses";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -86,6 +87,10 @@ const RootNavigator = () => {
         <Stack.Screen
           name={APP_PAGES.BOOKING_DETAILS}
           component={BookingDetail}
+        />
+        <Stack.Screen
+          name={APP_PAGES.MANAGE_ADDRESSES}
+          component={ManageAddresses}
         />
       </Stack.Group>
     </Stack.Navigator>

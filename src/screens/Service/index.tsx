@@ -21,6 +21,7 @@ import { formatCurrency } from "../../services/uiService";
 import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
+import { APP_PAGES } from "~src/shared/constants";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -347,7 +348,10 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
           <Description style={{ marginBottom: 10 }}>Starting Price</Description>
           <HighlightedDescription>{formatCurrency(180)}</HighlightedDescription>
         </View>
-        <Button style={{ width: 240, height: 60, padding: 12 }}>
+        <Button
+          style={{ width: 240, height: 60, padding: 12 }}
+          onPress={() => navigation.navigate(APP_PAGES.BOOKING_SUMMARY)}
+        >
           Book now
         </Button>
       </BottomCard>

@@ -36,12 +36,12 @@ export default function App() {
   useStatusBar(true, "", "light-content");
   useNavigationBar();
   let [fontsLoaded, error] = useFonts({
-    [Font.GilroyBold]: require("./src/assets/fonts/Gilroy-Bold.ttf"),
-    [Font.GilroyExtraBold]: require("./src/assets/fonts/Gilroy-ExtraBold.ttf"),
-    [Font.GilroyLight]: require("./src/assets/fonts/Gilroy-Light.ttf"),
-    [Font.GilroyMedium]: require("./src/assets/fonts/Gilroy-Medium.ttf"),
-    [Font.GilroyRegular]: require("./src/assets/fonts/Gilroy-Regular.ttf"),
-    [Font.GilroySemiBold]: require("./src/assets/fonts/Gilroy-SemiBold.ttf"),
+    [Font.EuclidBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
+    [Font.EuclidExtraBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
+    [Font.EuclidLight]: require("./src/assets/fonts/Euclid Circular B Light.ttf"),
+    [Font.EuclidMedium]: require("./src/assets/fonts/Euclid Circular B Medium.ttf"),
+    [Font.EuclidRegular]: require("./src/assets/fonts/Euclid Circular B Regular.ttf"),
+    [Font.EuclidSemiBold]: require("./src/assets/fonts/Euclid Circular B SemiBold.ttf"),
   });
   const colorScheme = useColorScheme();
   const theme = useMemo(() => {
@@ -61,13 +61,13 @@ export default function App() {
   }
   setCustomText({
     style: {
-      fontFamily: Font.GilroyRegular,
+      fontFamily: Font.EuclidRegular,
       color: theme.colors.text,
     },
   });
   setCustomTextInput({
     style: {
-      fontFamily: Font.GilroyRegular,
+      fontFamily: Font.EuclidRegular,
     },
   });
 

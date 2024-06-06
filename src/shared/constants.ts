@@ -27,6 +27,8 @@ export const APP_PAGES = {
   BOOKING_SUMMARY: "Booking Summary",
   BOOKING_DETAILS: "Booking Details",
   REGISTER_SERVICE: "Register Service",
+  MANAGE_ADDRESSES: "Manage Addresses",
+  OTHER_BOOKING_INFO: "Other Booking Info",
 };
 
 export const API_URLS = {
@@ -39,6 +41,7 @@ export const API_URLS = {
   SERVICES: "/services",
   BOOKINGS: "/bookings",
   REVIEWS: "/reviews",
+  MANAGE_ADDRESSES: "Manage Addresses",
 };
 
 export const STORAGE_KEYS = {

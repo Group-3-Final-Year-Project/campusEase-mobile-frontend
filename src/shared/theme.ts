@@ -14,22 +14,22 @@ import Color from "color";
 import { DefaultTheme as DefaultThemeProps } from "styled-components";
 
 export enum Font {
-  GilroyLight = "Gilroy-Light",
-  GilroyMedium = "Gilroy-Medium",
-  GilroyBold = "Gilroy-Bold",
-  GilroySemiBold = "Gilroy-SemiBold",
-  GilroyExtraBold = "Gilroy-ExtraBold",
-  GilroyRegular = "Gilroy-Regular",
+  EuclidLight = "Euclid-Light",
+  EuclidMedium = "Euclid-Medium",
+  EuclidBold = "Euclid-Bold",
+  EuclidSemiBold = "Euclid-SemiBold",
+  EuclidExtraBold = "Euclid-ExtraBold",
+  EuclidRegular = "Euclid-Regular",
 }
 export const DefaultConfigs = {
   typography: {
     fontFamily: {
-      light: Font.GilroyLight,
-      medium: Font.GilroyMedium,
-      regular: Font.GilroyRegular,
-      semiBold: Font.GilroySemiBold,
-      bold: Font.GilroyBold,
-      extraBold: Font.GilroyExtraBold,
+      light: Font.EuclidLight,
+      medium: Font.EuclidMedium,
+      regular: Font.EuclidRegular,
+      semiBold: Font.EuclidSemiBold,
+      bold: Font.EuclidBold,
+      extraBold: Font.EuclidExtraBold,
     },
     sizes: {
       h1: {

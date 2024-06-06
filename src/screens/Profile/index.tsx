@@ -98,7 +98,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: "",
+      toPage: APP_PAGES.MANAGE_ADDRESSES,
       showRightIcon: true,
     },
     {
