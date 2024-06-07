@@ -10,9 +10,14 @@ interface IInput {
 }
 
 const fontStyle = css`
-  font-family: ${(props) => props.theme.typography.fontFamily.bold};
+  font-family: ${(props) => props.theme.typography.fontFamily.semiBold};
   font-size: ${(props) => props.theme.typography.sizes.regular.size}px;
   color: ${(props) => props.theme.colors.text};
+
+  /* ::placeholder {
+    font-family: ${(props) => props.theme.typography.fontFamily.bold};
+    font-size: ${(props) => props.theme.typography.sizes.regular.size}px;
+  } */
 `;
 
 export const Container = styled.View`

@@ -15,10 +15,23 @@ import Profile from "~src/screens/Profile";
 import { TabBar } from "~components";
 import Analytics from "~src/screens/Analytics";
 import { useNavigationBar } from "~hooks";
+import { getUserType } from "~services";
+import { UserType } from "~src/@types/types";
 
 const UserTabNavigator = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
-  const [isServiceProvider] = React.useState(false);
+  const [isServiceProvider, setIsServiceProvider] =
+    React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const getIsProvider = async () => {
+      const userType = await getUserType();
+      const isServiceProvider = async () =>
+        userType === UserType.SERVICE_PROVIDER;
+      setIsServiceProvider(await isServiceProvider());
+    };
+    getIsProvider();
+  }, []);
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
@@ -226,7 +239,7 @@ const UserTabNavigator = () => {
           shadowRadius: 40,
         },
         headerTitleStyle: {
-          fontFamily: `${theme?.typography.fontFamily.extraBold}`,
+          fontFamily: `${theme?.typography.fontFamily.bold}`,
         },
       }}
     >

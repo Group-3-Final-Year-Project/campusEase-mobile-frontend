@@ -4,10 +4,11 @@ import {
   Container,
   HighlightedDescription,
   TopCard,
+  Description,
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "~components";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { KeyboardAvoidingView, Platform, View, Pressable } from "react-native";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
 
@@ -83,6 +84,25 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
               Service provi
             </Button>
           </View>
+          <Pressable onPress={() => navigation.replace(APP_PAGES.SIGNIN)}>
+            <Description
+              style={{
+                textAlign: "center",
+                marginTop: 20,
+                fontSize: 12,
+              }}
+            >
+              Already have an account?{" "}
+              <HighlightedDescription
+                style={{
+                  textAlign: "center",
+                  fontSize: 12,
+                }}
+              >
+                Log in
+              </HighlightedDescription>
+            </Description>
+          </Pressable>
         </BottomCard>
       </KeyboardAvoidingView>
     </Container>

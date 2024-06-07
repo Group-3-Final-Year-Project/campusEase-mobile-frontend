@@ -29,6 +29,7 @@ export const APP_PAGES = {
   REGISTER_SERVICE: "Register Service",
   MANAGE_ADDRESSES: "Manage Addresses",
   OTHER_BOOKING_INFO: "Other Booking Info",
+  SERVICE_CATEGORIES: "Service Categories",
 };
 
 export const API_URLS = {

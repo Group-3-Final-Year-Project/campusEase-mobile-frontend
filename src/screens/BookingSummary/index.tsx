@@ -29,22 +29,26 @@ const BookingSummary = ({ navigation }: NativeStackScreenProps<any>) => {
   return (
     <Container>
       <ScrollView
-        style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
+        style={{
+          paddingTop: insets.top,
+          paddingBottom: bottomInset,
+          paddingHorizontal: 15,
+        }}
       >
         <TertiaryServiceCard service={[]} />
-        <BookingInfoHeaderLabel>About Service Provider</BookingInfoHeaderLabel>
-        <ServiceProviderCard showContactInfo />
+        <BookingInfoContainer>
+          <BookingInfoHeaderLabel>
+            About Service Provider
+          </BookingInfoHeaderLabel>
+          <ServiceProviderCard showContactInfo />
+        </BookingInfoContainer>
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Payment Summary</BookingInfoHeaderLabel>
         </BookingInfoContainer>
       </ScrollView>
       <BottomCard>
-        <View>
-          <Description style={{ marginBottom: 10 }}>Starting Price</Description>
-          <HighlightedDescription>{formatCurrency(180)}</HighlightedDescription>
-        </View>
         <Button
-          style={{ width: 240, height: 60, padding: 12 }}
+          style={{ width: "100%", height: 60, padding: 12 }}
           onPress={() => navigation.navigate(APP_PAGES.OTHER_BOOKING_INFO)}
         >
           Continue

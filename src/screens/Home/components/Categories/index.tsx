@@ -3,24 +3,54 @@ import React, { useContext } from "react";
 import { GridView, AnimatedImage, Card } from "react-native-ui-lib";
 import { ListLabel } from "../../styles";
 import { ThemeContext } from "styled-components/native";
+import { useNavigation } from "@react-navigation/native";
+import { APP_PAGES } from "~src/shared/constants";
 
 const Categories = () => {
   const theme = useContext(ThemeContext);
+  const navigation = useNavigation();
 
   return (
     <View style={{ marginTop: 20 }}>
       <ListLabel style={{ marginBottom: 10 }}>Categories</ListLabel>
       <GridView
         items={[
-          { title: "item 1", onPress: () => console.log("item 1 pressed") },
-          { title: "item 2", onPress: () => console.log("item 2 pressed") },
-          { title: "item 3", onPress: () => console.log("item 2 pressed") },
-          { title: "item 4", onPress: () => console.log("item 2 pressed") },
-          { title: "item 5", onPress: () => console.log("item 2 pressed") },
-          { title: "item 6", onPress: () => console.log("item 2 pressed") },
-          { title: "item 7", onPress: () => console.log("item 2 pressed") },
-          { title: "item 8", onPress: () => console.log("item 2 pressed") },
-          { title: "item 9", onPress: () => console.log("item 2 pressed") },
+          {
+            title: "item 1",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 2",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 3",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 4",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 5",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 6",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 7",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 8",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
+          {
+            title: "item 9",
+            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
+          },
         ]}
         numColumns={3}
         itemSpacing={10}
@@ -31,6 +61,7 @@ const Categories = () => {
             center
             animated
             enableShadow={false}
+            onPress={item.onPress}
             containerStyle={{
               backgroundColor: theme?.colors.secondaryBackground,
               borderRadius: 15,

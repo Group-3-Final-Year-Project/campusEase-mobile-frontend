@@ -27,9 +27,9 @@ const BookingCard = (props: IBookingCard) => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingBottom: 15,
-          borderBottomColor: themeContext?.colors.secondaryBackground,
-          borderBottomWidth: 0.8,
+          paddingBottom: 7,
+          // borderBottomColor: themeContext?.colors.border,
+          // borderBottomWidth: 0.8,
         }}
       >
         <View>

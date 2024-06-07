@@ -22,7 +22,11 @@ export const Description = styled(Text).attrs({
 
 export const HeaderCard = styled.View`
   flex-direction: row;
-  padding-bottom: 15px;
+  padding: 5px 3.5px;
+  border-radius: 10px;
+  margin-top: 15px;
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
 `;
 
 export const HeaderItemLabel = styled(Text).attrs({
@@ -31,6 +35,6 @@ export const HeaderItemLabel = styled(Text).attrs({
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.regular};
-  font-size: 10px;
-  line-height: 10px;
+  /* font-size: 10px;
+  line-height: 10px; */
 `;

@@ -16,7 +16,9 @@ const SecondaryServiceCard: React.FC<ServiceCardProps> = (props) => {
   const theme = useContext(ThemeContext);
 
   return (
-    <CardContainer>
+    <CardContainer
+      onPress={() => props?.navigation.navigate(APP_PAGES.SERVICE)}
+    >
       <CardImage
         source={{
           uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",

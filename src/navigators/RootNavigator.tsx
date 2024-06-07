@@ -15,6 +15,8 @@ import BookingDetail from "~src/screens/BookingDetail";
 import RegisterService from "~src/screens/RegisterService";
 import SetLocation from "~src/screens/SetLocation";
 import ManageAddresses from "~src/screens/ManageAddresses";
+import ServiceCategories from "~src/screens/ServiceCategories";
+import MoreBookingInfo from "~src/screens/MoreBookingInfo";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -37,7 +39,7 @@ const RootNavigator = () => {
           shadowRadius: 40,
         },
         headerTitleStyle: {
-          fontFamily: `${theme?.typography.fontFamily.extraBold}`,
+          fontFamily: `${theme?.typography.fontFamily.bold}`,
         },
         headerTintColor: theme?.colors.text,
       }}
@@ -91,6 +93,14 @@ const RootNavigator = () => {
         <Stack.Screen
           name={APP_PAGES.MANAGE_ADDRESSES}
           component={ManageAddresses}
+        />
+        <Stack.Screen
+          name={APP_PAGES.SERVICE_CATEGORIES}
+          component={ServiceCategories}
+        />
+        <Stack.Screen
+          name={APP_PAGES.OTHER_BOOKING_INFO}
+          component={MoreBookingInfo}
         />
       </Stack.Group>
     </Stack.Navigator>

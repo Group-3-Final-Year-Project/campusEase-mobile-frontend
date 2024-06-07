@@ -5,10 +5,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Text from "~components/Text";
 
 export const BookingCardContainer = styled.TouchableOpacity`
-  border-color: ${(props: DefaultThemeProps) =>
+  background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
-  border-width: 0.8px;
-  border-radius: 15px;
+  border-radius: 10px;
   display: flex;
   padding: 15px;
 `;
@@ -19,9 +18,10 @@ export const BookingStatusTag = styled(Text).attrs({
   color: rgba(50, 205, 50, 1);
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.regular};
-  font-size: 10px;
-  line-height: 10px;
-  padding: 10px;
+  font-size: 8px;
+  line-height: 8px;
+  padding: 8px;
+  display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;

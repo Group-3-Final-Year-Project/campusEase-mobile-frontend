@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
 import { Iconify } from "react-native-iconify";
@@ -17,19 +17,42 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const [activeStatusBtn, setActiveStatusBtn] = useState("All");
+
+  const statuses = [
+    { name: "All" },
+    { name: "In Progress" },
+    { name: "Completed" },
+    { name: "Canceled" },
+  ];
+
+  const renderStatusBtn = ({ item }: { item: { name: string } }) => {
+    const isActive = item.name === activeStatusBtn;
+    return (
+      <IconBtn
+        onPress={() => setActiveStatusBtn(item.name)}
+        style={{
+          backgroundColor: isActive
+            ? themeContext?.colors.primary
+            : themeContext?.colors.background,
+        }}
+      >
+        <HeaderItemLabel>{item.name}</HeaderItemLabel>
+      </IconBtn>
+    );
+  };
 
   return (
     <Container>
       <HeaderCard>
-        <IconBtn style={{ marginRight: 7 }}>
-          <HeaderItemLabel>In Progress</HeaderItemLabel>
-        </IconBtn>
-        <IconBtn style={{ marginRight: 7 }}>
-          <HeaderItemLabel>Completed</HeaderItemLabel>
-        </IconBtn>
-        <IconBtn>
-          <HeaderItemLabel>Canceled</HeaderItemLabel>
-        </IconBtn>
+        <FlatList
+          horizontal
+          data={statuses}
+          renderItem={renderStatusBtn}
+          ItemSeparatorComponent={() => (
+            <View style={{ marginHorizontal: 3.5 }} />
+          )}
+        />
       </HeaderCard>
       <FlatList
         data={[...new Array(10)]}
