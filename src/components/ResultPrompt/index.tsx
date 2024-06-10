@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import React, { useContext } from "react";
 import { Dialog, DialogProps, PanningProvider } from "react-native-ui-lib";
 import { Iconify } from "react-native-iconify";
@@ -79,5 +79,3 @@ const ResultPrompt = (props: ResultProps) => {
 };
 
 export default ResultPrompt;
-
-const styles = StyleSheet.create({});

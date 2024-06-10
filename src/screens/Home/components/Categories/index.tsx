@@ -1,4 +1,4 @@
-import { StyleSheet, View, Dimensions, Text } from "react-native";
+import { View, Dimensions, Text } from "react-native";
 import React, { useContext } from "react";
 import { GridView, AnimatedImage, Card } from "react-native-ui-lib";
 import { ListLabel } from "../../styles";
@@ -84,5 +84,3 @@ const Categories = () => {
 };
 
 export default Categories;
-
-const styles = StyleSheet.create({});

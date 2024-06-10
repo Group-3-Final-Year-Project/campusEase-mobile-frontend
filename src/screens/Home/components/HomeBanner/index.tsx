@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useContext } from "react";
 import Carousel from "react-native-ui-lib/carousel";
 import Card from "react-native-ui-lib/card";
@@ -44,5 +44,3 @@ const HomeBanner = () => {
 };
 
 export default HomeBanner;
-
-const styles = StyleSheet.create({});

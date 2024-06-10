@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import React, { useContext } from "react";
 import {
   ContactInfoContainer,
@@ -74,5 +74,3 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
 };
 
 export default ServiceProviderCard;
-
-const styles = StyleSheet.create({});

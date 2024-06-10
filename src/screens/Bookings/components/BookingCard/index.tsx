@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useContext } from "react";
 import { BookingCardContainer, BookingStatusTag, BookingTitle } from "./styles";
 import { NavigationProp } from "@react-navigation/native";
@@ -79,5 +79,3 @@ const BookingCard = (props: IBookingCard) => {
 };
 
 export default BookingCard;
-
-const styles = StyleSheet.create({});

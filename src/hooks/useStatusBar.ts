@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
-import { useColorScheme } from "react-native";
-import { Platform, StatusBar } from "react-native";
+import { useColorScheme, Platform, StatusBar } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 const useStatusBar = (
@@ -18,9 +17,9 @@ const useStatusBar = (
         StatusBar.setBackgroundColor("transparent", true);
       } else {
         StatusBar.setBackgroundColor(
-          backgroundColor ||
-            theme?.colors.background ||
-            (colorScheme === "dark" ? "#07112D" : "#ffffff"),
+          backgroundColor ??
+            theme?.colors.background ??
+            (colorScheme === "dark" ? "#181820" : "#ffffff"),
           true
         );
       }

@@ -1,7 +1,6 @@
 import {
   FlatList,
   ListRenderItem,
-  StyleSheet,
   Text,
   View,
   useWindowDimensions,
@@ -115,5 +114,3 @@ const ServiceCategories = () => {
 };
 
 export default ServiceCategories;
-
-const styles = StyleSheet.create({});

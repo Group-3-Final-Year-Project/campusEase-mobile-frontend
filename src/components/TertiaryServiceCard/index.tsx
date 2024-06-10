@@ -1,18 +1,17 @@
-import { StyleSheet, View, TouchableOpacityProps } from "react-native";
+import { View, TouchableOpacityProps } from "react-native";
 import React, { useContext } from "react";
 import { CardContainer, CardImage, InfoContainer, Description } from "./styles";
 import { ThemeContext } from "styled-components/native";
-import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
 import { StarRating, Text } from "~components";
 import { formatCurrency } from "~services";
 
 interface ServiceCardProps extends TouchableOpacityProps {
   service: any;
-  navigation?: NavigationProp<any>;
+  // navigation?: NavigationProp<any>;
 }
 
-const TertiaryServiceCard: React.FC<ServiceCardProps> = (props) => {
+const TertiaryServiceCard = (props: ServiceCardProps) => {
   const theme = useContext(ThemeContext);
 
   return (
@@ -35,5 +34,3 @@ const TertiaryServiceCard: React.FC<ServiceCardProps> = (props) => {
 };
 
 export default TertiaryServiceCard;
-
-const styles = StyleSheet.create({});

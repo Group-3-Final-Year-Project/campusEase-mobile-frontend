@@ -1,4 +1,4 @@
-import { StyleSheet, View, Animated, FlatList, Image } from "react-native";
+import { View, Animated, FlatList, Image } from "react-native";
 import React, { useContext, useRef, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -360,5 +360,3 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
 };
 
 export default Service;
-
-const styles = StyleSheet.create({});

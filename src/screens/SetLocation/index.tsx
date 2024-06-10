@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
 import { Button } from "~components";
 import { getUserType, navigateAndResetStack } from "~services";
@@ -27,5 +27,3 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
 };
 
 export default SetLocation;
-
-const styles = StyleSheet.create({});

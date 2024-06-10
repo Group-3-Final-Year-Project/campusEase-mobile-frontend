@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { Container, Description, ListLabel, Title } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -156,5 +156,3 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   );
 };
 export default Home;
-
-const styles = StyleSheet.create({});

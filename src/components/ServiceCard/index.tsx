@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import React, { useContext } from "react";
 import { Title } from "./styles";
 import { Card, CardProps } from "react-native-ui-lib";
@@ -83,5 +83,3 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
 };
 
 export default ServiceCard;
-
-const styles = StyleSheet.create({});

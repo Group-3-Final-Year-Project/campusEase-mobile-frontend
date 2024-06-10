@@ -1,4 +1,4 @@
-import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
+import { FlatList, ListRenderItem, View } from "react-native";
 import React, { useCallback, useContext } from "react";
 import {
   Container,
@@ -76,16 +76,16 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
       showRightIcon: true,
     },
     {
-      name: "My Bookings",
+      name: "My Bookmarks",
       icon: (
         <Iconify
-          icon="solar:clipboard-list-outline"
+          icon="solar:documents-minimalistic-bold"
           size={18}
           strokeWidth={18}
           color={themeContext?.colors.text}
         />
       ),
-      toPage: APP_PAGES.BOOKINGS,
+      toPage: APP_PAGES.BOOKMARKS,
       showRightIcon: true,
     },
     {
@@ -244,5 +244,3 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
 };
 
 export default Profile;
-
-const styles = StyleSheet.create({});

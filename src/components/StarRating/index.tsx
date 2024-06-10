@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { Text, View, ViewStyle } from "react-native";
 import React from "react";
 import { Iconify } from "react-native-iconify";
 
@@ -29,5 +29,3 @@ const StarRating = (props: IStarRating) => {
 };
 
 export default StarRating;
-
-const styles = StyleSheet.create({});

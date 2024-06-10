@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { Text, View, FlatList } from "react-native";
 import React from "react";
 import { Container } from "./styles";
 import { SecondaryServiceCard } from "~components";
@@ -40,5 +40,3 @@ const Category = (props: ICategory) => {
 };
 
 export default Category;
-
-const styles = StyleSheet.create({});

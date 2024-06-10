@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -67,5 +67,3 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
 };
 
 export default Bookings;
-
-const styles = StyleSheet.create({});

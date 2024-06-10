@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -41,5 +41,3 @@ const Bookmarks = ({ navigation }: BottomTabScreenProps<any>) => {
 };
 
 export default Bookmarks;
-
-const styles = StyleSheet.create({});

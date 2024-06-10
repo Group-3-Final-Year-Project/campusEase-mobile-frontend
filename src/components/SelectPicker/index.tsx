@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useContext } from "react";
 import {
   Incubator,
@@ -78,5 +78,3 @@ const SelectPicker = ({ items, value, placeholderText }: ISelectPicker) => {
 };
 
 export default SelectPicker;
-
-const styles = StyleSheet.create({});

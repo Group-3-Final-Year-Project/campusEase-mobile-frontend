@@ -1,4 +1,4 @@
-import { StyleSheet, View, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import React, { useContext } from "react";
 import { ThemeContext } from "styled-components/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -61,5 +61,3 @@ const ManageAddresses = () => {
 };
 
 export default ManageAddresses;
-
-const styles = StyleSheet.create({});

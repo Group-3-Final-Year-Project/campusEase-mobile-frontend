@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import React, { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -63,5 +63,3 @@ const BookingDetail = () => {
 };
 
 export default BookingDetail;
-
-const styles = StyleSheet.create({});

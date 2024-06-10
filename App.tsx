@@ -3,15 +3,7 @@ import { useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { useMemo } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  useFonts,
-  // Urbanist_800ExtraBold,
-  // Urbanist_300Light,
-  // Urbanist_400Regular,
-  // Urbanist_500Medium,
-  // Urbanist_600SemiBold,
-  // Urbanist_700Bold,
-} from "@expo-google-fonts/urbanist";
+import { useFonts } from "@expo-google-fonts/urbanist";
 import {
   setCustomTextInput,
   setCustomText,

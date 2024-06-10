@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacityProps } from "react-native";
+import { View, TouchableOpacityProps } from "react-native";
 import React, { useContext } from "react";
 import { CardContainer, CardImage, InfoContainer, Description } from "./styles";
 import { ThemeContext } from "styled-components/native";
@@ -12,12 +12,14 @@ interface ServiceCardProps extends TouchableOpacityProps {
   navigation?: NavigationProp<any>;
 }
 
-const SecondaryServiceCard: React.FC<ServiceCardProps> = (props) => {
+const SecondaryServiceCard = (props: ServiceCardProps) => {
   const theme = useContext(ThemeContext);
 
   return (
     <CardContainer
-      onPress={() => props?.navigation.navigate(APP_PAGES.SERVICE)}
+      onPress={() =>
+        props.navigation && props.navigation.navigate(APP_PAGES.SERVICE)
+      }
     >
       <CardImage
         source={{
@@ -37,5 +39,3 @@ const SecondaryServiceCard: React.FC<ServiceCardProps> = (props) => {
 };
 
 export default SecondaryServiceCard;
-
-const styles = StyleSheet.create({});

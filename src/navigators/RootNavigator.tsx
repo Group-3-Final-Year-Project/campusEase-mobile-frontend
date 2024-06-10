@@ -17,18 +17,19 @@ import SetLocation from "~src/screens/SetLocation";
 import ManageAddresses from "~src/screens/ManageAddresses";
 import ServiceCategories from "~src/screens/ServiceCategories";
 import MoreBookingInfo from "~src/screens/MoreBookingInfo";
+import Bookmarks from "~src/screens/Bookmarks";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
   return (
-    //will set it to landing
     <Stack.Navigator
       initialRouteName={APP_PAGES.LANDING}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: true,
         headerStyle: {
+          // @ts-ignore
           elevation: 1,
           backgroundColor: theme?.colors.background,
           shadowColor: theme?.colors.secondaryBackground,
@@ -81,7 +82,7 @@ const RootNavigator = () => {
             headerTransparent: true,
           }}
         />
-        <Stack.Screen name={APP_PAGES.BOOKINGS} component={Bookings} />
+        <Stack.Screen name={APP_PAGES.BOOKMARKS} component={Bookmarks} />
         <Stack.Screen
           name={APP_PAGES.BOOKING_SUMMARY}
           component={BookingSummary}

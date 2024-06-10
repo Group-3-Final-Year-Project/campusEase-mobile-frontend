@@ -17,6 +17,7 @@ import Analytics from "~src/screens/Analytics";
 import { useNavigationBar } from "~hooks";
 import { getUserType } from "~services";
 import { UserType } from "~src/@types/types";
+import Bookings from "~src/screens/Bookings";
 
 const UserTabNavigator = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
@@ -74,27 +75,6 @@ const UserTabNavigator = () => {
         />
       ),
     },
-    {
-      name: APP_PAGES.BOOKINGS,
-      label: APP_PAGES.BOOKINGS,
-      component: Explore,
-      activeIconName: (
-        <Iconify
-          icon="solar:cart-large-bold"
-          size={24}
-          color={theme?.colors.primary}
-          strokeWidth={10}
-        />
-      ),
-      inactiveIconName: (
-        <Iconify
-          icon="solar:cart-large-outline"
-          size={24}
-          color={theme?.colors.secondaryText}
-          strokeWidth={10}
-        />
-      ),
-    },
   ];
 
   const UserTabItems = [
@@ -113,27 +93,6 @@ const UserTabNavigator = () => {
       inactiveIconName: (
         <Iconify
           icon="solar:map-point-outline"
-          size={24}
-          color={theme?.colors.secondaryText}
-          strokeWidth={10}
-        />
-      ),
-    },
-    {
-      name: APP_PAGES.BOOKMARKS,
-      label: APP_PAGES.BOOKMARKS,
-      component: Bookmarks,
-      activeIconName: (
-        <Iconify
-          icon="solar:documents-minimalistic-bold"
-          size={24}
-          color={theme?.colors.primary}
-          strokeWidth={10}
-        />
-      ),
-      inactiveIconName: (
-        <Iconify
-          icon="solar:documents-minimalistic-outline"
           size={24}
           color={theme?.colors.secondaryText}
           strokeWidth={10}
@@ -169,6 +128,27 @@ const UserTabNavigator = () => {
       ),
     },
     ...dynamicTabs,
+    {
+      name: APP_PAGES.BOOKINGS,
+      label: APP_PAGES.BOOKINGS,
+      component: Bookings,
+      activeIconName: (
+        <Iconify
+          icon="solar:clipboard-list-bold"
+          size={24}
+          color={theme?.colors.primary}
+          strokeWidth={10}
+        />
+      ),
+      inactiveIconName: (
+        <Iconify
+          icon="solar:clipboard-list-outline"
+          size={24}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
+        />
+      ),
+    },
 
     {
       name: APP_PAGES.CHATS,

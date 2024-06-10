@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useContext, useRef, useState } from "react";
 import Timeline from "react-native-ui-lib/timeline";
 import { ThemeContext } from "styled-components/native";
@@ -87,5 +87,3 @@ const BookingStatus = () => {
 };
 
 export default BookingStatus;
-
-const styles = StyleSheet.create({});
