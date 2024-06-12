@@ -318,7 +318,7 @@ const RegisterService = ({
                 <Button
                   // loading={formik.isSubmitting}
                   // @ts-ignore
-                  onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
+                  onPress={() => navigation.navigate(APP_PAGES.USER_TAB)}
                 >
                   Continue
                 </Button>

@@ -4,7 +4,8 @@ import { CardContainer, CardImage, InfoContainer, Description } from "./styles";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
-import { StarRating, Text } from "~components";
+import StarRating from "../StarRating";
+import Text from "../Text";
 import { formatCurrency } from "~services";
 
 interface ServiceCardProps extends TouchableOpacityProps {

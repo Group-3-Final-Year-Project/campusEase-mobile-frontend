@@ -79,7 +79,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
       name: "My Bookmarks",
       icon: (
         <Iconify
-          icon="solar:documents-minimalistic-bold"
+          icon="solar:documents-minimalistic-outline"
           size={18}
           strokeWidth={18}
           color={themeContext?.colors.text}

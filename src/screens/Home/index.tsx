@@ -1,5 +1,5 @@
 import { FlatList, View } from "react-native";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Container, Description, ListLabel, Title } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -17,6 +17,8 @@ import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
 import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import BookingCard from "../Bookings/components/BookingCard";
+import ProviderServices from "./components/ProviderServices";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -113,9 +115,12 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
             </IconBtn>
           </View>
           <HomeBanner />
+          <ProviderServices navigation={navigation as NavigationProp<any>} />
           <Categories />
+          {/* Upcoming bookings should also be here... */}
+          {/* Earnings summary should be displayed here for service providers... */}
           <View style={{ marginTop: 20 }}>
-            <ListLabel style={{ marginBottom: 10 }}>Most popular</ListLabel>
+            <ListLabel style={{ marginBottom: 10 }}>Popular services</ListLabel>
             <FlatList
               data={[...new Array(5)]}
               renderItem={({ item, index }) => (

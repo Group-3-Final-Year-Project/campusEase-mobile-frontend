@@ -7,6 +7,7 @@ import { Container, HeaderCard, HeaderItemLabel } from "./styles";
 import BookingCard from "./components/BookingCard";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IconBtn } from "~components";
+import { getIsServiceProvider } from "~services";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -18,9 +19,18 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [activeStatusBtn, setActiveStatusBtn] = useState("All");
+  const [isProvider, setIsProvider] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchIsProvider = async () => {
+      setIsProvider(await getIsServiceProvider());
+    };
+    fetchIsProvider();
+  }, []);
 
   const statuses = [
     { name: "All" },
+    ...(isProvider ? [{ name: "My service" }] : []),
     { name: "In Progress" },
     { name: "Completed" },
     { name: "Canceled" },

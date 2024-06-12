@@ -20,6 +20,7 @@ export const APP_PAGES = {
   EXPLORE: "Explore",
   BOOKMARKS: "Bookmarks",
   CHATS: "Chats",
+  CHAT: "Chat",
   USER_TYPE_SELECTOR: "User Type Selector",
   SERVICE: "Service",
   ANALYTICS: "Analytics",

@@ -72,6 +72,8 @@ export const DarkTheme: DefaultThemeProps = {
     secondaryBackground: "#21212b",
     // secondaryBackground: "#111214",
     border: "#111D40",
+    red: "#ff0000",
+    green: "#00ff00",
   },
 };
 
@@ -86,6 +88,8 @@ export const LightTheme: DefaultThemeProps = {
     background: "#ffffff",
     secondaryBackground: "#f5f6f8",
     border: "#f2f2f2",
+    red: "#ff0000",
+    green: "#00ff00",
   },
 };
 

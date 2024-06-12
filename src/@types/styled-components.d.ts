@@ -21,6 +21,8 @@ declare module "styled-components" {
       border: string;
       secondaryText: string;
       secondaryText2: string;
+      red: string;
+      green: string;
     };
     typography: {
       fontFamily: {

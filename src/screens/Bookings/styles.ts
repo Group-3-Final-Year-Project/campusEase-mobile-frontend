@@ -24,7 +24,7 @@ export const HeaderCard = styled.View`
   flex-direction: row;
   padding: 5px 3.5px;
   border-radius: 10px;
-  margin-top: 15px;
+  // margin-top: 15px;
   background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
 `;

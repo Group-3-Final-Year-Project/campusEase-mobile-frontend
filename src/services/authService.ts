@@ -70,6 +70,12 @@ export const getUserType = async () => {
   return userType;
 };
 
+export const getIsServiceProvider = async () => {
+  const userType = await getUserType();
+  const isServiceProvider = async () => userType === UserType.SERVICE_PROVIDER;
+  return await isServiceProvider();
+};
+
 export const changePassword = async () => {};
 
 export const readLoginDataFromAsyncStorage: () => Promise<VerifiedUser | null> =
@@ -102,9 +108,14 @@ export const signUserUp = async (signUpData: {
     const url = `${API_URLS.BASE_URL}${API_URLS.SIGNUP}`;
     console.log("url: ", url);
     const response = await axios.post(url, data);
+    const userData: User = {
+      token: response.data.data.token,
+      ...response.data.data.authorized_account,
+    };
     saveCurrentlyLoggedInUser(response.data.data as VerifiedUser);
     await setLoginDataToAsyncStorage(response.data.data as VerifiedUser);
     await setIsAlreadyUser();
+    await setUserType(userData.userType);
     return response.data.data as VerifiedUser;
   } catch (error) {
     return processErrorResponse(error as any, "Error signing up user");
@@ -126,6 +137,7 @@ export const signUserIn = async (signInData: {
     saveCurrentlyLoggedInUser(response.data.data as VerifiedUser);
     await setLoginDataToAsyncStorage(response.data.data as VerifiedUser);
     await setIsAlreadyUser();
+    await setUserType(userData.userType);
     return response.data.data as VerifiedUser;
   } catch (error) {
     return processErrorResponse(error as any, "Error logging in user");

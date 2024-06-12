@@ -1,6 +1,7 @@
 import { BottomTabNavigationHelpers } from "@react-navigation/bottom-tabs/lib/typescript/src/types";
 import { CommonActions, NavigationProp } from "@react-navigation/native";
 import { EffectCallback, DependencyList, useRef, useEffect } from "react";
+import * as ImagePicker from "expo-image-picker";
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -26,7 +27,18 @@ export const useDidMountEffect = (
   }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export const openGallery = () => {};
+export const pickImage = async (props?: ImagePicker.ImagePickerOptions) => {
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+    selectionLimit: 1,
+    ...props,
+  });
+
+  return result;
+};
 
 export const showAlert = () => {};
 

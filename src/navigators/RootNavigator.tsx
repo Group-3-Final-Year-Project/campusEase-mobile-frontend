@@ -9,7 +9,6 @@ import VerifyEmail from "~src/screens/VerifyEmail";
 import Landing from "~src/screens/Landing";
 import Login from "~src/screens/Login";
 import Service from "~src/screens/Service";
-import Bookings from "~src/screens/Bookings";
 import BookingSummary from "~src/screens/BookingSummary";
 import BookingDetail from "~src/screens/BookingDetail";
 import RegisterService from "~src/screens/RegisterService";
@@ -18,13 +17,14 @@ import ManageAddresses from "~src/screens/ManageAddresses";
 import ServiceCategories from "~src/screens/ServiceCategories";
 import MoreBookingInfo from "~src/screens/MoreBookingInfo";
 import Bookmarks from "~src/screens/Bookmarks";
+import Chat from "~src/screens/Chat";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
-      initialRouteName={APP_PAGES.LANDING}
+      initialRouteName={APP_PAGES.ONBOARD}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: true,
@@ -103,6 +103,7 @@ const RootNavigator = () => {
           name={APP_PAGES.OTHER_BOOKING_INFO}
           component={MoreBookingInfo}
         />
+        <Stack.Screen name={APP_PAGES.CHAT} component={Chat} />
       </Stack.Group>
     </Stack.Navigator>
   );

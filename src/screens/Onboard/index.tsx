@@ -84,7 +84,7 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
               Service provi
             </Button>
           </View>
-          <Pressable onPress={() => navigation.replace(APP_PAGES.SIGNIN)}>
+          <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNIN)}>
             <Description
               style={{
                 textAlign: "center",

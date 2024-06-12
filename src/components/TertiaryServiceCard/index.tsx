@@ -3,12 +3,13 @@ import React, { useContext } from "react";
 import { CardContainer, CardImage, InfoContainer, Description } from "./styles";
 import { ThemeContext } from "styled-components/native";
 import { NavigationProp } from "@react-navigation/native";
-import { StarRating, Text } from "~components";
+import StarRating from '../StarRating';
+import Text from '../Text';
 import { formatCurrency } from "~services";
 
 interface ServiceCardProps extends TouchableOpacityProps {
   service: any;
-  // navigation?: NavigationProp<any>;
+  navigation?: NavigationProp<any>;
 }
 
 const TertiaryServiceCard = (props: ServiceCardProps) => {
