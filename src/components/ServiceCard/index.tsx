@@ -8,14 +8,16 @@ import { Iconify } from "react-native-iconify";
 import Text from "~components/Text";
 import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
+import { Service } from "~src/@types/types";
 
 interface ServiceCardProps extends CardProps {
-  service: any;
-  navigation?: NavigationProp<any>;
+  service: Service;
+  navigation: NavigationProp<any>;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = (props) => {
+const ServiceCard = (props: ServiceCardProps) => {
   const theme = useContext(ThemeContext);
+  const { service, navigation } = props;
 
   return (
     <Card
@@ -30,9 +32,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
         padding: 10,
         position: "relative",
       }}
-      onPress={() =>
-        props?.navigation && props.navigation.navigate(APP_PAGES.SERVICE)
-      }
+      onPress={() => navigation && navigation.navigate(APP_PAGES.SERVICE)}
       {...props}
     >
       <Card.Image
@@ -42,7 +42,9 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
           borderRadius: 15,
         }}
         source={{
-          uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+          uri: service?.coverImage
+            ? service.coverImage
+            : "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
         }}
       />
       <View
@@ -63,7 +65,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
             color={theme?.colors.text}
           />
           <Text style={{ marginLeft: 5, fontSize: 12, lineHeight: 14 }}>
-            4.8
+            {service.rating ?? 0.0}
           </Text>
         </IconBtn>
         <IconBtn>
@@ -76,7 +78,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
         </IconBtn>
       </View>
       <Card.Section
-        content={[{ text: "Hello", children: <Title>Jeron's Plumbing</Title> }]}
+        content={[{ text: "Hello", children: <Title>{service.name}</Title> }]}
       />
     </Card>
   );

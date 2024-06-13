@@ -1,5 +1,5 @@
 import { View, Animated, FlatList, Image } from "react-native";
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useContext, useRef, useEffect, useCallback } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
 import {
@@ -28,7 +28,7 @@ export const useCustomBottomInset = () => {
   return Math.max(20, insets.bottom + 5);
 };
 
-const Service = ({ navigation }: NativeStackScreenProps<any>) => {
+const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
@@ -83,6 +83,13 @@ const Service = ({ navigation }: NativeStackScreenProps<any>) => {
       ),
     });
   }, [headerOpacity, navigation]);
+
+  const fetchData = useCallback(
+    async (serviceId: number) => {
+      //fetch service data here...
+    },
+    [route.params, navigation]
+  );
 
   const serviceSocialItems = [
     {

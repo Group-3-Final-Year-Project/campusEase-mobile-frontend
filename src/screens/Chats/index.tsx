@@ -1,15 +1,20 @@
-import { FlatList, View } from "react-native";
+import { FlatList, View, TouchableOpacity } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
 import { StatusBar } from "expo-status-bar";
-import { Container } from "./styles";
+import {
+  Container,
+  ChatCardContainer,
+  ChatCardLabel,
+  Description,
+} from "./styles";
 import { IconBtn } from "~components";
 import { Iconify } from "react-native-iconify";
 import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { TouchableOpacity } from "react-native";
 import { APP_PAGES } from "~src/shared/constants";
+import Avatar from "react-native-ui-lib/avatar";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -41,6 +46,31 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     }, [])
   );
 
+  const renderChatCard = () => (
+    <ChatCardContainer onPress={() => navigation.navigate(APP_PAGES.CHAT)}>
+      <Avatar
+        animate
+        useAutoColors
+        label="SO"
+        size={45}
+        backgroundColor="green"
+        labelColor="white"
+        source={{
+          uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+        }}
+      />
+      <View style={{ flexGrow: 1, paddingHorizontal: 10 }}>
+        <ChatCardLabel>Jeron Esmond</ChatCardLabel>
+        <Description>Hey there! I am the service ...</Description>
+      </View>
+      <View>
+        <Description style={{ color: themeContext?.colors.secondaryText2 }}>
+          12:37 am
+        </Description>
+      </View>
+    </ChatCardContainer>
+  );
+
   return (
     <Container
       style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
@@ -48,20 +78,12 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
       <StatusBar style={themeContext?.dark ? "light" : "dark"} />
       <FlatList
         data={[...new Array(5)]}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity
-            style={{
-              height: 80,
-              backgroundColor: themeContext?.colors.secondaryBackground,
-            }}
-            onPress={() => navigation.navigate(APP_PAGES.CHAT)}
-          ></TouchableOpacity>
-        )}
+        renderItem={renderChatCard}
         ItemSeparatorComponent={() => (
           <View
             style={{
-              height: 1,
-              backgroundColor: themeContext?.colors.secondaryText2,
+              height: 0.8,
+              backgroundColor: themeContext?.colors.secondaryBackground,
             }}
           />
         )}

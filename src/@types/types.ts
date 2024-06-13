@@ -56,10 +56,6 @@ export type VerifiedUser = {
   authorized_account: User;
 };
 
-export type Service = {};
-
-export type Booking = {};
-
 export type ReduxState = {
   user: VerifiedUser;
   // services: Service[];
@@ -77,4 +73,39 @@ export type ApiRequestResult<TData = any, SData = any> = {
   errorData?: any;
   count?: number;
   headers?: any;
+};
+
+export type SubService = {
+  name: string;
+  description?: NullableString;
+  price: number;
+};
+
+export type Service = {
+  id: number;
+  providerId: number;
+  name: string;
+  description?: NullableString;
+  category: string;
+  location: string;
+  coverImage: string;
+  gallery?: string[];
+  email: NullableString;
+  website?: NullableString;
+  startingPrice?: number;
+  subServices?: SubService[];
+  createdAt: Date;
+  updatedAt?: Date;
+  isAvailable: boolean;
+  rating?: number;
+};
+
+export type Booking = {};
+
+export type ServiceCategory = {
+  id: number;
+  name: string;
+  description?: NullableString;
+  icon?: React.ReactElement;
+  image?: string;
 };

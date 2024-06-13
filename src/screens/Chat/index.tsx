@@ -266,7 +266,7 @@ const Chat = () => {
             fontWeight: "200",
           }}
           renderQuickReplySend={renderQuickReplySend}
-          renderAccessory={renderAccessory}
+          // renderAccessory={renderAccessory}
           renderActions={renderCustomActions}
           renderSystemMessage={renderSystemMessage}
           renderCustomView={renderCustomView}
@@ -284,10 +284,5 @@ const Chat = () => {
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5" },
-  content: { backgroundColor: "#ffffff", flex: 1 },
-});
 
 export default Chat;

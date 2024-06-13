@@ -4,8 +4,14 @@ import { getIsServiceProvider } from "~services";
 import { ListLabel } from "../../styles";
 import { TertiaryServiceCard } from "~components";
 import { NavigationProp } from "@react-navigation/native";
+import { Service } from "~src/@types/types";
 
-const ProviderServices = (props: { navigation: NavigationProp<any> }) => {
+type ProviderServicesProps = {
+  navigation: NavigationProp<any>;
+  services: Service[];
+};
+
+const ProviderServices = ({ navigation, services }: ProviderServicesProps) => {
   const [isProvider, setIsProvider] = React.useState(false);
   React.useEffect(() => {
     const fetchIsProvider = async () => {
@@ -15,15 +21,16 @@ const ProviderServices = (props: { navigation: NavigationProp<any> }) => {
   }, []);
   return (
     <>
-      {isProvider ? (
+      {isProvider && !!services.length ? (
         <View style={{ marginTop: 20 }}>
           <ListLabel style={{ marginBottom: 10 }}>My services</ListLabel>
           <FlatList
-            data={[...new Array(2)]}
-            renderItem={({ item, index }) => (
+            data={services}
+            renderItem={({ item }) => (
               <TertiaryServiceCard
+                key={item.id}
                 service={item}
-                navigation={props.navigation}
+                navigation={navigation}
               />
             )}
             horizontal

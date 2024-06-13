@@ -12,6 +12,8 @@ import {
   IconBtn,
   ServiceCard,
   SecondaryServiceCard,
+  LoadingView,
+  EmptyState,
 } from "~components";
 import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
@@ -19,6 +21,9 @@ import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import BookingCard from "../Bookings/components/BookingCard";
 import ProviderServices from "./components/ProviderServices";
+import axios from "axios";
+import { API_URLS } from "~src/shared/constants";
+import { Service, ServiceCategory } from "~src/@types/types";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -29,6 +34,13 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [providerServices, setProviderServices] = useState<Service[]>([]);
+  const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
+    []
+  );
+  const [popularServices, setPopularServices] = useState<Service[]>([]);
+  const [nearYouServices, setNearYouServices] = useState<Service[]>([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -75,6 +87,14 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
     }, [])
   );
 
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+  }, []);
+
+  if (loading) {
+    return <LoadingView />;
+  }
+
   return (
     <Container>
       <VirtualisedContainer
@@ -115,46 +135,68 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
             </IconBtn>
           </View>
           <HomeBanner />
-          <ProviderServices navigation={navigation as NavigationProp<any>} />
-          <Categories />
+          <ProviderServices
+            services={providerServices}
+            navigation={navigation as NavigationProp<any>}
+          />
+          <Categories
+            categories={serviceCategories}
+            navigation={navigation as NavigationProp<any>}
+          />
           {/* Upcoming bookings should also be here... */}
           {/* Earnings summary should be displayed here for service providers... */}
-          <View style={{ marginTop: 20 }}>
-            <ListLabel style={{ marginBottom: 10 }}>Popular services</ListLabel>
-            <FlatList
-              data={[...new Array(5)]}
-              renderItem={({ item, index }) => (
-                <ServiceCard
-                  service={item}
-                  navigation={navigation as NavigationProp<any>}
-                />
+          {!popularServices.length && !nearYouServices.length ? (
+            <EmptyState />
+          ) : (
+            <>
+              {!!popularServices.length && (
+                <View style={{ marginTop: 20 }}>
+                  <ListLabel style={{ marginBottom: 10 }}>
+                    Popular services
+                  </ListLabel>
+                  <FlatList
+                    data={popularServices}
+                    renderItem={({ item }) => (
+                      <ServiceCard
+                        key={item.id}
+                        service={item}
+                        navigation={navigation as NavigationProp<any>}
+                      />
+                    )}
+                    horizontal
+                    ItemSeparatorComponent={() => (
+                      <View style={{ marginHorizontal: 7 }} />
+                    )}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
               )}
-              horizontal
-              ItemSeparatorComponent={() => (
-                <View style={{ marginHorizontal: 7 }} />
+              {!!nearYouServices.length && (
+                <View style={{ marginTop: 20 }}>
+                  <ListLabel style={{ marginBottom: 10 }}>
+                    Services near you
+                  </ListLabel>
+                  <FlatList
+                    data={nearYouServices}
+                    renderItem={({ item }) => (
+                      <SecondaryServiceCard
+                        key={item.id}
+                        service={item}
+                        navigation={navigation as NavigationProp<any>}
+                        style={{
+                          width: "100%",
+                        }}
+                      />
+                    )}
+                    ItemSeparatorComponent={() => (
+                      <View style={{ marginVertical: 7 }} />
+                    )}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
               )}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <ListLabel style={{ marginBottom: 10 }}>For you</ListLabel>
-            <FlatList
-              data={[...new Array(5)]}
-              renderItem={({ item, index }) => (
-                <SecondaryServiceCard
-                  service={item}
-                  navigation={navigation as NavigationProp<any>}
-                  style={{
-                    width: "100%",
-                  }}
-                />
-              )}
-              ItemSeparatorComponent={() => (
-                <View style={{ marginVertical: 7 }} />
-              )}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
+            </>
+          )}
         </>
       </VirtualisedContainer>
     </Container>

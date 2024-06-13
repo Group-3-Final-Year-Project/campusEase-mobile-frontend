@@ -1,57 +1,30 @@
-import { View, Dimensions, Text } from "react-native";
+import { View, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import { GridView, AnimatedImage, Card } from "react-native-ui-lib";
 import { ListLabel } from "../../styles";
 import { ThemeContext } from "styled-components/native";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
 import { APP_PAGES } from "~src/shared/constants";
+import { ServiceCategory } from "~src/@types/types";
 
-const Categories = () => {
+type CategoriesProps = {
+  categories: ServiceCategory[];
+  navigation: NavigationProp<any>;
+};
+
+const Categories = ({ categories, navigation }: CategoriesProps) => {
   const theme = useContext(ThemeContext);
-  const navigation = useNavigation();
+
+  const handleOnPress = (id: number) => {
+    //will set the redux filter for category to the specified id here...
+    navigation.navigate(APP_PAGES.SERVICE_CATEGORIES);
+  };
 
   return (
     <View style={{ marginTop: 20 }}>
       <ListLabel style={{ marginBottom: 10 }}>Categories</ListLabel>
       <GridView
-        items={[
-          {
-            title: "item 1",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 2",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 3",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 4",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 5",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 6",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 7",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 8",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-          {
-            title: "item 9",
-            onPress: () => navigation.navigate(APP_PAGES.SERVICE_CATEGORIES),
-          },
-        ]}
+        items={categories}
         numColumns={3}
         itemSpacing={10}
         viewWidth={Dimensions.get("screen").width - 30}
@@ -61,7 +34,7 @@ const Categories = () => {
             center
             animated
             enableShadow={false}
-            onPress={item.onPress}
+            onPress={() => handleOnPress(item.id)}
             containerStyle={{
               backgroundColor: theme?.colors.secondaryBackground,
               borderRadius: 15,
@@ -72,7 +45,11 @@ const Categories = () => {
             }}
           >
             <AnimatedImage
-              source={require("src/assets/images/HeartEyesEmoji.png")}
+              source={
+                item.image
+                  ? { uri: item.image }
+                  : require("src/assets/images/HeartEyesEmoji.png")
+              }
               width={30}
               height={30}
             />

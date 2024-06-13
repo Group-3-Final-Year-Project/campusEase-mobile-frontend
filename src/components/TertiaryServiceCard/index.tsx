@@ -3,32 +3,36 @@ import React, { useContext } from "react";
 import { CardContainer, CardImage, InfoContainer, Description } from "./styles";
 import { ThemeContext } from "styled-components/native";
 import { NavigationProp } from "@react-navigation/native";
-import StarRating from '../StarRating';
-import Text from '../Text';
+import StarRating from "../StarRating";
+import Text from "../Text";
 import { formatCurrency } from "~services";
+import { Service } from "~src/@types/types";
 
 interface ServiceCardProps extends TouchableOpacityProps {
-  service: any;
+  service: Service;
   navigation?: NavigationProp<any>;
 }
 
 const TertiaryServiceCard = (props: ServiceCardProps) => {
   const theme = useContext(ThemeContext);
+  const { service } = props;
 
   return (
     <CardContainer>
       <CardImage
         source={{
-          uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+          uri: service?.coverImage
+            ? service.coverImage
+            : "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
         }}
       />
       <InfoContainer>
-        <Description>Jeron Plumbing Works</Description>
+        <Description>{service.name}</Description>
         <View style={{ flexDirection: "row" }}>
-          <StarRating value={5} size={12} />
-          <Text>(5.0)</Text>
+          <StarRating value={Math.floor(service.rating ?? 0)} size={12} />
+          <Text>({service.rating ?? 0.0})</Text>
         </View>
-        <Description>{formatCurrency(190)}</Description>
+        <Description>{formatCurrency(service.startingPrice ?? 0)}</Description>
       </InfoContainer>
     </CardContainer>
   );
