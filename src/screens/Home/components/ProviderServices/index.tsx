@@ -4,11 +4,11 @@ import { getIsServiceProvider } from "~services";
 import { ListLabel } from "../../styles";
 import { TertiaryServiceCard } from "~components";
 import { NavigationProp } from "@react-navigation/native";
-import { Service } from "~src/@types/types";
+import { ServiceListService } from "~src/@types/types";
 
 type ProviderServicesProps = {
   navigation: NavigationProp<any>;
-  services: Service[];
+  services: ServiceListService[];
 };
 
 const ProviderServices = ({ navigation, services }: ProviderServicesProps) => {

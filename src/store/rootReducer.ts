@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
 import UserReducer from "./reducers/userReducer";
-// import FilterReducer from "./reducers/filterReducer";
+import FilterReducer from "./reducers/filterReducer";
 // import ServicesReducer from "./reducers/servicesReducer";
 
 const appReducer = combineReducers({
   user: UserReducer,
-  // filters: FilterReducer,
+  filters: FilterReducer,
   // services: ServicesReducer,
 });
 

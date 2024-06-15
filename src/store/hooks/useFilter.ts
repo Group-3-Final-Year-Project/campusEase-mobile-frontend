@@ -4,6 +4,7 @@ import {
   setFilterProps as _setFilterProps,
   setFilterValue as _setFilterValue,
 } from "../actions/filterActions";
+import { Filters } from "~src/@types/types";
 
 export const useFilter = () => {
   const dispatch = useAppDispatch();

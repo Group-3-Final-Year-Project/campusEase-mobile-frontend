@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   ContactInfoContainer,
   Description,
@@ -10,13 +10,16 @@ import Avatar from "react-native-ui-lib/avatar";
 import { ThemeContext } from "styled-components/native";
 import IconBtn from "~components/IconBtn";
 import { Iconify } from "react-native-iconify";
+import { ServiceProvider } from "~src/@types/types";
 
 interface IServiceProviderCard {
+  providerId: number;
   showContactInfo?: boolean;
 }
 
 const ServiceProviderCard = (props: IServiceProviderCard) => {
   const themeContext = useContext(ThemeContext);
+  const [provider, setProvider] = useState<ServiceProvider | null>(null);
 
   return (
     <ServiceProviderCardContainer>
@@ -29,11 +32,15 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
           backgroundColor="green"
           labelColor="white"
           source={{
-            uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+            uri:
+              provider?.profilePicture ??
+              "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
           }}
         />
         <View style={{ marginLeft: 15 }}>
-          <ServiceProviderLabel style={{}}>Sam Smith</ServiceProviderLabel>
+          <ServiceProviderLabel style={{}}>
+            {provider?.username}
+          </ServiceProviderLabel>
           <Description
             style={{
               fontSize: 12,

@@ -2,6 +2,10 @@ import { BottomTabNavigationHelpers } from "@react-navigation/bottom-tabs/lib/ty
 import { CommonActions, NavigationProp } from "@react-navigation/native";
 import { EffectCallback, DependencyList, useRef, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
+import * as Linking from "expo-linking";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
+import { Alert } from "react-native";
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -25,19 +29,6 @@ export const useDidMountEffect = (
     if (didMount.current) func();
     else didMount.current = true;
   }, deps); // eslint-disable-line react-hooks/exhaustive-deps
-};
-
-export const pickImage = async (props?: ImagePicker.ImagePickerOptions) => {
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.All,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
-    selectionLimit: 1,
-    ...props,
-  });
-
-  return result;
 };
 
 export const showAlert = () => {};
@@ -77,6 +68,79 @@ export const formatCurrency = (value: number) => {
   const formatter = new Intl.NumberFormat("en-GH", {
     style: "currency",
     currency: "GHS",
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
   });
   return formatter.format(Number(value));
 };
+
+export default async function getPermissionAsync(
+  permission: Permissions.PermissionType
+) {
+  const { status } = await Permissions.askAsync(permission);
+  if (status !== "granted") {
+    const permissionName = permission.toLowerCase().replace("_", " ");
+    Alert.alert(
+      "Cannot be done 😞",
+      `If you would like to use this feature, you'll need to enable the ${permissionName} permission in your phone settings.`,
+      [
+        {
+          text: "Let's go!",
+          onPress: () => Linking.openURL("app-settings:"),
+        },
+        { text: "Nevermind", onPress: () => {}, style: "cancel" },
+      ],
+      { cancelable: true }
+    );
+
+    return false;
+  }
+  return true;
+}
+
+export async function getLocationAsync(
+  onSend: (locations: { location: Location.LocationObjectCoords }[]) => void
+) {
+  if (await Location.requestForegroundPermissionsAsync()) {
+    const location = await Location.getCurrentPositionAsync({});
+    if (location) {
+      onSend([{ location: location.coords }]);
+    }
+  }
+}
+
+export async function pickImageAsync(
+  onSend: (images: ImagePicker.ImagePickerAsset[]) => void,
+  props?: ImagePicker.ImagePickerOptions
+) {
+  if (await ImagePicker.requestMediaLibraryPermissionsAsync()) {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      ...props,
+    });
+
+    if (!result.canceled) {
+      onSend(result.assets);
+      return result.assets;
+    }
+  }
+}
+
+export async function takePictureAsync(
+  onSend: (images: ImagePicker.ImagePickerAsset[]) => void,
+  props?: ImagePicker.ImagePickerOptions
+) {
+  if (await ImagePicker.requestCameraPermissionsAsync()) {
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      ...props,
+    });
+
+    if (!result.canceled) {
+      onSend(result.assets);
+      return result.assets;
+    }
+  }
+}

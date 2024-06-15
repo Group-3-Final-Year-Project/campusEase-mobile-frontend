@@ -35,16 +35,21 @@ export enum UserType {
   SERVICE_PROVIDER = "service_provider",
 }
 
+export enum Filters {
+  SERVICE_CATEGORY = "service_category",
+}
+
 export type User = {
   id: number;
   token: NullableString;
   userType: UserType.SERVICE_PROVIDER | UserType.USER;
   username: string;
   email: string;
-  phoneNumber: NullableString;
+  phoneNumber: string;
   location: NullableString;
   profilePicture: NullableString;
-  isVerified: boolean;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
   isActive: boolean;
   isLoggedIn: boolean;
   createdAt?: Date;
@@ -60,7 +65,9 @@ export type ReduxState = {
   user: VerifiedUser;
   // services: Service[];
   // bookings: Booking[];
-  // filters: {};
+  filters: {
+    [Filters.SERVICE_CATEGORY]: ServiceCategory;
+  };
 };
 
 export type ApiRequestResult<TData = any, SData = any> = {
@@ -86,7 +93,7 @@ export type Service = {
   providerId: number;
   name: string;
   description?: NullableString;
-  category: string;
+  category: ServiceCategory;
   location: string;
   coverImage: string;
   gallery?: string[];
@@ -98,6 +105,7 @@ export type Service = {
   updatedAt?: Date;
   isAvailable: boolean;
   rating?: number;
+  numberOfReviews?: number;
 };
 
 export type Booking = {};
@@ -108,4 +116,23 @@ export type ServiceCategory = {
   description?: NullableString;
   icon?: React.ReactElement;
   image?: string;
+};
+
+export type ServiceListService = {
+  id: number;
+  name: string;
+  description?: NullableString;
+  coverImage: string;
+  rating?: number;
+  startingPrice?: number;
+};
+
+export type ServiceProvider = {
+  id: number;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  profilePicture: NullableString;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
 };

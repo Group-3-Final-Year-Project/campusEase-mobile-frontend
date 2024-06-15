@@ -8,10 +8,10 @@ import { Iconify } from "react-native-iconify";
 import Text from "~components/Text";
 import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
-import { Service } from "~src/@types/types";
+import { ServiceListService } from "~src/@types/types";
 
 interface ServiceCardProps extends CardProps {
-  service: Service;
+  service: ServiceListService;
   navigation: NavigationProp<any>;
 }
 

@@ -18,34 +18,33 @@ import {
 import { ThemeContext } from "styled-components/native";
 import { IconBtn } from "~components";
 import { CategoryLabel } from "./styles";
+import Cats from "~src/data/categories.json";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { useFilter } from "~store/hooks/useFilter";
+import { Filters } from "~src/@types/types";
 
 const ServiceCategories = () => {
   const layout = useWindowDimensions();
   const themeContext = useContext(ThemeContext);
-  const categories = [
-    { id: "0", name: "Home" },
-    { id: "1", name: "Entertainment" },
-    { id: "2", name: "Plumbing" },
-    { id: "3", name: "Plumbings" },
-    { id: "4", name: "Food" },
-  ];
+  const { filters } = useFilter();
   const renderCategoryScene = reduce(
-    categories,
+    Cats,
     (acc, category) => ({
       ...acc,
       [category["id"]]: () => <Category category={category} />,
     }),
     {}
   );
-  const getCategoryRoutes = categories.map((category) => {
+  const getCategoryRoutes = Cats.map((category) => {
     return {
-      key: category.id,
+      key: category.id.toString(),
       title: capitalize(category.name),
     };
   });
 
   const renderScene = SceneMap(renderCategoryScene);
 
+  //use service category filter to set the index
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState(getCategoryRoutes);
 

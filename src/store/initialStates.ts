@@ -1,4 +1,4 @@
-import { ReduxState, UserType } from "~src/@types/types";
+import { Filters, ReduxState, UserType } from "~src/@types/types";
 
 const INITIAL_STATE: ReduxState = {
   user: {
@@ -8,10 +8,11 @@ const INITIAL_STATE: ReduxState = {
       token: null,
       username: "",
       email: "",
-      phoneNumber: null,
+      phoneNumber: "",
       location: null,
       profilePicture: null,
-      isVerified: false,
+      isEmailVerified: false,
+      isPhoneVerified: false,
       isActive: false,
       isLoggedIn: false,
       createdAt: undefined,
@@ -20,7 +21,12 @@ const INITIAL_STATE: ReduxState = {
   },
   // services: [],
   // bookings: [],
-  // filters: {},
+  filters: {
+    [Filters.SERVICE_CATEGORY]: {
+      id: 0,
+      name: "",
+    },
+  },
 };
 
 export default INITIAL_STATE;

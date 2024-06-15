@@ -1,5 +1,11 @@
-import { View, Animated, FlatList, Image } from "react-native";
-import React, { useContext, useRef, useEffect, useCallback } from "react";
+import { View, Animated, FlatList } from "react-native";
+import React, {
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
+  useState,
+} from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
 import {
@@ -13,7 +19,14 @@ import {
   TagLabel,
   Title,
 } from "./styles";
-import { Button, IconBtn, ServiceCard, ServiceProviderCard } from "~components";
+import {
+  Button,
+  EmptyState,
+  IconBtn,
+  LoadingView,
+  ServiceCard,
+  ServiceProviderCard,
+} from "~components";
 import { Iconify } from "react-native-iconify";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ServiceBanner from "./components/ServiceBanner";
@@ -22,6 +35,7 @@ import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
 import { APP_PAGES } from "~src/shared/constants";
+import { Service } from "~src/@types/types";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -32,6 +46,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const [service, setService] = useState<Service | null>(null);
 
   const yOffset = useRef(new Animated.Value(0)).current;
   const headerOpacity = yOffset.interpolate({
@@ -195,6 +210,9 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     );
   };
 
+  if (loading) return <LoadingView />;
+  else if (!service) return <EmptyState />;
+
   return (
     <Container>
       <Animated.ScrollView
@@ -226,7 +244,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
             }}
           >
             <IconBtn style={{ marginRight: 5 }}>
-              <TagLabel>Home</TagLabel>
+              <TagLabel>{service.category.name}</TagLabel>
             </IconBtn>
             <IconBtn
               style={{
@@ -238,25 +256,27 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 size={10}
                 strokeWidth={10}
               />
-              <TagLabel> 4.8 (354 reviews)</TagLabel>
+              <TagLabel>
+                {" "}
+                {service.rating} ({service.numberOfReviews} reviews)
+              </TagLabel>
             </IconBtn>
           </View>
           <View style={{ marginTop: 10 }}>
-            <Title style={{ marginBottom: 4 }}>Jeron Plumbing Works</Title>
+            <Title style={{ marginBottom: 4 }}>{service.name}</Title>
             <Description style={{ color: themeContext?.colors.secondaryText }}>
-              1012 Ocean avenue, New York, USA
+              {service.location}
             </Description>
           </View>
         </ServiceInfoContainer>
-        <ServiceInfoContainer>
-          <ServiceInfoHeaderLabel>About Service</ServiceInfoHeaderLabel>
-          <Description style={{ lineHeight: 24 }}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Est eveniet
-            tempore quibusdam, numquam nobis iste? Dolor vel est sunt minus
-            maiores voluptas assumenda harum ratione, cum, facere unde nobis?
-            Quis!
-          </Description>
-        </ServiceInfoContainer>
+        {service?.description && (
+          <ServiceInfoContainer>
+            <ServiceInfoHeaderLabel>About Service</ServiceInfoHeaderLabel>
+            <Description style={{ lineHeight: 24 }}>
+              {service.description}
+            </Description>
+          </ServiceInfoContainer>
+        )}
         <ServiceInfoContainer
           style={{
             flexDirection: "row",
@@ -277,7 +297,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           <ServiceInfoHeaderLabel>
             About Service Provider
           </ServiceInfoHeaderLabel>
-          <ServiceProviderCard />
+          <ServiceProviderCard providerId={service.providerId} />
         </ServiceInfoContainer>
         {/* Galllery goes here... */}
         <ServiceInfoContainer>

@@ -6,10 +6,10 @@ import { NavigationProp } from "@react-navigation/native";
 import StarRating from "../StarRating";
 import Text from "../Text";
 import { formatCurrency } from "~services";
-import { Service } from "~src/@types/types";
+import { ServiceListService } from "~src/@types/types";
 
 interface ServiceCardProps extends TouchableOpacityProps {
-  service: Service;
+  service: ServiceListService;
   navigation?: NavigationProp<any>;
 }
 

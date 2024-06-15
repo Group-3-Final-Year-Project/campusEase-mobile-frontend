@@ -4,9 +4,7 @@ import {
   Alert,
   Linking,
   Platform,
-  StyleSheet,
   Text,
-  View,
   KeyboardAvoidingView,
 } from "react-native";
 import {
@@ -15,6 +13,7 @@ import {
   Send,
   SendProps,
   SystemMessage,
+  SystemMessageProps,
 } from "react-native-gifted-chat";
 import AccessoryBar from "./AccessoryBar";
 import CustomActions from "./CustomActions";
@@ -23,6 +22,7 @@ import earlierMessages from "./data/earlierMessages";
 import messagesData from "./data/messages";
 import { Container } from "./styles";
 import { ThemeContext } from "styled-components/native";
+import { InferProps, Requireable } from "prop-types";
 
 const user = {
   _id: 1,
@@ -216,24 +216,73 @@ const Chat = () => {
     [onSendFromUser]
   );
 
-  const renderSystemMessage = useCallback((props) => {
-    return (
-      <SystemMessage
-        {...props}
-        containerStyle={{
-          marginBottom: 15,
-        }}
-        textStyle={{
-          fontSize: 14,
-          fontFamily: themeContext?.typography.fontFamily.regular,
-        }}
-      />
-    );
-  }, []);
+  const renderSystemMessage = useCallback(
+    (
+      props: React.JSX.IntrinsicAttributes &
+        Pick<SystemMessageProps<IMessage>, keyof SystemMessageProps<IMessage>> &
+        Pick<
+          InferProps<{
+            currentMessage: Requireable<object>;
+            containerStyle: Requireable<number | boolean | object>;
+            wrapperStyle: Requireable<number | boolean | object>;
+            textStyle: Requireable<number | boolean | object>;
+          }>,
+          never
+        > &
+        Pick<SystemMessageProps<IMessage>, never>
+    ) => {
+      return (
+        <SystemMessage
+          {...props}
+          containerStyle={{
+            marginBottom: 15,
+          }}
+          textStyle={{
+            fontSize: 14,
+            fontFamily: themeContext?.typography.fontFamily.regular,
+          }}
+        />
+      );
+    },
+    []
+  );
 
-  const renderCustomView = useCallback((props) => {
-    return <CustomView {...props} />;
-  }, []);
+  const renderCustomView = useCallback(
+    (
+      props: React.JSX.IntrinsicAttributes &
+        React.JSX.IntrinsicClassAttributes<CustomView> &
+        Pick<
+          Pick<
+            Readonly<{
+              currentMessage: any;
+              containerStyle: any;
+              mapViewStyle: any;
+            }>,
+            never
+          > &
+            Pick<
+              InferProps<{ currentMessage: Requireable<object> }>,
+              "currentMessage"
+            > &
+            Pick<
+              Readonly<{
+                currentMessage: any;
+                containerStyle: any;
+                mapViewStyle: any;
+              }>,
+              "containerStyle" | "mapViewStyle"
+            >,
+          never
+        > & {
+          readonly containerStyle?: any;
+          currentMessage?: object | null | undefined;
+          readonly mapViewStyle?: any;
+        } & {}
+    ) => {
+      return <CustomView {...props} />;
+    },
+    []
+  );
 
   const renderSend = useCallback((props: SendProps<IMessage>) => {
     return (

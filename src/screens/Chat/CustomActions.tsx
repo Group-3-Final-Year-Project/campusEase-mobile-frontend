@@ -11,11 +11,7 @@ import {
 } from "react-native";
 
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import {
-  getLocationAsync,
-  pickImageAsync,
-  takePictureAsync,
-} from "./mediaUtils";
+import { getLocationAsync, pickImageAsync, takePictureAsync } from "~services";
 
 interface Props {
   renderIcon?: () => React.ReactNode;

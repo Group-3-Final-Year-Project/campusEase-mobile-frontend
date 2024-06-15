@@ -1,3 +1,4 @@
+import { Filters } from "~src/@types/types";
 import ACTION_TYPES from "~store/actionTypes";
 import INITIAL_STATE from "~store/initialStates";
 
@@ -21,6 +22,7 @@ const FilterReducer = (
     case ACTION_TYPES.CLEAR_ALL_FILTER_PROPS: //will come back to this later
       return {
         ...state,
+        [Filters.SERVICE_CATEGORY]: {},
         //clear all filter props here...
       };
   }

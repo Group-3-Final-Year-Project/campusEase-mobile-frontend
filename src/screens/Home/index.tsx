@@ -23,7 +23,7 @@ import BookingCard from "../Bookings/components/BookingCard";
 import ProviderServices from "./components/ProviderServices";
 import axios from "axios";
 import { API_URLS } from "~src/shared/constants";
-import { Service, ServiceCategory } from "~src/@types/types";
+import { ServiceListService, ServiceCategory } from "~src/@types/types";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -35,12 +35,18 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [providerServices, setProviderServices] = useState<Service[]>([]);
+  const [providerServices, setProviderServices] = useState<
+    ServiceListService[]
+  >([]);
   const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
     []
   );
-  const [popularServices, setPopularServices] = useState<Service[]>([]);
-  const [nearYouServices, setNearYouServices] = useState<Service[]>([]);
+  const [popularServices, setPopularServices] = useState<ServiceListService[]>(
+    []
+  );
+  const [nearYouServices, setNearYouServices] = useState<ServiceListService[]>(
+    []
+  );
 
   useFocusEffect(
     useCallback(() => {
