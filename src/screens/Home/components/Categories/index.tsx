@@ -5,7 +5,8 @@ import { ListLabel } from "../../styles";
 import { ThemeContext } from "styled-components/native";
 import { NavigationProp } from "@react-navigation/native";
 import { APP_PAGES } from "~src/shared/constants";
-import { ServiceCategory } from "~src/@types/types";
+import { Filters, ServiceCategory } from "~src/@types/types";
+import { useFilter } from "~store/hooks/useFilter";
 
 type CategoriesProps = {
   categories: ServiceCategory[];
@@ -14,9 +15,20 @@ type CategoriesProps = {
 
 const Categories = ({ categories, navigation }: CategoriesProps) => {
   const theme = useContext(ThemeContext);
+  const { setFilterValue } = useFilter();
 
-  const handleOnPress = (id: number) => {
+  const handleOnPress = (item: ServiceCategory) => {
     //will set the redux filter for category to the specified id here...
+    setFilterValue({
+      filter: Filters.SERVICE_CATEGORY,
+      value: {
+        id: item.id,
+        name: item.name,
+        image: item?.image,
+        icon: item?.icon,
+        description: item?.description,
+      },
+    });
     navigation.navigate(APP_PAGES.SERVICE_CATEGORIES);
   };
 
@@ -31,10 +43,11 @@ const Categories = ({ categories, navigation }: CategoriesProps) => {
         // listPadding={Spacings.s5}
         renderCustomItem={(item) => (
           <Card
+            key={item?.id}
             center
             animated
             enableShadow={false}
-            onPress={() => handleOnPress(item.id)}
+            onPress={() => handleOnPress(item as ServiceCategory)}
             containerStyle={{
               backgroundColor: theme?.colors.secondaryBackground,
               borderRadius: 15,
@@ -46,7 +59,7 @@ const Categories = ({ categories, navigation }: CategoriesProps) => {
           >
             <AnimatedImage
               source={
-                item.image
+                item?.image
                   ? { uri: item.image }
                   : require("src/assets/images/HeartEyesEmoji.png")
               }

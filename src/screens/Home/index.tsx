@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, View, RefreshControl } from "react-native";
 import React, { useCallback, useContext, useState } from "react";
 import { Container, Description, ListLabel, Title } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -24,6 +24,9 @@ import ProviderServices from "./components/ProviderServices";
 import axios from "axios";
 import { API_URLS } from "~src/shared/constants";
 import { ServiceListService, ServiceCategory } from "~src/@types/types";
+import { useQuery } from "@tanstack/react-query";
+import Cats from "~src/data/categories";
+import ServicesData from "~src/data/servicesData";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -34,19 +37,18 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [providerServices, setProviderServices] = useState<
-    ServiceListService[]
-  >([]);
-  const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
-    []
-  );
-  const [popularServices, setPopularServices] = useState<ServiceListService[]>(
-    []
-  );
-  const [nearYouServices, setNearYouServices] = useState<ServiceListService[]>(
-    []
-  );
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [providerServices, setProviderServices] = useState<
+  //   ServiceListService[]
+  // >([]);
+  // const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
+  //   []
+  // );
+  // const [popularServices, setPopularServices] = useState<ServiceListService[]>([
+  // ]);
+  // const [nearYouServices, setNearYouServices] = useState<ServiceListService[]>([
+
+  // ]);
 
   useFocusEffect(
     useCallback(() => {
@@ -94,18 +96,43 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   );
 
   const fetchData = useCallback(async () => {
-    setLoading(true);
+    // setServiceCategories(Cats);
+    // setProviderServices(ServicesData);
+    // setPopularServices(ServicesData);
+    // setNearYouServices(ServicesData);
+    setTimeout(() => null, 5000);
+    return {
+      serviceCategories: Cats,
+      providerServices: ServicesData,
+      popularServices: ServicesData,
+      nearYouServices: ServicesData,
+    };
   }, []);
 
-  if (loading) {
+  const { data, isLoading, isError, isRefetching } = useQuery({
+    queryKey: ["homeScreenData"],
+    queryFn: () => fetchData(),
+  });
+
+  if (isLoading) {
     return <LoadingView />;
+  } else if (isError || !data || data === undefined) {
+    return <EmptyState />;
   }
+
+  const {
+    nearYouServices,
+    popularServices,
+    providerServices,
+    serviceCategories,
+  } = data;
 
   return (
     <Container>
       <VirtualisedContainer
         style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
         renderItem={undefined}
+        refreshControl={<RefreshControl refreshing={isRefetching} />}
       >
         <>
           <View
@@ -145,17 +172,20 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
             services={providerServices}
             navigation={navigation as NavigationProp<any>}
           />
-          <Categories
-            categories={serviceCategories}
-            navigation={navigation as NavigationProp<any>}
-          />
-          {/* Upcoming bookings should also be here... */}
-          {/* Earnings summary should be displayed here for service providers... */}
-          {!popularServices.length && !nearYouServices.length ? (
+
+          {!popularServices?.length && !nearYouServices?.length ? (
             <EmptyState />
           ) : (
             <>
-              {!!popularServices.length && (
+              {!!serviceCategories?.length && (
+                <Categories
+                  categories={serviceCategories}
+                  navigation={navigation as NavigationProp<any>}
+                />
+              )}
+              {/* Upcoming bookings should also be here... */}
+              {/* Earnings summary should be displayed here for service providers... */}
+              {!!popularServices?.length && (
                 <View style={{ marginTop: 20 }}>
                   <ListLabel style={{ marginBottom: 10 }}>
                     Popular services
@@ -177,7 +207,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                   />
                 </View>
               )}
-              {!!nearYouServices.length && (
+              {!!nearYouServices?.length && (
                 <View style={{ marginTop: 20 }}>
                   <ListLabel style={{ marginBottom: 10 }}>
                     Services near you

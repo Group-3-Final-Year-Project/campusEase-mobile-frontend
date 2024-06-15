@@ -21,7 +21,7 @@ const ProviderServices = ({ navigation, services }: ProviderServicesProps) => {
   }, []);
   return (
     <>
-      {isProvider && !!services.length ? (
+      {isProvider && !!services?.length ? (
         <View style={{ marginTop: 20 }}>
           <ListLabel style={{ marginBottom: 10 }}>My services</ListLabel>
           <FlatList

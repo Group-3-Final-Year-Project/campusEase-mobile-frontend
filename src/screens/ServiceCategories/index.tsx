@@ -1,11 +1,12 @@
 import {
+  Alert,
   FlatList,
   ListRenderItem,
   Text,
   View,
   useWindowDimensions,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import reduce from "lodash/reduce";
 import capitalize from "lodash/capitalize";
 import Category from "./components/Category";
@@ -18,7 +19,7 @@ import {
 import { ThemeContext } from "styled-components/native";
 import { IconBtn } from "~components";
 import { CategoryLabel } from "./styles";
-import Cats from "~src/data/categories.json";
+import Cats from "~src/data/categories";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { useFilter } from "~store/hooks/useFilter";
 import { Filters } from "~src/@types/types";
@@ -26,7 +27,7 @@ import { Filters } from "~src/@types/types";
 const ServiceCategories = () => {
   const layout = useWindowDimensions();
   const themeContext = useContext(ThemeContext);
-  const { filters } = useFilter();
+  const { filters, setFilterValue } = useFilter();
   const renderCategoryScene = reduce(
     Cats,
     (acc, category) => ({
@@ -42,10 +43,15 @@ const ServiceCategories = () => {
     };
   });
 
+  // useEffect(() =>
+  //   Alert.alert("hello", JSON.stringify(filters[Filters.SERVICE_CATEGORY]))
+  // );
   const renderScene = SceneMap(renderCategoryScene);
 
   //use service category filter to set the index
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = React.useState(
+    filters[Filters.SERVICE_CATEGORY]?.id
+  );
   const [routes] = React.useState(getCategoryRoutes);
 
   const renderItem = (
@@ -104,7 +110,13 @@ const ServiceCategories = () => {
     <TabView
       navigationState={{ index, routes }}
       renderScene={renderScene}
-      onIndexChange={setIndex}
+      onIndexChange={(index) => {
+        setIndex(index);
+        setFilterValue({
+          filter: Filters.SERVICE_CATEGORY,
+          value: Cats.filter((cat) => cat.id === index),
+        });
+      }}
       initialLayout={{ width: layout.width }}
       overScrollMode="auto"
       renderTabBar={_renderTabBar}

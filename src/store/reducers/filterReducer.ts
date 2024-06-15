@@ -25,6 +25,8 @@ const FilterReducer = (
         [Filters.SERVICE_CATEGORY]: {},
         //clear all filter props here...
       };
+    default:
+      return state;
   }
 };
 

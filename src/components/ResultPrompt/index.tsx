@@ -1,10 +1,10 @@
-import { Image, Text, View } from "react-native";
+import { View } from "react-native";
 import React, { useContext } from "react";
 import { Dialog, DialogProps, PanningProvider } from "react-native-ui-lib";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "styled-components/native";
 import { Description, Title } from "./styles";
-import { Button } from "~components";
+import Button from "../Button";
 
 type ResultProps = DialogProps & {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,9 +1,11 @@
-import { Text, View, FlatList } from "react-native";
-import React from "react";
+import { Text, View, FlatList, RefreshControl } from "react-native";
+import React, { useCallback } from "react";
 import { Container } from "./styles";
-import { SecondaryServiceCard } from "~components";
+import { SecondaryServiceCard, LoadingView, EmptyState } from "~components";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import servicesData from "~src/data/servicesData";
+import { useQuery } from "@tanstack/react-query";
 
 interface ICategory {
   category: any;
@@ -17,10 +19,25 @@ const Category = (props: ICategory) => {
   const navigation = useNavigation();
   const bottomInset = useCustomBottomInset();
 
+  const fetchData = useCallback(async () => {
+    setTimeout(() => null, 5000);
+    return servicesData;
+  }, []);
+
+  const { data, isLoading, isError, isRefetching } = useQuery({
+    queryKey: ["homeScreenData"],
+    queryFn: () => fetchData(),
+  });
+
+  if (isLoading) {
+    return <LoadingView />;
+  } else if (isError || !data || data === undefined) {
+    return <EmptyState />;
+  }
   return (
     <Container>
       <FlatList
-        data={[...new Array(15)]}
+        data={data}
         renderItem={({ item, index }) => (
           <SecondaryServiceCard
             service={item}
@@ -34,6 +51,7 @@ const Category = (props: ICategory) => {
         showsHorizontalScrollIndicator={false}
         style={{ paddingBottom: bottomInset }}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
+        refreshControl={<RefreshControl refreshing={isRefetching} />}
       />
     </Container>
   );

@@ -20,6 +20,7 @@ import RootNavigator from "~src/navigators/RootNavigator";
 import { Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
 import store from "~store/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 enableScreens();
 SplashScreen.preventAutoHideAsync();
@@ -27,7 +28,8 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   useStatusBar(true, "", "light-content");
   useNavigationBar();
-  let [fontsLoaded, error] = useFonts({
+  const queryClient = new QueryClient();
+  const [fontsLoaded, error] = useFonts({
     [Font.EuclidBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
     [Font.EuclidExtraBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
     [Font.EuclidLight]: require("./src/assets/fonts/Euclid Circular B Light.ttf"),
@@ -73,10 +75,12 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <SafeComponent request={{ loading: !fontsLoaded, data: true }}>
           <Provider store={store}>
-            <StatusBar style="dark" />
-            <NavigationContainer theme={theme as any}>
-              <RootNavigator />
-            </NavigationContainer>
+            <QueryClientProvider client={queryClient}>
+              <StatusBar style="dark" />
+              <NavigationContainer theme={theme as any}>
+                <RootNavigator />
+              </NavigationContainer>
+            </QueryClientProvider>
           </Provider>
         </SafeComponent>
       </ThemeProvider>

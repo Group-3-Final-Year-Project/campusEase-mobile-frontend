@@ -35,7 +35,7 @@ import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
 import { APP_PAGES } from "~src/shared/constants";
-import { Service } from "~src/@types/types";
+import { Service as IService } from "~src/@types/types";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -46,7 +46,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [service, setService] = useState<Service | null>(null);
+  const [service, setService] = useState<IService | null>(null);
 
   const yOffset = useRef(new Animated.Value(0)).current;
   const headerOpacity = yOffset.interpolate({
