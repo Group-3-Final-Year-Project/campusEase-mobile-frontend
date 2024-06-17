@@ -51,6 +51,19 @@ export const STORAGE_KEYS = {
   IS_ALREADY_USER: "campusEase_is_already_user",
   ACTIVE_USER: "campusEase_active_user",
   USER_TYPE: "campusEase_active_user_type",
+  BOOKMARKS: "campusEase_bookmarks",
+  CHATROOMS: "campusEase_chatRooms",
+  MESSAGES: "chatRoom_messages",
+  USERS: "chatRoom_users",
+};
+
+export const QUERY_KEYS = {
+  HOME_SCREEN_DATA: "campusEase_home_screen_data",
+  CATEGORY_SERVICES: "campusEase_category_services",
+  BOOKINGS: "campusEase_bookings",
+  BOOKMARKS: "campusEase_bookmarks_data",
+  SERVICE: "campusEase_service",
+  CHATS: "campusEase_chats",
 };
 
 export const MISC = {};

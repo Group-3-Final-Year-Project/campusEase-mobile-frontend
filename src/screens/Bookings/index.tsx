@@ -6,8 +6,13 @@ import { Iconify } from "react-native-iconify";
 import { Container, HeaderCard, HeaderItemLabel } from "./styles";
 import BookingCard from "./components/BookingCard";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { IconBtn } from "~components";
+import { EmptyState, IconBtn, LoadingView } from "~components";
 import { getIsServiceProvider } from "~services";
+import { BookingStatus } from "~src/@types/types";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from "~src/shared/constants";
+import bookingsData from "~src/data/bookingsData";
+import { RefreshControl } from "react-native";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -18,7 +23,7 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [activeStatusBtn, setActiveStatusBtn] = useState("All");
+  const [activeStatusBtn, setActiveStatusBtn] = useState(BookingStatus.ALL);
   const [isProvider, setIsProvider] = React.useState(false);
 
   React.useEffect(() => {
@@ -29,14 +34,14 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   }, []);
 
   const statuses = [
-    { name: "All" },
-    ...(isProvider ? [{ name: "My service" }] : []),
-    { name: "In Progress" },
-    { name: "Completed" },
-    { name: "Canceled" },
+    { name: BookingStatus.ALL },
+    ...(isProvider ? [{ name: BookingStatus.MY_SERVICE }] : []),
+    { name: BookingStatus.IN_PROGRESS },
+    { name: BookingStatus.COMPLETED },
+    { name: BookingStatus.CANCELLED },
   ];
 
-  const renderStatusBtn = ({ item }: { item: { name: string } }) => {
+  const renderStatusBtn = ({ item }: { item: { name: BookingStatus } }) => {
     const isActive = item.name === activeStatusBtn;
     return (
       <IconBtn
@@ -52,6 +57,19 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
     );
   };
 
+  const fetchData = React.useCallback(
+    async (bookingStatus: BookingStatus) => {
+      setTimeout(() => null, 5000);
+      return bookingsData;
+    },
+    [activeStatusBtn]
+  );
+
+  const { data, isLoading, isError, isRefetching } = useQuery({
+    queryKey: [QUERY_KEYS.BOOKINGS],
+    queryFn: () => fetchData(activeStatusBtn),
+  });
+
   return (
     <Container>
       <HeaderCard>
@@ -64,14 +82,22 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
           )}
         />
       </HeaderCard>
-      <FlatList
-        data={[...new Array(10)]}
-        renderItem={({ item }) => (
-          <BookingCard booking={item} navigation={navigation} />
-        )}
-        ItemSeparatorComponent={() => <View style={{ marginVertical: 7 }} />}
-        ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
-      />
+      {isLoading ? (
+        <LoadingView />
+      ) : isError || !data || data === undefined ? (
+        <EmptyState />
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <BookingCard booking={item} navigation={navigation} />
+          )}
+          ItemSeparatorComponent={() => <View style={{ marginVertical: 7 }} />}
+          ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
+          ListEmptyComponent={() => <EmptyState />}
+          refreshControl={<RefreshControl refreshing={isRefetching} />}
+        />
+      )}
     </Container>
   );
 };

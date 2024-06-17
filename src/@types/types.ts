@@ -1,5 +1,6 @@
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LocationObjectCoords } from "expo-location";
 
 export type CustomNavigationProp = {
   navigation: NativeStackNavigationProp<ParamListBase, any>;
@@ -39,6 +40,14 @@ export enum Filters {
   SERVICE_CATEGORY = "service_category",
 }
 
+export enum BookingStatus {
+  ALL = "all",
+  IN_PROGRESS = "In Progress",
+  COMPLETED = "Completed",
+  CANCELLED = "Cancelled",
+  MY_SERVICE = "My Service",
+}
+
 export type User = {
   id: number;
   token: NullableString;
@@ -46,7 +55,7 @@ export type User = {
   username: string;
   email: string;
   phoneNumber: string;
-  location: NullableString;
+  locations: LocationObject[];
   profilePicture: NullableString;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
@@ -61,6 +70,14 @@ export type VerifiedUser = {
   authorized_account: User;
 };
 
+export type ChatData = {
+  messages: any[];
+  step: number;
+  loadEarlier?: boolean;
+  isLoadingEarlier?: boolean;
+  isTyping: boolean;
+};
+
 export type ReduxState = {
   user: VerifiedUser;
   // services: Service[];
@@ -68,6 +85,7 @@ export type ReduxState = {
   filters: {
     [Filters.SERVICE_CATEGORY]: ServiceCategory;
   };
+  chat: ChatData;
 };
 
 export type ApiRequestResult<TData = any, SData = any> = {
@@ -88,13 +106,18 @@ export type SubService = {
   price: number;
 };
 
+export type LocationObject = {
+  name: string;
+  location: LocationObjectCoords;
+};
+
 export type Service = {
   id: number;
   providerId: number;
   name: string;
   description?: NullableString;
   category: ServiceCategory;
-  location: string;
+  location: LocationObject;
   coverImage: string;
   gallery?: string[];
   email: NullableString;

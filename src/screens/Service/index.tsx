@@ -34,8 +34,11 @@ import { formatCurrency } from "../../services/uiService";
 import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
-import { APP_PAGES } from "~src/shared/constants";
+import { APP_PAGES, QUERY_KEYS } from "~src/shared/constants";
 import { Service as IService } from "~src/@types/types";
+import { useQuery } from "@tanstack/react-query";
+import servicesData from "~src/data/servicesData";
+import { RefreshControl } from "react-native";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -46,7 +49,6 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [service, setService] = useState<IService | null>(null);
 
   const yOffset = useRef(new Animated.Value(0)).current;
   const headerOpacity = yOffset.interpolate({
@@ -100,8 +102,8 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   }, [headerOpacity, navigation]);
 
   const fetchData = useCallback(
-    async (serviceId: number) => {
-      //fetch service data here...
+    (serviceId: number) => {
+      return servicesData.filter((service) => service.id === serviceId)[0];
     },
     [route.params, navigation]
   );
@@ -210,8 +212,13 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     );
   };
 
-  if (loading) return <LoadingView />;
-  else if (!service) return <EmptyState />;
+  const { data, isLoading, isError, isRefetching } = useQuery({
+    queryKey: [QUERY_KEYS.SERVICE],
+    queryFn: () => fetchData(route.params?.serviceId),
+  });
+
+  if (isLoading) return <LoadingView />;
+  else if (isError || !data || data === undefined) return <EmptyState />;
 
   return (
     <Container>
@@ -231,6 +238,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           { useNativeDriver: true }
         )}
         scrollEventThrottle={16}
+        refreshControl={<RefreshControl refreshing={isRefetching} />}
         style={{ paddingBottom: bottomInset }}
       >
         <ServiceBanner />
@@ -244,7 +252,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
             }}
           >
             <IconBtn style={{ marginRight: 5 }}>
-              <TagLabel>{service.category.name}</TagLabel>
+              <TagLabel>{data?.category.name}</TagLabel>
             </IconBtn>
             <IconBtn
               style={{
@@ -257,23 +265,22 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 strokeWidth={10}
               />
               <TagLabel>
-                {" "}
-                {service.rating} ({service.numberOfReviews} reviews)
+                {data.rating} ({data.numberOfReviews} reviews)
               </TagLabel>
             </IconBtn>
           </View>
           <View style={{ marginTop: 10 }}>
-            <Title style={{ marginBottom: 4 }}>{service.name}</Title>
+            <Title style={{ marginBottom: 4 }}>{data.name}</Title>
             <Description style={{ color: themeContext?.colors.secondaryText }}>
-              {service.location}
+              {data.location.name}
             </Description>
           </View>
         </ServiceInfoContainer>
-        {service?.description && (
+        {data?.description && (
           <ServiceInfoContainer>
             <ServiceInfoHeaderLabel>About Service</ServiceInfoHeaderLabel>
             <Description style={{ lineHeight: 24 }}>
-              {service.description}
+              {data.description}
             </Description>
           </ServiceInfoContainer>
         )}
@@ -297,7 +304,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           <ServiceInfoHeaderLabel>
             About Service Provider
           </ServiceInfoHeaderLabel>
-          <ServiceProviderCard providerId={service.providerId} />
+          <ServiceProviderCard providerId={data.providerId} />
         </ServiceInfoContainer>
         {/* Galllery goes here... */}
         <ServiceInfoContainer>

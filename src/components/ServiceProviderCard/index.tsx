@@ -11,6 +11,8 @@ import { ThemeContext } from "styled-components/native";
 import IconBtn from "~components/IconBtn";
 import { Iconify } from "react-native-iconify";
 import { ServiceProvider } from "~src/@types/types";
+import { openLink } from "~services";
+import usersData from "~src/data/usersData";
 
 interface IServiceProviderCard {
   providerId: number;
@@ -19,7 +21,9 @@ interface IServiceProviderCard {
 
 const ServiceProviderCard = (props: IServiceProviderCard) => {
   const themeContext = useContext(ThemeContext);
-  const [provider, setProvider] = useState<ServiceProvider | null>(null);
+  const [provider, setProvider] = useState<ServiceProvider | null>(
+    usersData[1]
+  );
 
   return (
     <ServiceProviderCardContainer>
@@ -58,6 +62,7 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
               backgroundColor: themeContext?.colors.primary,
               marginRight: 7,
             }}
+            onPress={() => openLink(`tel:${provider?.phoneNumber}`)}
           >
             <Iconify
               icon="solar:phone-calling-outline"

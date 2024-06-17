@@ -22,7 +22,7 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import BookingCard from "../Bookings/components/BookingCard";
 import ProviderServices from "./components/ProviderServices";
 import axios from "axios";
-import { API_URLS } from "~src/shared/constants";
+import { API_URLS, QUERY_KEYS } from "~src/shared/constants";
 import { ServiceListService, ServiceCategory } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
 import Cats from "~src/data/categories";
@@ -49,6 +49,19 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   // const [nearYouServices, setNearYouServices] = useState<ServiceListService[]>([
 
   // ]);
+
+  const getServiceListServices: () => ServiceListService[] = () => {
+    return ServicesData.map((service) => {
+      return {
+        id: service.id,
+        name: service.name,
+        description: service?.description,
+        coverImage: service.coverImage,
+        rating: service?.rating,
+        startingPrice: service?.startingPrice,
+      };
+    });
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -103,14 +116,14 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
     setTimeout(() => null, 5000);
     return {
       serviceCategories: Cats,
-      providerServices: ServicesData,
-      popularServices: ServicesData,
-      nearYouServices: ServicesData,
+      providerServices: getServiceListServices(),
+      popularServices: getServiceListServices(),
+      nearYouServices: getServiceListServices(),
     };
   }, []);
 
   const { data, isLoading, isError, isRefetching } = useQuery({
-    queryKey: ["homeScreenData"],
+    queryKey: [QUERY_KEYS.HOME_SCREEN_DATA],
     queryFn: () => fetchData(),
   });
 
@@ -133,6 +146,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
         style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
         renderItem={undefined}
         refreshControl={<RefreshControl refreshing={isRefetching} />}
+        ListEmptyComponent={() => <EmptyState />}
       >
         <>
           <View

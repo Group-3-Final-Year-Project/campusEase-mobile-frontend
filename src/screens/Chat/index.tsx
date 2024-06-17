@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useCallback, useContext, useReducer } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import {
   Alert,
   Linking,
@@ -14,90 +14,57 @@ import {
   SendProps,
   SystemMessage,
   SystemMessageProps,
+  User as GiftedChatUser,
 } from "react-native-gifted-chat";
 import AccessoryBar from "./AccessoryBar";
 import CustomActions from "./CustomActions";
 import CustomView from "./CustomView";
-import earlierMessages from "./data/earlierMessages";
-import messagesData from "./data/messages";
 import { Container } from "./styles";
 import { ThemeContext } from "styled-components/native";
 import { InferProps, Requireable } from "prop-types";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { firestoreDatabase } from "firebaseConfig";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { STORAGE_KEYS } from "~src/shared/constants";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 
-const user = {
-  _id: 1,
-  name: "Developer",
-};
-
-const otherUser = {
-  _id: 2,
-  name: "React Native",
-  avatar: "https://facebook.github.io/react/img/logo_og.png",
-};
-
-interface IState {
-  messages: any[];
-  step: number;
-  loadEarlier?: boolean;
-  isLoadingEarlier?: boolean;
-  isTyping: boolean;
-}
-
-enum ActionKind {
-  SEND_MESSAGE = "SEND_MESSAGE",
-  LOAD_EARLIER_MESSAGES = "LOAD_EARLIER_MESSAGES",
-  LOAD_EARLIER_START = "LOAD_EARLIER_START",
-  SET_IS_TYPING = "SET_IS_TYPING",
-  // LOAD_EARLIER_END = 'LOAD_EARLIER_END',
-}
-
-// An interface for our actions
-interface StateAction {
-  type: ActionKind;
-  payload?: any;
-}
-
-function reducer(state: IState, action: StateAction) {
-  switch (action.type) {
-    case ActionKind.SEND_MESSAGE: {
-      return {
-        ...state,
-        step: state.step + 1,
-        messages: action.payload,
-      };
-    }
-    case ActionKind.LOAD_EARLIER_MESSAGES: {
-      return {
-        ...state,
-        loadEarlier: true,
-        isLoadingEarlier: false,
-        messages: action.payload,
-      };
-    }
-    case ActionKind.LOAD_EARLIER_START: {
-      return {
-        ...state,
-        isLoadingEarlier: true,
-      };
-    }
-    case ActionKind.SET_IS_TYPING: {
-      return {
-        ...state,
-        isTyping: action.payload,
-      };
-    }
-  }
-}
-
-const Chat = () => {
-  const [state, dispatch] = useReducer(reducer, {
-    messages: messagesData,
-    step: 0,
-    loadEarlier: true,
-    isLoadingEarlier: false,
-    isTyping: false,
-  });
+const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
+  const { chatId } = route.params;
+  const dispatch = useAppDispatch();
+  const chat = useAppSelector((state) => state.chat);
+  const currentUser = useAppSelector((state) => state.user);
+  const giftedChatUser: GiftedChatUser = {
+    _id: currentUser.id,
+    name: currentUser.username,
+  };
+
+  useEffect(() => {
+    const messagesRef = collection(
+      firestoreDatabase,
+      STORAGE_KEYS.CHATROOMS,
+      chatId,
+      STORAGE_KEYS.MESSAGES
+    );
+    const q = query(messagesRef, orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const messages = querySnapshot.docs.map((doc) => ({
+        _id: doc.data()._id,
+        createdAt: doc.data().createdAt.toDate(),
+        text: doc.data().text,
+        user: doc.data().user,
+      }));
+      dispatch({ type: ActionKind.LOAD_EARLIER_MESSAGES, payload: messages });
+    });
+
+    return () => unsubscribe();
+  }, [chatId]);
 
   const onSend = useCallback(
     (messages: any[]) => {
@@ -109,26 +76,41 @@ const Chat = () => {
       );
 
       dispatch({ type: ActionKind.SEND_MESSAGE, payload: newMessages });
+      const { _id, createdAt, text, user } = messages[0];
+      addDoc(
+        collection(
+          firestoreDatabase,
+          STORAGE_KEYS.CHATROOMS,
+          chatId,
+          STORAGE_KEYS.MESSAGES
+        ),
+        {
+          _id,
+          createdAt,
+          text,
+          user,
+        }
+      );
     },
     [dispatch, state.messages]
   );
 
-  const onLoadEarlier = useCallback(() => {
-    console.log("loading");
-    dispatch({ type: ActionKind.LOAD_EARLIER_START });
-    setTimeout(() => {
-      const newMessages = GiftedChat.prepend(
-        state.messages,
-        earlierMessages() as IMessage[],
-        Platform.OS !== "web"
-      );
+  // const onLoadEarlier = useCallback(() => {
+  //   console.log("loading");
+  //   dispatch({ type: ActionKind.LOAD_EARLIER_START });
+  //   setTimeout(() => {
+  //     const newMessages = GiftedChat.prepend(
+  //       chat.messages,
+  //       earlierMessages() as IMessage[],
+  //       Platform.OS !== "web"
+  //     );
 
-      dispatch({
-        type: ActionKind.LOAD_EARLIER_MESSAGES,
-        payload: newMessages,
-      });
-    }, 1500); // simulating network
-  }, [dispatch, state.messages]);
+  //     dispatch({
+  //       type: ActionKind.LOAD_EARLIER_MESSAGES,
+  //       payload: newMessages,
+  //     });
+  //   }, 1500); // simulating network
+  // }, [dispatch, chat.messages]);
 
   const parsePatterns = useCallback((_linkStyle: any) => {
     return [
@@ -156,7 +138,7 @@ const Chat = () => {
           createdAt,
           _id: Math.round(Math.random() * 1000000),
           text: replies[0].title,
-          user,
+          giftedChatUser,
         },
       ]);
     } else if (replies.length > 1) {
@@ -165,7 +147,7 @@ const Chat = () => {
           createdAt,
           _id: Math.round(Math.random() * 1000000),
           text: replies.map((reply) => reply.title).join(", "),
-          user,
+          giftedChatUser,
         },
       ]);
     } else {
@@ -189,7 +171,7 @@ const Chat = () => {
       const createdAt = new Date();
       const messagesToUpload = messages.map((message) => ({
         ...message,
-        user,
+        giftedChatUser,
         createdAt,
         _id: Math.round(Math.random() * 1000000),
       }));
@@ -199,14 +181,14 @@ const Chat = () => {
     [onSend]
   );
 
-  const renderAccessory = useCallback(() => {
-    return (
-      <AccessoryBar
-        onSend={onSendFromUser}
-        isTyping={() => setIsTyping(true)}
-      />
-    );
-  }, [onSendFromUser, setIsTyping]);
+  // const renderAccessory = useCallback(() => {
+  //   return (
+  //     <AccessoryBar
+  //       onSend={onSendFromUser}
+  //       isTyping={() => setIsTyping(true)}
+  //     />
+  //   );
+  // }, [onSendFromUser, setIsTyping]);
 
   const renderCustomActions = useCallback(
     (props) =>
@@ -299,13 +281,13 @@ const Chat = () => {
         style={{ flexGrow: 1 }}
       >
         <GiftedChat
-          messages={state.messages}
+          messages={chat.messages ?? []}
           onSend={onSend}
-          loadEarlier={state.loadEarlier}
-          onLoadEarlier={onLoadEarlier}
-          isLoadingEarlier={state.isLoadingEarlier}
+          loadEarlier={chat.loadEarlier}
+          // onLoadEarlier={onLoadEarlier}
+          isLoadingEarlier={chat.isLoadingEarlier}
           parsePatterns={parsePatterns}
-          user={user}
+          user={giftedChatUser}
           scrollToBottom
           onLongPressAvatar={onLongPressAvatar}
           onPressAvatar={onPressAvatar}
@@ -325,7 +307,7 @@ const Chat = () => {
             left: { color: "red" },
             right: { color: "yellow" },
           }}
-          isTyping={state.isTyping}
+          isTyping={chat.isTyping}
           inverted={Platform.OS !== "web"}
           infiniteScroll
         />

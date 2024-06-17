@@ -144,3 +144,5 @@ export async function takePictureAsync(
     }
   }
 }
+
+export const openLink = (url: string) => Linking.openURL(url);

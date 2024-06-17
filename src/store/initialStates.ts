@@ -9,7 +9,7 @@ const INITIAL_STATE: ReduxState = {
       username: "",
       email: "",
       phoneNumber: "",
-      location: null,
+      locations: [],
       profilePicture: null,
       isEmailVerified: false,
       isPhoneVerified: false,
@@ -26,6 +26,13 @@ const INITIAL_STATE: ReduxState = {
       id: 0,
       name: "",
     },
+  },
+  chat: {
+    messages: [],
+    step: 0,
+    loadEarlier: true,
+    isLoadingEarlier: false,
+    isTyping: false,
   },
 };
 

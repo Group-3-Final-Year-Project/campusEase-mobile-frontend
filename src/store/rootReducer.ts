@@ -1,11 +1,13 @@
 import { combineReducers } from "redux";
 import UserReducer from "./reducers/userReducer";
 import FilterReducer from "./reducers/filterReducer";
+import ChatReducer from "./reducers/chatReducer";
 // import ServicesReducer from "./reducers/servicesReducer";
 
 const appReducer = combineReducers({
   user: UserReducer,
   filters: FilterReducer,
+  chat: ChatReducer,
   // services: ServicesReducer,
 });
 

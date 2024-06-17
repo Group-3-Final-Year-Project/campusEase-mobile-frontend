@@ -6,6 +6,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import servicesData from "~src/data/servicesData";
 import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from "~src/shared/constants";
 
 interface ICategory {
   category: any;
@@ -25,7 +26,7 @@ const Category = (props: ICategory) => {
   }, []);
 
   const { data, isLoading, isError, isRefetching } = useQuery({
-    queryKey: ["homeScreenData"],
+    queryKey: [QUERY_KEYS.CATEGORY_SERVICES],
     queryFn: () => fetchData(),
   });
 
@@ -51,6 +52,7 @@ const Category = (props: ICategory) => {
         showsHorizontalScrollIndicator={false}
         style={{ paddingBottom: bottomInset }}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
+        ListEmptyComponent={() => <EmptyState />}
         refreshControl={<RefreshControl refreshing={isRefetching} />}
       />
     </Container>
