@@ -7,9 +7,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import servicesData from "~src/data/servicesData";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~src/shared/constants";
+import { ServiceCategory } from "~src/@types/types";
 
 interface ICategory {
-  category: any;
+  category: ServiceCategory;
 }
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -20,10 +21,11 @@ const Category = (props: ICategory) => {
   const navigation = useNavigation();
   const bottomInset = useCustomBottomInset();
 
-  const fetchData = useCallback(async () => {
-    setTimeout(() => null, 5000);
-    return servicesData;
-  }, []);
+  const fetchData = useCallback(() => {
+    return servicesData.filter(
+      (service) => service.category.id === props.category.id
+    );
+  }, [props.category]);
 
   const { data, isLoading, isError, isRefetching } = useQuery({
     queryKey: [QUERY_KEYS.CATEGORY_SERVICES],

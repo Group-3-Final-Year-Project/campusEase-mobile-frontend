@@ -6,7 +6,7 @@ import Text from "~components/Text";
 
 export const Title = styled(Text).attrs({
   fontSize: "large",
-  fontWeight: "bold",
+  fontWeight: "medium",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
   /* margin-bottom: 5px; */
@@ -36,6 +36,10 @@ export const InfoContainer = styled.View`
 
 export const Description = styled(Text).attrs({})`
   font-family: ${(props: DefaultThemeProps) =>
-    props.theme.typography.fontFamily.bold};
+    props.theme.typography.fontFamily.regular};
   // padding-bottom: 10px;
+`;
+
+export const ServiceTitle = styled(Text)`
+  font-family:${(props:DefaultThemeProps) => props.theme.typography.fontFamily.semiBold};
 `;

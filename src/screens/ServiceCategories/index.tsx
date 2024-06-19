@@ -1,12 +1,5 @@
-import {
-  Alert,
-  FlatList,
-  ListRenderItem,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
-import React, { useContext, useEffect } from "react";
+import { FlatList, View, useWindowDimensions } from "react-native";
+import React, { useContext } from "react";
 import reduce from "lodash/reduce";
 import capitalize from "lodash/capitalize";
 import Category from "./components/Category";
@@ -19,8 +12,7 @@ import {
 import { ThemeContext } from "styled-components/native";
 import { IconBtn } from "~components";
 import { CategoryLabel } from "./styles";
-import Cats from "~src/data/categories";
-import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { categoriesData } from "~src/data/categories";
 import { useFilter } from "~store/hooks/useFilter";
 import { Filters } from "~src/@types/types";
 
@@ -29,14 +21,14 @@ const ServiceCategories = () => {
   const themeContext = useContext(ThemeContext);
   const { filters, setFilterValue } = useFilter();
   const renderCategoryScene = reduce(
-    Cats,
+    Object.values(categoriesData),
     (acc, category) => ({
       ...acc,
       [category["id"]]: () => <Category category={category} />,
     }),
     {}
   );
-  const getCategoryRoutes = Cats.map((category) => {
+  const getCategoryRoutes = Object.values(categoriesData).map((category) => {
     return {
       key: category.id.toString(),
       title: capitalize(category.name),
@@ -53,6 +45,14 @@ const ServiceCategories = () => {
     filters[Filters.SERVICE_CATEGORY]?.id
   );
   const [routes] = React.useState(getCategoryRoutes);
+
+  const onIndexChange = (index: number) => {
+    setIndex(index);
+    setFilterValue({
+      filter: Filters.SERVICE_CATEGORY,
+      value: Object.values(categoriesData).filter((cat) => cat.id === index)[0],
+    });
+  };
 
   const renderItem = (
     item: {
@@ -110,13 +110,7 @@ const ServiceCategories = () => {
     <TabView
       navigationState={{ index, routes }}
       renderScene={renderScene}
-      onIndexChange={(index) => {
-        setIndex(index);
-        setFilterValue({
-          filter: Filters.SERVICE_CATEGORY,
-          value: Cats.filter((cat) => cat.id === index),
-        });
-      }}
+      onIndexChange={(index) => onIndexChange(index)}
       initialLayout={{ width: layout.width }}
       overScrollMode="auto"
       renderTabBar={_renderTabBar}

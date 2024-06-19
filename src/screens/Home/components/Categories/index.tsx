@@ -1,12 +1,14 @@
 import { View, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import { GridView, AnimatedImage, Card } from "react-native-ui-lib";
-import { ListLabel } from "../../styles";
+import { ListLabel, Description } from "../../styles";
 import { ThemeContext } from "styled-components/native";
 import { NavigationProp } from "@react-navigation/native";
 import { APP_PAGES } from "~src/shared/constants";
 import { Filters, ServiceCategory } from "~src/@types/types";
 import { useFilter } from "~store/hooks/useFilter";
+import truncate from "lodash/truncate";
+import { categoriesIcons } from "~src/data/categories";
 
 type CategoriesProps = {
   categories: ServiceCategory[];
@@ -25,7 +27,6 @@ const Categories = ({ categories, navigation }: CategoriesProps) => {
         id: item.id,
         name: item.name,
         image: item?.image,
-        icon: item?.icon,
         description: item?.description,
       },
     });
@@ -52,20 +53,29 @@ const Categories = ({ categories, navigation }: CategoriesProps) => {
               backgroundColor: theme?.colors.secondaryBackground,
               borderRadius: 15,
               width: (Dimensions.get("screen").width - 60) / 3,
-              height: 120,
+              height: 100,
               marginBottom: 10,
               marginRight: 10,
             }}
           >
-            <AnimatedImage
-              source={
-                item?.image
-                  ? { uri: item.image }
-                  : require("src/assets/images/HeartEyesEmoji.png")
-              }
-              width={30}
-              height={30}
-            />
+            {item.image ? (
+              <AnimatedImage
+                source={
+                  item?.image
+                    ? { uri: item.image }
+                    : require("src/assets/images/HeartEyesEmoji.png")
+                }
+                width={30}
+                height={30}
+              />
+            ) : (
+              categoriesIcons?.[item.id]
+            )}
+            <Description
+              style={{ fontSize: 10, color: theme?.colors.secondaryText2 }}
+            >
+              {truncate(item.name, { length: 16 })}
+            </Description>
           </Card>
         )}
       />

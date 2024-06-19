@@ -27,7 +27,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [chatList, setChatList] = useState<>([]);
+  const [chatList, setChatList] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -49,8 +49,10 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     }, [])
   );
 
+  console.log("CL ", chatList);
+
   const renderChatCard = ({ item }) => (
-    <ChatCardContainer onPress={() => handleChatPress()}>
+    <ChatCardContainer onPress={() => handleChatPress(item.id)}>
       <Avatar
         animate
         useAutoColors
@@ -82,7 +84,6 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
       chatsRef,
       where(STORAGE_KEYS.USERS, "array-contains", currentUserId)
     );
-
     try {
       const querySnapshot = await getDocs(q);
       const chats = querySnapshot.docs.map(async (doc) => {
@@ -99,6 +100,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
           ...doc.data(),
         };
       });
+      console.log(chats);
       setChatList(chats);
     } catch (error) {
       console.error("Error fetching chat history:", error);
@@ -120,7 +122,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
       <StatusBar style={themeContext?.dark ? "light" : "dark"} />
       <FlatList
         data={chatList}
-        renderItem={({}) => renderChatCard}
+        renderItem={renderChatCard}
         ItemSeparatorComponent={() => (
           <View
             style={{

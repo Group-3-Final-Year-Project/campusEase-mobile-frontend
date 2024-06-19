@@ -18,13 +18,14 @@ import ServiceCategories from "~src/screens/ServiceCategories";
 import MoreBookingInfo from "~src/screens/MoreBookingInfo";
 import Bookmarks from "~src/screens/Bookmarks";
 import Chat from "~src/screens/Chat";
+import PrivacyPolicy from "~src/screens/PrivacyPolicy";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
-      initialRouteName={APP_PAGES.USER_TAB}
+      initialRouteName={APP_PAGES.LANDING}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: true,
@@ -104,6 +105,10 @@ const RootNavigator = () => {
           component={MoreBookingInfo}
         />
         <Stack.Screen name={APP_PAGES.CHAT} component={Chat} />
+        <Stack.Screen
+          name={APP_PAGES.PRIVACY_POLICY}
+          component={PrivacyPolicy}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );

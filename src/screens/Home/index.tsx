@@ -1,5 +1,5 @@
 import { FlatList, View, RefreshControl } from "react-native";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import { Container, Description, ListLabel, Title } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeContext } from "styled-components/native";
@@ -19,14 +19,14 @@ import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
 import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import BookingCard from "../Bookings/components/BookingCard";
 import ProviderServices from "./components/ProviderServices";
-import axios from "axios";
-import { API_URLS, QUERY_KEYS } from "~src/shared/constants";
-import { ServiceListService, ServiceCategory } from "~src/@types/types";
+import { QUERY_KEYS } from "~src/shared/constants";
+import { ServiceListService, VerifiedUser } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
-import Cats from "~src/data/categories";
+import { categoriesData } from "~src/data/categories";
 import ServicesData from "~src/data/servicesData";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { getIsServiceProvider } from "../../services/authService";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -37,21 +37,21 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  // const [loading, setLoading] = useState<boolean>(false);
-  // const [providerServices, setProviderServices] = useState<
-  //   ServiceListService[]
-  // >([]);
-  // const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
-  //   []
-  // );
-  // const [popularServices, setPopularServices] = useState<ServiceListService[]>([
-  // ]);
-  // const [nearYouServices, setNearYouServices] = useState<ServiceListService[]>([
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
 
-  // ]);
-
-  const getServiceListServices: () => ServiceListService[] = () => {
-    return ServicesData.map((service) => {
+  const getServiceListServices = (
+    providerId?: number,
+    getMyServices?: boolean
+  ): ServiceListService[] => {
+    const data = ServicesData.filter((service) =>
+      providerId
+        ? getMyServices
+          ? service.providerId === providerId
+          : service.providerId !== providerId
+        : service
+    ).map((service) => {
       return {
         id: service.id,
         name: service.name,
@@ -59,8 +59,10 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
         coverImage: service.coverImage,
         rating: service?.rating,
         startingPrice: service?.startingPrice,
+        isAvailable: service.isAvailable,
       };
     });
+    return data;
   };
 
   useFocusEffect(
@@ -81,7 +83,9 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                 backgroundColor="green"
                 labelColor="white"
                 source={{
-                  uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+                  uri: authorized_account?.profilePicture
+                    ? authorized_account?.profilePicture
+                    : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
                 }}
               />
               <View style={{ marginLeft: 10 }}>
@@ -109,16 +113,13 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   );
 
   const fetchData = useCallback(async () => {
-    // setServiceCategories(Cats);
-    // setProviderServices(ServicesData);
-    // setPopularServices(ServicesData);
-    // setNearYouServices(ServicesData);
     setTimeout(() => null, 5000);
     return {
-      serviceCategories: Cats,
-      providerServices: getServiceListServices(),
-      popularServices: getServiceListServices(),
-      nearYouServices: getServiceListServices(),
+      serviceCategories: Object.values(categoriesData),
+      popularServices: getServiceListServices(authorized_account.id),
+      nearYouServices: getServiceListServices(authorized_account.id),
+      providerServices: getServiceListServices(authorized_account.id, true),
+      // serviceRequests:await getIsServiceProvider() ? :
     };
   }, []);
 
@@ -146,7 +147,6 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
         style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
         renderItem={undefined}
         refreshControl={<RefreshControl refreshing={isRefetching} />}
-        ListEmptyComponent={() => <EmptyState />}
       >
         <>
           <View

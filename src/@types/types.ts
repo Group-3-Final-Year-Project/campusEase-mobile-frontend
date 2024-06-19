@@ -41,7 +41,7 @@ export enum Filters {
 }
 
 export enum BookingStatus {
-  ALL = "all",
+  ALL = "All",
   IN_PROGRESS = "In Progress",
   COMPLETED = "Completed",
   CANCELLED = "Cancelled",
@@ -61,8 +61,8 @@ export type User = {
   isPhoneVerified: boolean;
   isActive: boolean;
   isLoggedIn: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type VerifiedUser = {
@@ -111,6 +111,29 @@ export type LocationObject = {
   location: LocationObjectCoords;
 };
 
+export enum PaymentStatus {
+  PAID = "Paid",
+  PENDING = "Pending",
+  NOT_PAID = "Not Paid",
+}
+
+export type PaymentMethod = {
+  id: number;
+  name: string;
+  extraData: object;
+};
+
+export type BookingAttachment = {
+  id: number;
+  type: string;
+  url: string;
+};
+
+export type BookingState = {
+  name: BookingStatus;
+  description: string;
+};
+
 export type Service = {
   id: number;
   providerId: number;
@@ -131,13 +154,30 @@ export type Service = {
   numberOfReviews?: number;
 };
 
-export type Booking = {};
+export type Booking = {
+  id: number;
+  providerId: number;
+  userId: number;
+  serviceId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  location: LocationObject;
+  paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  scheduledDate: Date;
+  scheduledTime: Date;
+  notes: string;
+  attachments: BookingAttachment[];
+  bookingStates: BookingState[];
+};
 
 export type ServiceCategory = {
   id: number;
   name: string;
   description?: NullableString;
-  icon?: React.ReactElement;
   image?: string;
 };
 
@@ -148,6 +188,7 @@ export type ServiceListService = {
   coverImage: string;
   rating?: number;
   startingPrice?: number;
+  isAvailable: boolean;
 };
 
 export type ServiceProvider = {
@@ -158,4 +199,15 @@ export type ServiceProvider = {
   profilePicture: NullableString;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
+};
+
+export type SearchFilters = {
+  startingPriceRange?: { min: number; max: number };
+  ratingRange?: { min: number; max: number };
+  isAvailable?: boolean;
+  location?: {
+    latitude?: number;
+    longitude?: number;
+    radius?: number;
+  };
 };

@@ -1,4 +1,10 @@
-import { View, Animated, FlatList } from "react-native";
+import {
+  View,
+  Animated,
+  FlatList,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import React, {
   useContext,
   useRef,
@@ -35,10 +41,10 @@ import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
 import { APP_PAGES, QUERY_KEYS } from "~src/shared/constants";
-import { Service as IService } from "~src/@types/types";
+import { ServiceProvider } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
 import servicesData from "~src/data/servicesData";
-import { RefreshControl } from "react-native";
+import usersData from "~src/data/usersData";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -49,6 +55,8 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const [serviceProvider, setServiceProvider] =
+    useState<ServiceProvider | null>(null);
 
   const yOffset = useRef(new Animated.Value(0)).current;
   const headerOpacity = yOffset.interpolate({
@@ -106,6 +114,24 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
       return servicesData.filter((service) => service.id === serviceId)[0];
     },
     [route.params, navigation]
+  );
+
+  const getServiceProvider = useCallback(
+    (providerId: number) => {
+      const { authorized_account } = usersData.filter(
+        ({ authorized_account }) => authorized_account.id === providerId
+      )[0];
+      setServiceProvider({
+        id: authorized_account.id,
+        username: authorized_account.username,
+        email: authorized_account.email,
+        phoneNumber: authorized_account.phoneNumber,
+        profilePicture: authorized_account.profilePicture,
+        isEmailVerified: authorized_account.isEmailVerified,
+        isPhoneVerified: authorized_account.isPhoneVerified,
+      });
+    },
+    [route.params?.serviceId]
   );
 
   const serviceSocialItems = [
@@ -217,6 +243,10 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     queryFn: () => fetchData(route.params?.serviceId),
   });
 
+  useEffect(() => {
+    data && getServiceProvider(data.providerId);
+  }, [data]);
+
   if (isLoading) return <LoadingView />;
   else if (isError || !data || data === undefined) return <EmptyState />;
 
@@ -241,7 +271,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
         refreshControl={<RefreshControl refreshing={isRefetching} />}
         style={{ paddingBottom: bottomInset }}
       >
-        <ServiceBanner />
+        <ServiceBanner banner={data.coverImage} />
         <ServiceInfoContainer>
           <View
             style={{
@@ -265,7 +295,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 strokeWidth={10}
               />
               <TagLabel>
-                {data.rating} ({data.numberOfReviews} reviews)
+                {data?.rating ?? 0.0} ({data?.numberOfReviews ?? 0} reviews)
               </TagLabel>
             </IconBtn>
           </View>
@@ -300,12 +330,14 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
             </IconBtn>
           ))}
         </ServiceInfoContainer>
-        <ServiceInfoContainer>
-          <ServiceInfoHeaderLabel>
-            About Service Provider
-          </ServiceInfoHeaderLabel>
-          <ServiceProviderCard providerId={data.providerId} />
-        </ServiceInfoContainer>
+        {serviceProvider && (
+          <ServiceInfoContainer>
+            <ServiceInfoHeaderLabel>
+              About Service Provider
+            </ServiceInfoHeaderLabel>
+            <ServiceProviderCard provider={serviceProvider} />
+          </ServiceInfoContainer>
+        )}
         {/* Galllery goes here... */}
         <ServiceInfoContainer>
           <ServiceInfoHeaderLabel>Gallery</ServiceInfoHeaderLabel>
@@ -362,7 +394,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           </StackAggregator>
         </ServiceInfoContainer>
         {/* More for you goes here... */}
-        <ServiceInfoContainer>
+        {/* <ServiceInfoContainer>
           <ServiceInfoHeaderLabel>More for you</ServiceInfoHeaderLabel>
           <FlatList
             data={[...new Array(5)]}
@@ -375,7 +407,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
             )}
             showsHorizontalScrollIndicator={false}
           />
-        </ServiceInfoContainer>
+        </ServiceInfoContainer> */}
       </Animated.ScrollView>
       <BottomCard>
         <View>

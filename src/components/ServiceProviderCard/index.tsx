@@ -15,15 +15,13 @@ import { openLink } from "~services";
 import usersData from "~src/data/usersData";
 
 interface IServiceProviderCard {
-  providerId: number;
+  provider: ServiceProvider;
   showContactInfo?: boolean;
 }
 
 const ServiceProviderCard = (props: IServiceProviderCard) => {
   const themeContext = useContext(ThemeContext);
-  const [provider, setProvider] = useState<ServiceProvider | null>(
-    usersData[1]
-  );
+  const { provider, showContactInfo } = props;
 
   return (
     <ServiceProviderCardContainer>
@@ -55,7 +53,7 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
           </Description>
         </View>
       </View>
-      {props?.showContactInfo && (
+      {showContactInfo && (
         <ContactInfoContainer>
           <IconBtn
             style={{

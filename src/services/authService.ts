@@ -143,3 +143,15 @@ export const signUserIn = async (signInData: {
     return processErrorResponse(error as any, "Error logging in user");
   }
 };
+
+export const mockSignin = async (userData: VerifiedUser) => {
+  try {
+    saveCurrentlyLoggedInUser(userData);
+    await setLoginDataToAsyncStorage(userData);
+    await setAsLoggedIn();
+    await setIsAlreadyUser();
+    await setUserType(userData.authorized_account.userType);
+  } catch (error) {
+    return processErrorResponse(error as any, "Error logging in user");
+  }
+};

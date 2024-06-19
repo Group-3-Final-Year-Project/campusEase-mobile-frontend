@@ -17,6 +17,9 @@ import Switch from "react-native-ui-lib/switch";
 import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES } from "~src/shared/constants";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { VerifiedUser } from "~src/@types/types";
+import { pickImageAsync } from "~services";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -27,6 +30,9 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -125,7 +131,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: "",
+      toPage: APP_PAGES.PRIVACY_POLICY,
       showRightIcon: true,
     },
     {
@@ -162,7 +168,9 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
         <ProfileImageView>
           <ProfileImage
             source={{
-              uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+              uri: authorized_account?.profilePicture
+                ? authorized_account?.profilePicture
+                : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
             }}
           />
           <IconBtn
@@ -172,6 +180,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
               right: 0,
               backgroundColor: themeContext?.colors.primary,
             }}
+            // onPress={pickImageAsync}
           >
             <Iconify
               icon="solar:camera-outline"
@@ -181,7 +190,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
             />
           </IconBtn>
         </ProfileImageView>
-        <Title>Owusu-Ansah Solomon</Title>
+        <Title>{authorized_account.username}</Title>
       </HeaderCard>
     );
   };
@@ -221,6 +230,8 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
       </ProfileItemCard>
     );
   };
+
+  const renderFooterComponent = () => <></>;
 
   return (
     <Container>

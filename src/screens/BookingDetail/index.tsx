@@ -28,7 +28,7 @@ const BookingDetail = () => {
       <ScrollView
         style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
       >
-        <TertiaryServiceCard service={[]} />
+        <TertiaryServiceCard service={{}} />
         <BookingInfoContainer style={{ flexDirection: "row" }}>
           <Button
             variant="outline"

@@ -10,7 +10,7 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { signUserIn, navigateAndResetStack } from "~services";
+import { signUserIn, mockSignin, navigateAndResetStack } from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import { updateUserData } from "~store/actions/userActions";
 import { User } from "~src/@types/types";
@@ -23,6 +23,7 @@ import {
   HighlightedDescription,
 } from "../SignInOrUp/styles";
 import HeroText from "../SignInOrUp/components/HeroText";
+import usersData from "~src/data/usersData";
 
 export const useCustomBottomInset = () => {
   const insets = useSafeAreaInsets();
@@ -53,19 +54,17 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
     initialValues: signinInitialValues,
     validationSchema: signinSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
-      // try {
-      //   const res = await signUserIn(values);
-      //   console.log("Res after submit: ", res);
-      //   dispatch(updateUserData(res));
-      //   resetForm();
-      //navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
-      // } catch (error) {
-      //   setDialogVisible(true);
-      //   throw Error(error as any);
-      // } finally {
-      //   setSubmitting(false);
-      // }
+      try {
+        await mockSignin(usersData[0]);
+        dispatch(updateUserData(usersData[0]));
+        resetForm();
+        navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+      } catch (error) {
+        setDialogVisible(true);
+        throw Error(error as any);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 

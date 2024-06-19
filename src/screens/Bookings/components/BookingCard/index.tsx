@@ -8,6 +8,8 @@ import { formatCurrency } from "~services";
 import { Button } from "~components";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
+import { VerifiedUser } from "~src/@types/types";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
 
 interface IBookingCard {
   booking: any;
@@ -16,6 +18,9 @@ interface IBookingCard {
 
 const BookingCard = (props: IBookingCard) => {
   const themeContext = useContext(ThemeContext);
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
 
   return (
     <BookingCardContainer
@@ -43,6 +48,17 @@ const BookingCard = (props: IBookingCard) => {
           color={themeContext?.colors.text}
         />
       </View>
+      <View style={{ flexDirection: "row", paddingVertical: 15 }}>
+        <Iconify
+          icon="solar:check-circle-outline"
+          size={24}
+          strokeWidth={16}
+          color={themeContext?.colors.primary}
+        />
+        <Description style={{ marginLeft: 15, paddingVertical: 5 }}>
+          Amount Paid {formatCurrency(190)}
+        </Description>
+      </View>
       <View
         style={{
           flexDirection: "row",
@@ -51,26 +67,10 @@ const BookingCard = (props: IBookingCard) => {
           paddingTop: 15,
         }}
       >
-        <View style={{ flexDirection: "row", paddingVertical: 15 }}>
-          <Iconify
-            icon="solar:check-circle-outline"
-            size={24}
-            strokeWidth={16}
-            color={themeContext?.colors.primary}
-          />
-          <Description style={{ marginLeft: 15, paddingVertical: 5 }}>
-            Amount Paid {formatCurrency(190)}
-          </Description>
-        </View>
-        <Button
-          style={{
-            // height: 50,
-            paddingBottom: 12,
-            paddingTop: 12,
-          }}
-          buttonTextSize="small"
-          buttonTextWeight="regular"
-        >
+        <Button buttonTextSize="small" buttonTextWeight="regular">
+          Print e-receipt
+        </Button>
+        <Button buttonTextSize="small" buttonTextWeight="regular">
           Book again
         </Button>
       </View>

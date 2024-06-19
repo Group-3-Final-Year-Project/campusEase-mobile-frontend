@@ -1,12 +1,13 @@
 import React from "react";
-import { View } from "react-native";
 import { BannerCard } from "./styles";
 
-const ServiceBanner = () => {
+const ServiceBanner = ({ banner }: { banner: string }) => {
   return (
     <BannerCard
       source={{
-        uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+        uri:
+          banner ||
+          "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
       }}
     ></BannerCard>
   );

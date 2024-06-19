@@ -32,6 +32,6 @@ export const InfoContainer = styled.View`
 
 export const Description = styled(Text).attrs({})`
   font-family: ${(props: DefaultThemeProps) =>
-    props.theme.typography.fontFamily.bold};
+    props.theme.typography.fontFamily.regular};
   // padding-bottom: 10px;
 `;

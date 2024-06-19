@@ -5,7 +5,7 @@ import Text from "~components/Text";
 
 export const Title = styled(Text).attrs({
   fontSize: "large",
-  fontWeight: "bold",
+  fontWeight: "medium",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
   /* margin-bottom: 5px; */

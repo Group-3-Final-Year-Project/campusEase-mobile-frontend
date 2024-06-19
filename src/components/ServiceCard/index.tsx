@@ -32,7 +32,10 @@ const ServiceCard = (props: ServiceCardProps) => {
         padding: 10,
         position: "relative",
       }}
-      onPress={() => navigation && navigation.navigate(APP_PAGES.SERVICE)}
+      onPress={() =>
+        navigation &&
+        navigation.navigate(APP_PAGES.SERVICE, { serviceId: service.id })
+      }
       {...props}
     >
       <Card.Image
@@ -65,7 +68,7 @@ const ServiceCard = (props: ServiceCardProps) => {
             color={theme?.colors.text}
           />
           <Text style={{ marginLeft: 5, fontSize: 12, lineHeight: 14 }}>
-            {service.rating ?? 0.0}
+            {service?.rating ?? 0.0}
           </Text>
         </IconBtn>
         <IconBtn>
