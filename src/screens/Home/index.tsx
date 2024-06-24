@@ -2,6 +2,7 @@ import { FlatList, View, RefreshControl } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { Container, Description, ListLabel, Title } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 
 import { NavigationProp, useFocusEffect } from "@react-navigation/native";
@@ -27,11 +28,7 @@ import { categoriesData } from "~src/data/categories";
 import ServicesData from "~src/data/servicesData";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { getIsServiceProvider } from "../../services/authService";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
+import SearchFilterBtn from "~components/SearchFilterBtn";
 
 const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -149,38 +146,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
         refreshControl={<RefreshControl refreshing={isRefetching} />}
       >
         <>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-            }}
-          >
-            <Searchbar
-              placeholder="Search..."
-              icon={
-                <Iconify
-                  icon="solar:minimalistic-magnifer-outline"
-                  size={18}
-                  strokeWidth={18}
-                  color={themeContext?.colors.text}
-                />
-              }
-            />
-            <IconBtn
-              style={{
-                marginLeft: 7,
-                backgroundColor: themeContext?.colors.primary,
-                width: 50,
-              }}
-            >
-              <Iconify
-                icon="solar:tuning-2-outline"
-                size={18}
-                strokeWidth={18}
-                color={themeContext?.colors.text}
-              />
-            </IconBtn>
-          </View>
+          <SearchFilterBtn />
           <HomeBanner />
           <ProviderServices
             services={providerServices}

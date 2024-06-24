@@ -1,6 +1,7 @@
 import { View, ScrollView } from "react-native";
 import React, { useContext, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 
 import Avatar from "react-native-ui-lib/avatar";
@@ -17,16 +18,11 @@ import {
   BookingInfoContainer,
   BookingInfoHeaderLabel,
 } from "../BookingDetail/styles";
-import { formatCurrency } from "~services";
+import { formatCurrency, pickDocuments } from "~services";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { CountryCodeText, FormControl } from "../SignInOrUp/styles";
 import ResultPrompt from "~components/ResultPrompt";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -126,7 +122,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
             Attachments for service provider
           </BookingInfoHeaderLabel>
           <FormControl>
-            <AddAttachmentBtn>
+            <AddAttachmentBtn onPress={() => pickDocuments()}>
               <Iconify
                 color={themeContext?.colors.secondaryText2}
                 icon="solar:add-square-outline"

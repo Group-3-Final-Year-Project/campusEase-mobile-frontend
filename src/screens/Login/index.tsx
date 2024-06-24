@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { Button, Input, AdvancedDialog } from "~components";
 import { KeyboardAvoidingView, Platform, Pressable, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
@@ -24,11 +25,6 @@ import {
 } from "../SignInOrUp/styles";
 import HeroText from "../SignInOrUp/components/HeroText";
 import usersData from "~src/data/usersData";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 export const signinSchema = yup.object().shape({
   username: yup.string().required("Username required!"),

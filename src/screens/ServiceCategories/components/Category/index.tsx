@@ -4,6 +4,7 @@ import { Container } from "./styles";
 import { SecondaryServiceCard, LoadingView, EmptyState } from "~components";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import servicesData from "~src/data/servicesData";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~src/shared/constants";
@@ -12,10 +13,6 @@ import { ServiceCategory } from "~src/@types/types";
 interface ICategory {
   category: ServiceCategory;
 }
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const Category = (props: ICategory) => {
   const navigation = useNavigation();

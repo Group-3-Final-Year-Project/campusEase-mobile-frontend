@@ -1,6 +1,7 @@
 import { FlatList, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import { Iconify } from "react-native-iconify";
 import { Container, HeaderCard, HeaderItemLabel } from "./styles";
@@ -13,11 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~src/shared/constants";
 import bookingsData from "~src/data/bookingsData";
 import { RefreshControl } from "react-native";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();

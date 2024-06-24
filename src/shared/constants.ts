@@ -32,6 +32,7 @@ export const APP_PAGES = {
   OTHER_BOOKING_INFO: "Other Booking Info",
   SERVICE_CATEGORIES: "Service Categories",
   PRIVACY_POLICY: "Privacy Policy",
+  SEARCH_AND_FILTER: "Search and Filter",
 };
 
 export const API_URLS = {
@@ -66,6 +67,7 @@ export const QUERY_KEYS = {
   SERVICE: "campusEase_service",
   CHATS: "campusEase_chats",
   SERVICES: "campusEase_services",
+  SERVICE_REQUEST: "campusEase_service_request",
 };
 
 export const MISC = {};

@@ -1,6 +1,12 @@
 import { View, TouchableOpacityProps } from "react-native";
 import React, { useContext } from "react";
-import { CardContainer, CardImage, InfoContainer, Description } from "./styles";
+import {
+  CardContainer,
+  CardImage,
+  InfoContainer,
+  Description,
+  ServiceTitle,
+} from "./styles";
 import { ThemeContext } from "styled-components/native";
 import { NavigationProp } from "@react-navigation/native";
 import StarRating from "../StarRating";
@@ -27,7 +33,7 @@ const TertiaryServiceCard = (props: ServiceCardProps) => {
         }}
       />
       <InfoContainer>
-        <Description>{service.name}</Description>
+        <ServiceTitle>{service.name}</ServiceTitle>
         <View style={{ flexDirection: "row" }}>
           <StarRating value={Math.floor(service.rating ?? 0)} size={12} />
           <Text>({service.rating ?? 0.0})</Text>

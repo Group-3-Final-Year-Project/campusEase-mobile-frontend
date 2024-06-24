@@ -35,3 +35,8 @@ export const Description = styled(Text).attrs({})`
     props.theme.typography.fontFamily.regular};
   // padding-bottom: 10px;
 `;
+
+export const ServiceTitle = styled(Text)`
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.semiBold};
+`;

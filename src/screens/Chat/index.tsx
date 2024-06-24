@@ -33,6 +33,7 @@ import {
 } from "firebase/firestore";
 import { STORAGE_KEYS } from "~src/shared/constants";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
+import ACTION_TYPES from "~store/actionTypes";
 
 const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
@@ -60,7 +61,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
         text: doc.data().text,
         user: doc.data().user,
       }));
-      dispatch({ type: ActionKind.LOAD_EARLIER_MESSAGES, payload: messages });
+      dispatch({ type: ACTION_TYPES.LOAD_EARLIER_MESSAGES, payload: messages });
     });
 
     return () => unsubscribe();
@@ -70,12 +71,12 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
     (messages: any[]) => {
       const sentMessages = [{ ...messages[0], sent: true, received: true }];
       const newMessages = GiftedChat.append(
-        state.messages,
+        chat.messages,
         sentMessages,
         Platform.OS !== "web"
       );
 
-      dispatch({ type: ActionKind.SEND_MESSAGE, payload: newMessages });
+      dispatch({ type: ACTION_TYPES.SEND_MESSAGE, payload: newMessages });
       const { _id, createdAt, text, user } = messages[0];
       addDoc(
         collection(
@@ -92,12 +93,12 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
         }
       );
     },
-    [dispatch, state.messages]
+    [dispatch, chat.messages]
   );
 
   // const onLoadEarlier = useCallback(() => {
   //   console.log("loading");
-  //   dispatch({ type: ActionKind.LOAD_EARLIER_START });
+  //   dispatch({ type: ACTION_TYPES.LOAD_EARLIER_START });
   //   setTimeout(() => {
   //     const newMessages = GiftedChat.prepend(
   //       chat.messages,
@@ -106,7 +107,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   //     );
 
   //     dispatch({
-  //       type: ActionKind.LOAD_EARLIER_MESSAGES,
+  //       type: ACTION_TYPES.LOAD_EARLIER_MESSAGES,
   //       payload: newMessages,
   //     });
   //   }, 1500); // simulating network
@@ -161,7 +162,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
 
   const setIsTyping = useCallback(
     (isTyping: boolean) => {
-      dispatch({ type: ActionKind.SET_IS_TYPING, payload: isTyping });
+      dispatch({ type: ACTION_TYPES.SET_IS_TYPING, payload: isTyping });
     },
     [dispatch]
   );

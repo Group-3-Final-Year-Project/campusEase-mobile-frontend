@@ -9,6 +9,7 @@ import {
   CountryCodeText,
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { Button, Input, AdvancedDialog } from "~components";
 import HeroText from "./components/HeroText";
 import {
@@ -17,6 +18,7 @@ import {
   Platform,
   Pressable,
   View,
+  ScrollView,
 } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
@@ -31,12 +33,6 @@ import { signUserUp } from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import { updateUserData } from "~store/actions/userActions";
 import { User } from "~src/@types/types";
-import { ScrollView } from "react-native";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 export const signupSchema = yup.object().shape({
   name: yup.string().min(3, "Name not valid!").required("Name required!"),

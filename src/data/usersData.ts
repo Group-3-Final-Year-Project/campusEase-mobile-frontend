@@ -1,3 +1,4 @@
+import moment from "moment";
 import { UserType, VerifiedUser } from "~src/@types/types";
 
 export const usersData: VerifiedUser[] = [
@@ -23,6 +24,18 @@ export const usersData: VerifiedUser[] = [
             speed: null,
           },
         },
+        {
+          name: "Work",
+          location: {
+            latitude: 45.7749, // Replace with actual latitude
+            longitude: -142.4194,
+            altitude: null,
+            accuracy: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          },
+        },
         // Add more locations as needed
       ],
       profilePicture:
@@ -31,7 +44,7 @@ export const usersData: VerifiedUser[] = [
       isPhoneVerified: false,
       isActive: true,
       isLoggedIn: true, // Modify based on login state
-      createdAt: JSON.stringify(new Date("2024-06-17T00:00:00.000Z")), // Replace with actual creation date
+      createdAt: moment(new Date("2024-06-17T00:00:00.000Z")).seconds(), // Replace with actual creation date
       updatedAt: undefined, // Or set an update date if applicable
     },
   },
@@ -65,7 +78,7 @@ export const usersData: VerifiedUser[] = [
       isPhoneVerified: false,
       isActive: true,
       isLoggedIn: false, // Modify based on login state
-      createdAt: JSON.stringify(new Date("2024-06-17T00:00:00.000Z")), // Replace with actual creation date
+      createdAt: moment(new Date("2024-06-17T00:00:00.000Z")).seconds(), // Replace with actual creation date
       updatedAt: undefined, // Or set an update date if applicable
     },
   },

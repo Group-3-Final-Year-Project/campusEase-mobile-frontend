@@ -1,6 +1,7 @@
 import { View, ScrollView, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 
 import Avatar from "react-native-ui-lib/avatar";
@@ -12,11 +13,6 @@ import {
 } from "./styles";
 import { Button, ServiceProviderCard, TertiaryServiceCard } from "~components";
 import BookingStatus from "./components/BookingStatus";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const BookingDetail = () => {
   const insets = useSafeAreaInsets();

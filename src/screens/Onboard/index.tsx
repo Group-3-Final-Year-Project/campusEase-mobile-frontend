@@ -7,6 +7,7 @@ import {
   Description,
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { Button } from "~components";
 import { KeyboardAvoidingView, Platform, View, Pressable } from "react-native";
 import { ThemeContext } from "styled-components/native";
@@ -17,11 +18,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Carousel } from "react-native-ui-lib";
 import { setUserType } from "~services";
 import { UserType } from "~src/@types/types";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();

@@ -209,14 +209,14 @@ const UserTabNavigator = () => {
         headerShown: true,
         headerShadowVisible: true,
         headerStyle: {
-          elevation: 1,
+          // elevation: 1,
           backgroundColor: theme?.colors.background,
-          shadowColor: theme?.colors.secondaryBackground,
-          shadowOffset: {
-            height: 6,
-            width: 0,
-          },
-          shadowRadius: 40,
+          // shadowColor: theme?.colors.secondaryBackground,
+          // shadowOffset: {
+          //   height: 6,
+          //   width: 0,
+          // },
+          // shadowRadius: 40,
         },
         headerTitleStyle: {
           fontFamily: `${theme?.typography.fontFamily.bold}`,

@@ -1,8 +1,9 @@
-import { FlatList, Text, View, RefreshControl } from "react-native";
+import { FlatList, View, RefreshControl } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ThemeContext } from "styled-components/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import {
   EmptyState,
   IconBtn,
@@ -23,16 +24,7 @@ import { QUERY_KEYS } from "~src/shared/constants";
 import { useQuery } from "@tanstack/react-query";
 import { NavigationProp } from "@react-navigation/native";
 
-type SearchFilterProps = NativeStackScreenProps<any> & {
-  showFilterBtn?: boolean;
-};
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
-
-const SearchAndFilter = ({ navigation, showFilterBtn }: SearchFilterProps) => {
+const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
@@ -77,31 +69,13 @@ const SearchAndFilter = ({ navigation, showFilterBtn }: SearchFilterProps) => {
     data && setVisibleList(data);
   }, [data]);
 
-  const searchServices = (
-    services: ServiceListService[],
-    searchString: string
-  ) => {
-    setSearchTerm(searchString);
-    const lowercaseSearchTerm = searchString.toLowerCase();
-
-    setVisibleList(
-      services.filter((service) => {
-        const lowercaseName = service.name.toLowerCase();
-        const lowercaseDescription = service.description?.toLowerCase();
-        return (
-          lowercaseName.includes(lowercaseSearchTerm) ||
-          (lowercaseDescription &&
-            lowercaseDescription.includes(lowercaseSearchTerm))
-        );
-      })
-    );
-  };
-
   const searchAndFilterServices = (
     services: ServiceListService[],
     searchTerm: string,
     ...args: SearchFilters[]
   ) => {
+    console.log(searchTerm);
+    setSearchTerm(searchTerm);
     const filteredByName = services.filter((service) => {
       const lowercaseSearchTerm = searchTerm.toLowerCase();
       const lowercaseName = service.name.toLowerCase();
@@ -184,22 +158,21 @@ const SearchAndFilter = ({ navigation, showFilterBtn }: SearchFilterProps) => {
             />
           }
         />
-        {showFilterBtn && (
-          <IconBtn
-            style={{
-              marginLeft: 7,
-              backgroundColor: themeContext?.colors.primary,
-              width: 50,
-            }}
-          >
-            <Iconify
-              icon="solar:tuning-2-outline"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          </IconBtn>
-        )}
+
+        <IconBtn
+          style={{
+            marginLeft: 7,
+            backgroundColor: themeContext?.colors.primary,
+            width: 50,
+          }}
+        >
+          <Iconify
+            icon="solar:tuning-2-outline"
+            size={18}
+            strokeWidth={18}
+            color={themeContext?.colors.text}
+          />
+        </IconBtn>
       </View>
       <FlatList
         data={visibleList}

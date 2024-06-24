@@ -13,6 +13,7 @@ import React, {
   useState,
 } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import {
   BottomCard,
@@ -36,7 +37,7 @@ import {
 import { Iconify } from "react-native-iconify";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ServiceBanner from "./components/ServiceBanner";
-import { formatCurrency } from "../../services/uiService";
+import { formatCurrency, openLink } from "../../services/uiService";
 import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
@@ -45,11 +46,7 @@ import { ServiceProvider } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
 import servicesData from "~src/data/servicesData";
 import usersData from "~src/data/usersData";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
+import { BookingInfoCard } from "../BookingSummary/styles";
 
 const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -145,7 +142,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      action: "",
+      action: () => openLink(`tel:${serviceProvider?.phoneNumber}`),
     },
     {
       name: "Chat",
@@ -322,7 +319,11 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           }}
         >
           {serviceSocialItems.map((item, index) => (
-            <IconBtn key={index} style={{ height: 80, width: 80 }}>
+            <IconBtn
+              key={index}
+              onPress={item.action}
+              style={{ height: 80, width: 80 }}
+            >
               <>{item.icon}</>
               <Description style={{ marginTop: 10, fontSize: 12 }}>
                 {item.name}
@@ -336,6 +337,50 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
               About Service Provider
             </ServiceInfoHeaderLabel>
             <ServiceProviderCard provider={serviceProvider} />
+          </ServiceInfoContainer>
+        )}
+        {data?.subServices && (
+          <ServiceInfoContainer>
+            <ServiceInfoHeaderLabel>Sub services</ServiceInfoHeaderLabel>
+            <BookingInfoCard>
+              {data.subServices.map((subService) => (
+                <View style={{ paddingVertical: 15 }} key={subService.id}>
+                  <View
+                    style={{
+                      width: "100%",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <View>
+                        <Description>{subService.name}</Description>
+                        {subService?.description && (
+                          <Description
+                            style={{
+                              fontSize: 12,
+                              color: themeContext?.colors.secondaryText,
+                              paddingTop: 5,
+                            }}
+                          >
+                            {subService?.description}
+                          </Description>
+                        )}
+                      </View>
+                    </View>
+                    <Description>
+                      {formatCurrency(subService?.price ?? 0)}
+                    </Description>
+                  </View>
+                </View>
+              ))}
+            </BookingInfoCard>
           </ServiceInfoContainer>
         )}
         {/* Galllery goes here... */}
@@ -412,11 +457,18 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
       <BottomCard>
         <View>
           <Description style={{ marginBottom: 10 }}>Starting Price</Description>
-          <HighlightedDescription>{formatCurrency(180)}</HighlightedDescription>
+          <HighlightedDescription>
+            {formatCurrency(data?.startingPrice ?? 0)}
+          </HighlightedDescription>
         </View>
         <Button
           style={{ width: 240, height: 60, padding: 12 }}
-          onPress={() => navigation.navigate(APP_PAGES.BOOKING_SUMMARY)}
+          onPress={() =>
+            navigation.navigate(APP_PAGES.BOOKING_SUMMARY, {
+              service: data,
+              serviceProvider,
+            })
+          }
         >
           Book now
         </Button>

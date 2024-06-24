@@ -17,3 +17,12 @@ export const Description = styled(Text).attrs({
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.regular};
 `;
+
+export const BookingInfoCard = styled.View`
+  border-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
+  border-width: 0.8px;
+  border-radius: 15px;
+  display: flex;
+  padding: 15px;
+`;

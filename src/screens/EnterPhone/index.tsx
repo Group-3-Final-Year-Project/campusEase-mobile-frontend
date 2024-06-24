@@ -8,17 +8,13 @@ import {
   Title,
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { Button } from "~components";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
 import PhoneInput from "./components/PhoneInput";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const EnterPhone = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();

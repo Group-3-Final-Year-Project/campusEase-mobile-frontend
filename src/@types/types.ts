@@ -61,8 +61,8 @@ export type User = {
   isPhoneVerified: boolean;
   isActive: boolean;
   isLoggedIn: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: number;
+  updatedAt?: number;
 };
 
 export type VerifiedUser = {
@@ -101,6 +101,7 @@ export type ApiRequestResult<TData = any, SData = any> = {
 };
 
 export type SubService = {
+  id: number;
   name: string;
   description?: NullableString;
   price: number;
@@ -117,10 +118,10 @@ export enum PaymentStatus {
   NOT_PAID = "Not Paid",
 }
 
-export type PaymentMethod = {
+export type PaymentMethodObject = {
   id: number;
   name: string;
-  extraData: object;
+  extraData?: object;
 };
 
 export type BookingAttachment = {
@@ -147,8 +148,8 @@ export type Service = {
   website?: NullableString;
   startingPrice?: number;
   subServices?: SubService[];
-  createdAt: Date;
-  updatedAt?: Date;
+  createdAt: number;
+  updatedAt?: number;
   isAvailable: boolean;
   rating?: number;
   numberOfReviews?: number;
@@ -159,16 +160,17 @@ export type Booking = {
   providerId: number;
   userId: number;
   serviceId: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: number;
+  updatedAt: number;
   location: LocationObject;
-  paymentMethod: PaymentMethod;
+  paymentMethodObject: PaymentMethodObject;
   paymentStatus: PaymentStatus;
+  serviceType: SubService;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  scheduledDate: Date;
-  scheduledTime: Date;
+  scheduledDate: number;
+  scheduledTime: number;
   notes: string;
   attachments: BookingAttachment[];
   bookingStates: BookingState[];

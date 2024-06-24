@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { Button, Input, SelectPicker } from "~components";
 import { KeyboardAvoidingView, Platform, View, ScrollView } from "react-native";
 import { ThemeContext } from "styled-components/native";
@@ -33,11 +34,6 @@ import {
 import { pictures, sortByUrl, deleteUrlFromItem, addUrlToItem } from "./utils";
 import { PickerSingleValue } from "react-native-ui-lib/src/components/picker/types";
 import { DraggableGrid } from "react-native-draggable-grid";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 export const schema = yup.object().shape({
   name: yup.string().min(3, "Name not valid!").required("Name required!"),

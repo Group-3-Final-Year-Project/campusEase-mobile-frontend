@@ -1,21 +1,16 @@
-import { FlatList, ScrollView, View } from "react-native";
-import React, { useCallback, useContext, useRef, useState } from "react";
+import { FlatList, View } from "react-native";
+import React, { useContext, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 
-import { useFocusEffect } from "@react-navigation/native";
-import Avatar from "react-native-ui-lib/avatar";
-import { Iconify } from "react-native-iconify";
-import { Searchbar, IconBtn, ServiceCard } from "~components";
-import { Container, Description } from "./styles";
-import { Dimensions } from "react-native";
-import MapView from "react-native-maps";
+import { NavigationProp } from "@react-navigation/native";
+import { ServiceCard } from "~components";
+import { Container, ListLabel } from "./styles";
+import MapView, { PROVIDER_GOOGLE, MapOverlay } from "react-native-maps";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
+import servicesData from "~src/data/servicesData";
+import SearchFilterBtn from "~components/SearchFilterBtn";
 
 const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -32,63 +27,51 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
   return (
     <Container
       style={{
-        paddingTop: insets.top + 20,
-        paddingBottom: bottomInset,
         position: "relative",
       }}
     >
+      <MapView provider={PROVIDER_GOOGLE} style={{ flex: 1 }}></MapView>
       <View
         style={{
-          flexDirection: "row",
-          width: "100%",
+          paddingTop: insets.top + 20,
+          paddingBottom: bottomInset,
+          position: "absolute",
+          flex: 1,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          // zIndex: 10,
+          paddingLeft: 15,
+          paddingRight: 15,
         }}
       >
-        <Searchbar
-          placeholder="Search..."
-          icon={
-            <Iconify
-              icon="solar:minimalistic-magnifer-outline"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          }
-        />
-        <IconBtn
+        <SearchFilterBtn />
+        <View
           style={{
-            marginLeft: 7,
-            backgroundColor: themeContext?.colors.primary,
-            width: 50,
+            position: "absolute",
+            bottom: 20,
+            width: "100%",
+            paddingLeft: 15,
+            paddingRight: 0,
           }}
         >
-          <Iconify
-            icon="solar:tuning-2-outline"
-            size={18}
-            strokeWidth={18}
-            color={themeContext?.colors.text}
+          <ListLabel style={{ marginBottom: 10 }}>Suggested for you</ListLabel>
+          <FlatList
+            data={servicesData}
+            renderItem={({ item, index }) => (
+              <ServiceCard
+                navigation={navigation as NavigationProp<any>}
+                service={item}
+              />
+            )}
+            horizontal
+            ItemSeparatorComponent={() => (
+              <View style={{ marginHorizontal: 7 }} />
+            )}
+            showsHorizontalScrollIndicator={false}
           />
-        </IconBtn>
-      </View>
-      <View
-        style={{
-          position: "absolute",
-          bottom: 20,
-          width: "100%",
-          paddingLeft: 15,
-        }}
-      >
-        <Description style={{ marginBottom: 10 }}>
-          Suggested for you
-        </Description>
-        <FlatList
-          data={[...new Array(5)]}
-          renderItem={({ item, index }) => <ServiceCard service={item} />}
-          horizontal
-          ItemSeparatorComponent={() => (
-            <View style={{ marginHorizontal: 7 }} />
-          )}
-          showsHorizontalScrollIndicator={false}
-        />
+        </View>
       </View>
     </Container>
   );

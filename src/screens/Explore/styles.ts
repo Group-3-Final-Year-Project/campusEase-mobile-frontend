@@ -8,8 +8,8 @@ export const Container = styled(SafeAreaView).attrs({
   edges: ["left", "right"],
 })`
   flex: 1;
-  padding-left: 15px;
-  padding-right: 15px;
+  /* padding-left: 15px;
+  padding-right: 15px; */
 `;
 
 export const HomeScrollView = styled.ScrollView``;
@@ -28,4 +28,9 @@ export const Title = styled(Text).attrs({
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
   margin-bottom: 5px;
+`;
+
+export const ListLabel = styled(Description)`
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.bold};
 `;

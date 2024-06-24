@@ -10,6 +10,7 @@ import {
   Title,
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import { IconBtn } from "~components";
 import { Iconify } from "react-native-iconify";
@@ -20,11 +21,6 @@ import { APP_PAGES } from "~src/shared/constants";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
 import { pickImageAsync } from "~services";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();

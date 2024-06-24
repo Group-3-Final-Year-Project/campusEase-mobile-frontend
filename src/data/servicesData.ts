@@ -1,5 +1,6 @@
 import { Service } from "~src/@types/types";
 import { categoriesData } from "./categories";
+import moment from "moment";
 
 const servicesData: Service[] = [
   {
@@ -27,7 +28,7 @@ const servicesData: Service[] = [
       "https://www.theprintcafe.com/wp-content/uploads/2014/11/25.jpg",
     email: "printing@campus.edu",
     startingPrice: 0.05, // Per page cost example
-    createdAt: new Date("2024-06-15T10:00:00.000Z"),
+    createdAt: moment(new Date("2024-06-15T10:00:00.000Z")).seconds(),
     updatedAt: undefined,
     isAvailable: true,
   },
@@ -59,17 +60,20 @@ const servicesData: Service[] = [
       {
         name: "Latte",
         price: 3.5,
+        id: 0,
       },
       {
         name: "Cappuccino",
         price: 3.25,
+        id: 1,
       },
       {
         name: "Croissant",
         price: 2.0,
+        id: 2,
       },
     ],
-    createdAt: new Date("2024-06-10T12:00:00.000Z"),
+    createdAt: moment(new Date("2024-06-10T12:00:00.000Z")).seconds(),
     updatedAt: undefined,
     isAvailable: true,
     email: null,
@@ -98,7 +102,7 @@ const servicesData: Service[] = [
     coverImage:
       "https://bristeeritech.com/wp-content/uploads/2021/01/fast-and-reliable-laptop-repair-services-at-bristeeri-tech.jpg",
     email: "techrepair@campus.edu",
-    createdAt: new Date("2024-06-05T14:00:00.000Z"),
+    createdAt: moment(new Date("2024-06-05T14:00:00.000Z")).seconds(),
     updatedAt: undefined,
     isAvailable: true,
   },
@@ -126,7 +130,7 @@ const servicesData: Service[] = [
     coverImage:
       "https://sprudge.com/wp-content/uploads/2022/10/Letterpressletters-coffeshop-interior2_Letterpressletters.jpg",
     website: "https://thebookworm.com",
-    createdAt: new Date("2024-05-30T16:00:00.000Z"),
+    createdAt: moment(new Date("2024-05-30T16:00:00.000Z")).seconds(),
     updatedAt: undefined,
     isAvailable: true,
     email: null,
@@ -160,13 +164,15 @@ const servicesData: Service[] = [
       {
         name: "Wash & Fold (Standard Load)",
         price: 10.0,
+        id: 0,
       },
       {
         name: "Dry Cleaning (Shirt)",
         price: 5.0,
+        id: 1,
       },
     ],
-    createdAt: new Date("2024-05-25T08:00:00.000Z"),
+    createdAt: moment(new Date("2024-05-25T08:00:00.000Z")).seconds(),
     updatedAt: undefined,
     isAvailable: true,
     email: null,
@@ -195,7 +201,7 @@ const servicesData: Service[] = [
     coverImage:
       "https://biomed.emory.edu/_includes/images/sections/academics/lgs-tutoring-500.jpg",
     email: "tutoring@campus.edu",
-    createdAt: new Date("2024-05-20T10:00:00.000Z"),
+    createdAt: moment(new Date("2024-05-20T10:00:00.000Z")).seconds(),
     updatedAt: undefined,
     isAvailable: true,
   },

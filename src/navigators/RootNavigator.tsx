@@ -19,6 +19,7 @@ import MoreBookingInfo from "~src/screens/MoreBookingInfo";
 import Bookmarks from "~src/screens/Bookmarks";
 import Chat from "~src/screens/Chat";
 import PrivacyPolicy from "~src/screens/PrivacyPolicy";
+import SearchAndFilter from "~src/screens/SearchAndFilter";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -31,14 +32,14 @@ const RootNavigator = () => {
         headerShadowVisible: true,
         headerStyle: {
           // @ts-ignore
-          elevation: 1,
+          // elevation: 1,
           backgroundColor: theme?.colors.background,
-          shadowColor: theme?.colors.secondaryBackground,
-          shadowOffset: {
-            height: 6,
-            width: 0,
-          },
-          shadowRadius: 40,
+          // shadowColor: theme?.colors.secondaryBackground,
+          // shadowOffset: {
+          //   height: 6,
+          //   width: 0,
+          // },
+          // shadowRadius: 40,
         },
         headerTitleStyle: {
           fontFamily: `${theme?.typography.fontFamily.bold}`,
@@ -108,6 +109,10 @@ const RootNavigator = () => {
         <Stack.Screen
           name={APP_PAGES.PRIVACY_POLICY}
           component={PrivacyPolicy}
+        />
+        <Stack.Screen
+          name={APP_PAGES.SEARCH_AND_FILTER}
+          component={SearchAndFilter}
         />
       </Stack.Group>
     </Stack.Navigator>

@@ -1,6 +1,7 @@
 import { FlatList, View } from "react-native";
 import React, { useCallback, useContext, useState, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -9,7 +10,7 @@ import {
   ChatCardLabel,
   Description,
 } from "./styles";
-import { IconBtn } from "~components";
+import { EmptyState, IconBtn, LoadingView } from "~components";
 import { Iconify } from "react-native-iconify";
 import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -17,18 +18,18 @@ import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import Avatar from "react-native-ui-lib/avatar";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestoreDatabase } from "firebaseConfig";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
+import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { VerifiedUser } from "~src/@types/types";
 
 const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [chatList, setChatList] = useState([]);
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
@@ -48,8 +49,6 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
       });
     }, [])
   );
-
-  console.log("CL ", chatList);
 
   const renderChatCard = ({ item }) => (
     <ChatCardContainer onPress={() => handleChatPress(item.id)}>
@@ -115,6 +114,8 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     getChatHistory();
   }, []);
 
+  if (loading) return <LoadingView />;
+
   return (
     <Container
       style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
@@ -132,6 +133,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
           />
         )}
         showsHorizontalScrollIndicator={false}
+        ListEmptyComponent={() => <EmptyState />}
       />
     </Container>
   );

@@ -1,6 +1,7 @@
 import { FlatList, RefreshControl, View } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import { EmptyState, LoadingView, SecondaryServiceCard } from "~components";
 import { Iconify } from "react-native-iconify";
@@ -10,11 +11,6 @@ import { NavigationProp } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~src/shared/constants";
 import { getBookmarks } from "~services";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const Bookmarks = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();

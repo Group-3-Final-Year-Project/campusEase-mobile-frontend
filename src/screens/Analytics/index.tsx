@@ -1,6 +1,7 @@
 import { View, ScrollView, StyleSheet, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import { Iconify } from "react-native-iconify";
 import {
@@ -10,11 +11,6 @@ import {
 } from "./styles";
 import { BarChart, LineChart } from "react-native-chart-kit";
 import { width } from "~src/shared/constants";
-
-export const useCustomBottomInset = () => {
-  const insets = useSafeAreaInsets();
-  return Math.max(20, insets.bottom + 5);
-};
 
 const Analytics = () => {
   const insets = useSafeAreaInsets();
