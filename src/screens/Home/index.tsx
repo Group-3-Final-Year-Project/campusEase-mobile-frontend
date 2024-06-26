@@ -1,6 +1,6 @@
 import { FlatList, View, RefreshControl } from "react-native";
 import React, { useCallback, useContext } from "react";
-import { Container, Description, ListLabel, Title } from "./styles";
+import { Container, Description, ListLabel, LogoLabel } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
@@ -70,37 +70,40 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems: "center",
               }}
             >
-              <Avatar
-                animate
-                useAutoColors
-                label="SO"
-                size={45}
-                backgroundColor="green"
-                labelColor="white"
-                source={{
-                  uri: authorized_account?.profilePicture
-                    ? authorized_account?.profilePicture
-                    : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
-                }}
-              />
-              <View style={{ marginLeft: 10 }}>
-                <Description>Location</Description>
-                <Title>New York, USA</Title>
-              </View>
+              <LogoLabel>CampusEase</LogoLabel>
             </View>
           );
         },
         headerRight: () => (
-          <IconBtn>
-            <Iconify
-              icon="solar:bell-bold"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <IconBtn>
+              <Iconify
+                icon="solar:bell-bold"
+                size={18}
+                strokeWidth={18}
+                color={themeContext?.colors.text}
+              />
+            </IconBtn>
+            <Avatar
+              animate
+              useAutoColors
+              label="SO"
+              size={35}
+              backgroundColor="green"
+              labelColor="white"
+              containerStyle={{
+                marginLeft: 10,
+              }}
+              source={{
+                uri: authorized_account?.profilePicture
+                  ? authorized_account?.profilePicture
+                  : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+              }}
             />
-          </IconBtn>
+          </View>
         ),
         headerRightContainerStyle: {
           marginRight: 15,

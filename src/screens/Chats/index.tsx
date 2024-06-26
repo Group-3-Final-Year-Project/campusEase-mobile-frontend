@@ -16,20 +16,43 @@ import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import Avatar from "react-native-ui-lib/avatar";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  DocumentData,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { firestoreDatabase } from "firebaseConfig";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { VerifiedUser } from "~src/@types/types";
+import { UserForFirebase, VerifiedUser } from "~src/@types/types";
 
 const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [chatList, setChatList] = useState([]);
+  const [chatList, setChatList] = useState<
+    {
+      id: string;
+      users: DocumentData[];
+      messages?: DocumentData[];
+    }[]
+  >([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { authorized_account }: VerifiedUser = useAppSelector(
     (state) => state.user
   );
+
+  const currentUserForFirebase: UserForFirebase = {
+    id: authorized_account.id,
+    email: authorized_account.email,
+    username: authorized_account.username,
+    phoneNumber: authorized_account.phoneNumber,
+    isEmailVerified: authorized_account.isEmailVerified,
+    isPhoneVerified: authorized_account.isPhoneVerified,
+    profilePicture: authorized_account.profilePicture,
+    userType: authorized_account.userType,
+  };
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
@@ -50,57 +73,75 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     }, [])
   );
 
-  const renderChatCard = ({ item }) => (
-    <ChatCardContainer onPress={() => handleChatPress(item.id)}>
-      <Avatar
-        animate
-        useAutoColors
-        label="SO"
-        size={45}
-        backgroundColor="green"
-        labelColor="white"
-        source={{
-          uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
-        }}
-      />
-      <View style={{ flexGrow: 1, paddingHorizontal: 10 }}>
-        <ChatCardLabel>Jeron Esmond</ChatCardLabel>
-        <Description>Hey there! I am the service ...</Description>
-      </View>
-      <View>
-        <Description style={{ color: themeContext?.colors.secondaryText2 }}>
-          12:37 am
-        </Description>
-      </View>
-    </ChatCardContainer>
-  );
+  const renderChatCard = ({
+    item,
+  }: {
+    item: {
+      id: string;
+      users: DocumentData[];
+      messages?: DocumentData[] | undefined;
+    };
+  }) => {
+    const user = item.users.filter(
+      (user) => user.id !== authorized_account.id
+    )[0];
+    return (
+      <ChatCardContainer onPress={() => handleChatPress(item.id)}>
+        <Avatar
+          animate
+          useAutoColors
+          label="SO"
+          size={45}
+          backgroundColor="green"
+          labelColor="white"
+          source={{
+            uri: user
+              ? user?.profilePicture
+              : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+          }}
+        />
+        <View style={{ flexGrow: 1, paddingHorizontal: 10 }}>
+          <ChatCardLabel>{user?.username}</ChatCardLabel>
+          <Description>Hey there! I am the service ...</Description>
+        </View>
+        <View>
+          <Description style={{ color: themeContext?.colors.secondaryText2 }}>
+            12:37 am
+          </Description>
+        </View>
+      </ChatCardContainer>
+    );
+  };
 
   const getChatHistory = async () => {
-    const currentUserId = ""; /* Get the currently logged-in user's ID */ // Replace with your user ID retrieval logic
-
     const chatsRef = collection(firestoreDatabase, STORAGE_KEYS.CHATROOMS);
-    const q = query(
-      chatsRef,
-      where(STORAGE_KEYS.USERS, "array-contains", currentUserId)
-    );
+    const querySnapshot = await getDocs(chatsRef);
+
     try {
-      const querySnapshot = await getDocs(q);
-      const chats = querySnapshot.docs.map(async (doc) => {
-        const usersRef = collection(
-          firestoreDatabase,
-          STORAGE_KEYS.CHATROOMS,
-          doc.id,
-          STORAGE_KEYS.USERS
-        );
-        const usersSnapShot = await getDocs(usersRef);
-        return {
-          id: doc.id,
-          users: usersSnapShot.docs,
-          ...doc.data(),
-        };
-      });
-      console.log(chats);
-      setChatList(chats);
+      const chatData = await Promise.all(
+        querySnapshot.docs.map(async (doc) => {
+          const chatId = doc.id;
+          const chatDocData = doc.data(); // Store chat document data
+
+          // Fetch users within the chat (if users collection exists)
+          const usersRef = collection(
+            firestoreDatabase,
+            STORAGE_KEYS.CHATROOMS,
+            chatId,
+            STORAGE_KEYS.USERS
+          );
+          const usersSnapshot = await getDocs(usersRef);
+          const users = usersSnapshot.docs.map((userDoc) => userDoc.data()); // Extract user data
+
+          return {
+            id: chatId,
+            users, // Array of user data objects
+            ...chatDocData, // Spread chat document data
+          };
+        })
+      );
+      console.log("Chats dATA: ", chatData[0].users);
+      setChatList(chatData);
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }

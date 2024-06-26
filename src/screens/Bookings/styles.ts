@@ -35,6 +35,6 @@ export const HeaderItemLabel = styled(Text).attrs({
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.regular};
-  /* font-size: 10px;
-  line-height: 10px; */
+  font-size: 10px;
+  line-height: 10px;
 `;

@@ -29,7 +29,7 @@ const RootNavigator = () => {
       initialRouteName={APP_PAGES.LANDING}
       screenOptions={{
         headerShown: false,
-        headerShadowVisible: true,
+        headerShadowVisible: false,
         headerStyle: {
           // @ts-ignore
           // elevation: 1,

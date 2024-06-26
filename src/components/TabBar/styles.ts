@@ -17,15 +17,16 @@ export const Container = styled.View`
   align-items: center;
   width: 100%;
   height: 70px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-top-width: 1px;
+  border-top-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
   ${css`
     elevation: 0.5;
     shadow-color: #000;
     shadow-offset: 0px 1px;
     shadow-opacity: 0.1;
     shadow-radius: 1px;
-  `}
+  `};
 `;
 
 export const TabItem = styled.Pressable`

@@ -207,7 +207,7 @@ const UserTabNavigator = () => {
         tabBarHideOnKeyboard: true,
         tabBarAllowFontScaling: true,
         headerShown: true,
-        headerShadowVisible: true,
+        headerShadowVisible: false,
         headerStyle: {
           // elevation: 1,
           backgroundColor: theme?.colors.background,

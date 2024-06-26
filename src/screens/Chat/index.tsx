@@ -25,6 +25,7 @@ import { InferProps, Requireable } from "prop-types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { firestoreDatabase } from "firebaseConfig";
 import {
+  Unsubscribe,
   addDoc,
   collection,
   onSnapshot,
@@ -34,42 +35,85 @@ import {
 import { STORAGE_KEYS } from "~src/shared/constants";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
+import { VerifiedUser } from "~src/@types/types";
+import moment from "moment";
 
 const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
   const { chatId } = route.params;
   const dispatch = useAppDispatch();
   const chat = useAppSelector((state) => state.chat);
-  const currentUser = useAppSelector((state) => state.user);
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
   const giftedChatUser: GiftedChatUser = {
-    _id: currentUser.id,
-    name: currentUser.username,
+    _id: authorized_account.id,
+    name: authorized_account.username,
   };
 
   useEffect(() => {
-    const messagesRef = collection(
-      firestoreDatabase,
-      STORAGE_KEYS.CHATROOMS,
-      chatId,
-      STORAGE_KEYS.MESSAGES
-    );
-    const q = query(messagesRef, orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const messages = querySnapshot.docs.map((doc) => ({
-        _id: doc.data()._id,
-        createdAt: doc.data().createdAt.toDate(),
-        text: doc.data().text,
-        user: doc.data().user,
-      }));
-      dispatch({ type: ACTION_TYPES.LOAD_EARLIER_MESSAGES, payload: messages });
-    });
+    const fetchMessages = async (chatId: string) => {
+      try {
+        const messagesRef = collection(
+          firestoreDatabase,
+          STORAGE_KEYS.CHATROOMS,
+          chatId,
+          STORAGE_KEYS.MESSAGES
+        );
+        const q = query(messagesRef, orderBy("createdAt", "desc")); // Order by descending timestamp
 
-    return () => unsubscribe();
+        // Fetch messages with real-time updates
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const messages = querySnapshot.docs.map((doc) => {
+            const messageData = doc.data();
+            return {
+              _id: messageData._id, // Assuming _id exists
+              createdAt: messageData?.createdAt
+                ? moment(messageData.createdAt).toLocaleString()
+                : moment().toLocaleString(), // Convert timestamp to date
+              text: messageData.text,
+              user: messageData.user, // Assuming 'user' field exists with user data
+            };
+          });
+
+          dispatch({
+            type: ACTION_TYPES.LOAD_EARLIER_MESSAGES,
+            payload: messages,
+          });
+        });
+
+        // Cleanup function for real-time listener
+        return unsubscribe;
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    let unsubscribe: Promise<Unsubscribe | undefined> | (() => any);
+
+    // Fetch messages initially or on chatId change
+    if (chatId) {
+      unsubscribe = fetchMessages(chatId);
+    }
+
+    // Cleanup function for effect
+    return () => {
+      // Unsubscribe from the real-time listener if it exists
+      unsubscribe && unsubscribe;
+    };
   }, [chatId]);
 
   const onSend = useCallback(
     (messages: any[]) => {
-      const sentMessages = [{ ...messages[0], sent: true, received: true }];
+      const updatedMessages = messages.map((message) => {
+        return {
+          ...message,
+          createdAt: moment(createdAt).toLocaleString(),
+        };
+      });
+      const sentMessages = [
+        { ...updatedMessages[0], sent: true, received: true },
+      ];
       const newMessages = GiftedChat.append(
         chat.messages,
         sentMessages,
@@ -78,6 +122,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
 
       dispatch({ type: ACTION_TYPES.SEND_MESSAGE, payload: newMessages });
       const { _id, createdAt, text, user } = messages[0];
+      // console.log("id: ", _id, createdAt, text, user);
       addDoc(
         collection(
           firestoreDatabase,
@@ -87,7 +132,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
         ),
         {
           _id,
-          createdAt,
+          createdAt: moment(createdAt).toLocaleString(),
           text,
           user,
         }
@@ -318,3 +363,6 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
 };
 
 export default Chat;
+function unsubscribe() {
+  throw new Error("Function not implemented.");
+}

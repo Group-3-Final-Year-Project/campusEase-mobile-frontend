@@ -8,21 +8,29 @@ import { NavigationProp } from "@react-navigation/native";
 import { ServiceCard } from "~components";
 import { Container, ListLabel } from "./styles";
 import MapView, { PROVIDER_GOOGLE, MapOverlay } from "react-native-maps";
+import type { Region } from "react-native-maps";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import servicesData from "~src/data/servicesData";
 import SearchFilterBtn from "~components/SearchFilterBtn";
+import { VerifiedUser } from "~src/@types/types";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
 
 const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
+  const userLocation = authorized_account.locations[0]?.location;
   const mapRef = useRef();
-  const [initialRegion, setInitialRegion] = useState({
-    latitude: 10,
-    longitude: 10,
-    latitudeDelta: 0.001,
-    longitudeDelta: 0.001,
+  const [initialRegion, setInitialRegion] = useState<Region>({
+    latitude: userLocation.latitude,
+    longitude: userLocation.longitude,
+    latitudeDelta: 0,
+    longitudeDelta: 0,
   });
+  console.log(initialRegion);
 
   return (
     <Container
@@ -30,7 +38,11 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
         position: "relative",
       }}
     >
-      <MapView provider={PROVIDER_GOOGLE} style={{ flex: 1 }}></MapView>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        initialRegion={initialRegion}
+        style={{ flex: 1 }}
+      ></MapView>
       <View
         style={{
           paddingTop: insets.top + 20,

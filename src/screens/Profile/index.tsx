@@ -15,12 +15,12 @@ import { ThemeContext } from "styled-components/native";
 import { IconBtn } from "~components";
 import { Iconify } from "react-native-iconify";
 import Switch from "react-native-ui-lib/switch";
-import { useFocusEffect } from "@react-navigation/native";
+import { NavigationProp, useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES } from "~src/shared/constants";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
-import { pickImageAsync } from "~services";
+import { logoutUser, navigateAndResetStack, pickImageAsync } from "~services";
 
 const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -61,7 +61,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: "",
+      action: () => null,
       showRightIcon: true,
     },
     {
@@ -74,7 +74,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: "",
+      action: () => null,
       showRightIcon: true,
     },
     {
@@ -87,7 +87,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: APP_PAGES.BOOKMARKS,
+      action: () => navigation.navigate(APP_PAGES.BOOKMARKS),
       showRightIcon: true,
     },
     {
@@ -100,7 +100,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: APP_PAGES.MANAGE_ADDRESSES,
+      action: () => navigation.navigate(APP_PAGES.MANAGE_ADDRESSES),
       showRightIcon: true,
     },
     {
@@ -113,7 +113,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: "",
+      action: () => null,
       showRightIcon: true,
       rightIcon: <Switch />,
     },
@@ -127,7 +127,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: APP_PAGES.PRIVACY_POLICY,
+      action: () => navigation.navigate(APP_PAGES.PRIVACY_POLICY),
       showRightIcon: true,
     },
     {
@@ -140,7 +140,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      toPage: "",
+      action: () => null,
       showRightIcon: true,
     },
     {
@@ -153,7 +153,13 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={"red"}
         />
       ),
-      toPage: "",
+      action: async () => {
+        await logoutUser();
+        navigateAndResetStack(
+          navigation as NavigationProp<any>,
+          APP_PAGES.LANDING
+        );
+      },
       showRightIcon: false,
     },
   ];
@@ -197,11 +203,10 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
     toPage: string;
     showRightIcon: boolean;
     rightIcon: Element | undefined;
+    action: () => void;
   }> = ({ item }) => {
     return (
-      <ProfileItemCard
-        onPress={() => item.toPage && navigation.navigate(item.toPage)}
-      >
+      <ProfileItemCard onPress={item.action}>
         <View style={{ flexDirection: "row" }}>
           <>{item.icon}</>
           <ProfileItemLabel

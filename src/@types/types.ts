@@ -195,6 +195,7 @@ export type ServiceListService = {
 
 export type ServiceProvider = {
   id: number;
+  userType: UserType.SERVICE_PROVIDER | UserType.USER;
   username: string;
   email: string;
   phoneNumber: string;
@@ -212,4 +213,15 @@ export type SearchFilters = {
     longitude?: number;
     radius?: number;
   };
+};
+
+export type UserForFirebase = {
+  id: number;
+  userType: UserType.SERVICE_PROVIDER | UserType.USER;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  profilePicture: NullableString;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
 };

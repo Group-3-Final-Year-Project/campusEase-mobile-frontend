@@ -12,7 +12,7 @@ const fontStyle = css`
 `;
 
 export const Container = styled.View`
-  border-radius: 20px;
+  border-radius: 16px;
   background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
   flex-direction: row;

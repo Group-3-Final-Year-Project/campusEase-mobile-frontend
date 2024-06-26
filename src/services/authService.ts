@@ -155,3 +155,16 @@ export const mockSignin = async (userData: VerifiedUser) => {
     return processErrorResponse(error as any, "Error logging in user");
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    LOGGED_IN_USER = null;
+    AsyncStorage.multiRemove([
+      STORAGE_KEYS.USER_TYPE,
+      STORAGE_KEYS.ACTIVE_USER,
+    ]);
+    await setAsLoggedOut();
+  } catch (error) {
+    return processErrorResponse(error as any, "Error logging out user");
+  }
+};

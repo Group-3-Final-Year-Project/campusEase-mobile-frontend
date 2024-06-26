@@ -32,3 +32,10 @@ export const Title = styled(Text).attrs({
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
   margin-bottom: 5px;
 `;
+
+export const LogoLabel = styled(Text).attrs({
+  fontSize: "large",
+  fontWeight: "bold",
+})`
+  color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
+`;

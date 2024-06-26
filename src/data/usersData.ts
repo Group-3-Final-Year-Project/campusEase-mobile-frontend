@@ -15,8 +15,8 @@ export const usersData: VerifiedUser[] = [
         {
           name: "Home",
           location: {
-            latitude: 37.7749, // Replace with actual latitude
-            longitude: -122.4194,
+            latitude: 6.6771542731125875,
+            longitude: -1.565951702533225,
             altitude: null,
             accuracy: null,
             altitudeAccuracy: null,

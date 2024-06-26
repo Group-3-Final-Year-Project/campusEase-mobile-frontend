@@ -21,12 +21,14 @@ const fontStyle = css`
 `;
 
 export const Container = styled.View`
-  border-radius: 20px;
-  background-color: ${(props: DefaultThemeProps) =>
+  border-radius: 16px;
+  border-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
   flex-direction: row;
   overflow: hidden;
   flex-grow: 1;
+  border-width: 1px;
+
   /* margin: 25px 0; */
 `;
 

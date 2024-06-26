@@ -17,9 +17,12 @@ export const CardContainer = styled.TouchableOpacity`
   min-height: 100px;
   width: 100%;
   padding: 10px;
-  background-color: ${(props: DefaultThemeProps) =>
-    props.theme.colors.secondaryBackground};
+  /* background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground}; */
   border-radius: 15px;
+  border-width: 1px;
+  border-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
 `;
 
 export const CardImage = styled.Image`
@@ -41,5 +44,6 @@ export const Description = styled(Text).attrs({})`
 `;
 
 export const ServiceTitle = styled(Text)`
-  font-family:${(props:DefaultThemeProps) => props.theme.typography.fontFamily.semiBold};
+  font-family: ${(props: DefaultThemeProps) =>
+    props.theme.typography.fontFamily.semiBold};
 `;

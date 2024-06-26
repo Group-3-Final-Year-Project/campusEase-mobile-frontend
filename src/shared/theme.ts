@@ -71,7 +71,7 @@ export const DarkTheme: DefaultThemeProps = {
     background: "#181820",
     secondaryBackground: "#21212b",
     // secondaryBackground: "#111214",
-    border: "#111D40",
+    border: "#696464",
     red: "#ff0000",
     green: "#00ff00",
   },

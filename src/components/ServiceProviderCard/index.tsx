@@ -10,9 +10,16 @@ import Avatar from "react-native-ui-lib/avatar";
 import { ThemeContext } from "styled-components/native";
 import IconBtn from "~components/IconBtn";
 import { Iconify } from "react-native-iconify";
-import { ServiceProvider } from "~src/@types/types";
-import { openLink } from "~services";
+import {
+  ServiceProvider,
+  UserForFirebase,
+  VerifiedUser,
+} from "~src/@types/types";
+import { openChat, openLink } from "~services";
 import usersData from "~src/data/usersData";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { RootState } from "~store/store";
 
 interface IServiceProviderCard {
   provider: ServiceProvider;
@@ -22,6 +29,20 @@ interface IServiceProviderCard {
 const ServiceProviderCard = (props: IServiceProviderCard) => {
   const themeContext = useContext(ThemeContext);
   const { provider, showContactInfo } = props;
+  const navigation = useNavigation();
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
+  const currentUserForFirebase: UserForFirebase = {
+    id: authorized_account.id,
+    email: authorized_account.email,
+    username: authorized_account.username,
+    phoneNumber: authorized_account.phoneNumber,
+    isEmailVerified: authorized_account.isEmailVerified,
+    isPhoneVerified: authorized_account.isPhoneVerified,
+    profilePicture: authorized_account.profilePicture,
+    userType: authorized_account.userType,
+  };
 
   return (
     <ServiceProviderCardContainer>
@@ -69,7 +90,15 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
               color={themeContext?.colors.text}
             />
           </IconBtn>
-          <IconBtn>
+          <IconBtn
+            onPress={() =>
+              openChat(
+                navigation as NavigationProp<any>,
+                currentUserForFirebase,
+                provider
+              )
+            }
+          >
             <Iconify
               icon="solar:chat-round-line-outline"
               size={16}
