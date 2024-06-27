@@ -61,8 +61,8 @@ export type User = {
   isPhoneVerified: boolean;
   isActive: boolean;
   isLoggedIn: boolean;
-  createdAt?: number;
-  updatedAt?: number;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type VerifiedUser = {
@@ -81,7 +81,7 @@ export type ChatData = {
 export type ReduxState = {
   user: VerifiedUser;
   // services: Service[];
-  // bookings: Booking[];
+  booking: Booking;
   filters: {
     [Filters.SERVICE_CATEGORY]: ServiceCategory;
   };
@@ -148,8 +148,8 @@ export type Service = {
   website?: NullableString;
   startingPrice?: number;
   subServices?: SubService[];
-  createdAt: number;
-  updatedAt?: number;
+  createdAt: string;
+  updatedAt?: string;
   isAvailable: boolean;
   rating?: number;
   numberOfReviews?: number;
@@ -160,17 +160,17 @@ export type Booking = {
   providerId: number;
   userId: number;
   serviceId: number;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: string;
+  updatedAt: string;
   location: LocationObject;
   paymentMethodObject: PaymentMethodObject;
   paymentStatus: PaymentStatus;
-  serviceType: SubService;
+  serviceType?: SubService;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  scheduledDate: number;
-  scheduledTime: number;
+  scheduledDate: string;
+  scheduledTime: string;
   notes: string;
   attachments: BookingAttachment[];
   bookingStates: BookingState[];

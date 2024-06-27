@@ -15,7 +15,7 @@ import {
   UserForFirebase,
   VerifiedUser,
 } from "~src/@types/types";
-import { openChat, openLink } from "~services";
+import { extractUserDataForFirebase, openChat, openLink } from "~services";
 import usersData from "~src/data/usersData";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
@@ -33,16 +33,8 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
   const { authorized_account }: VerifiedUser = useAppSelector(
     (state) => state.user
   );
-  const currentUserForFirebase: UserForFirebase = {
-    id: authorized_account.id,
-    email: authorized_account.email,
-    username: authorized_account.username,
-    phoneNumber: authorized_account.phoneNumber,
-    isEmailVerified: authorized_account.isEmailVerified,
-    isPhoneVerified: authorized_account.isPhoneVerified,
-    profilePicture: authorized_account.profilePicture,
-    userType: authorized_account.userType,
-  };
+  const currentUserForFirebase: UserForFirebase =
+    extractUserDataForFirebase(authorized_account);
 
   return (
     <ServiceProviderCardContainer>
@@ -70,7 +62,7 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
               color: themeContext?.colors.secondaryText,
             }}
           >
-            Service provider
+            {provider.userType}
           </Description>
         </View>
       </View>

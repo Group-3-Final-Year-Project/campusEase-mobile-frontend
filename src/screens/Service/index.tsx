@@ -1,10 +1,4 @@
-import {
-  View,
-  Animated,
-  FlatList,
-  StyleSheet,
-  RefreshControl,
-} from "react-native";
+import { View, Animated, StyleSheet, RefreshControl } from "react-native";
 import React, {
   useContext,
   useRef,
@@ -12,7 +6,6 @@ import React, {
   useCallback,
   useState,
 } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import {
@@ -31,7 +24,7 @@ import {
   EmptyState,
   IconBtn,
   LoadingView,
-  ServiceCard,
+  SafeComponent,
   ServiceProviderCard,
 } from "~components";
 import { Iconify } from "react-native-iconify";
@@ -42,18 +35,33 @@ import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
 import { APP_PAGES, QUERY_KEYS } from "~src/shared/constants";
-import { ServiceProvider } from "~src/@types/types";
+import {
+  ServiceProvider,
+  UserForFirebase,
+  VerifiedUser,
+} from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
 import servicesData from "~src/data/servicesData";
 import usersData from "~src/data/usersData";
 import { BookingInfoCard } from "../BookingSummary/styles";
+import {
+  extractUserDataForFirebase,
+  getServiceProviderData,
+  openChat,
+} from "~services";
+import { NavigationProp } from "@react-navigation/native";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
 
 const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
-  const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [serviceProvider, setServiceProvider] =
     useState<ServiceProvider | null>(null);
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
+  const currentUserForFirebase: UserForFirebase =
+    extractUserDataForFirebase(authorized_account);
 
   const yOffset = useRef(new Animated.Value(0)).current;
   const headerOpacity = yOffset.interpolate({
@@ -113,22 +121,20 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     [route.params, navigation]
   );
 
+  const { data, isLoading, isError, isRefetching, error, refetch } = useQuery({
+    queryKey: [QUERY_KEYS.SERVICE],
+    queryFn: () => fetchData(route.params?.serviceId),
+  });
+
+  useEffect(() => {
+    data && getServiceProvider(data.providerId);
+  }, [data]);
+
   const getServiceProvider = useCallback(
     (providerId: number) => {
-      const { authorized_account } = usersData.filter(
-        ({ authorized_account }) => authorized_account.id === providerId
-      )[0];
-      setServiceProvider({
-        id: authorized_account.id,
-        username: authorized_account.username,
-        email: authorized_account.email,
-        phoneNumber: authorized_account.phoneNumber,
-        profilePicture: authorized_account.profilePicture,
-        isEmailVerified: authorized_account.isEmailVerified,
-        isPhoneVerified: authorized_account.isPhoneVerified,
-      });
+      setServiceProvider(getServiceProviderData(providerId));
     },
-    [route.params?.serviceId]
+    [route.params?.bookingId]
   );
 
   const serviceSocialItems = [
@@ -154,7 +160,13 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      action: "",
+      action: () =>
+        serviceProvider &&
+        openChat(
+          navigation as NavigationProp<any>,
+          currentUserForFirebase,
+          serviceProvider
+        ),
     },
     {
       name: "Website",
@@ -166,7 +178,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      action: "",
+      action: () => data?.website && openLink(data?.website),
     },
     {
       name: "Map",
@@ -178,11 +190,11 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      action: "",
+      action: () => null,
     },
   ];
 
-  const renderReviewCard = (review) => {
+  const renderReviewCard = (review: any) => {
     return (
       <ReviewCard>
         <View
@@ -235,211 +247,210 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     );
   };
 
-  const { data, isLoading, isError, isRefetching } = useQuery({
-    queryKey: [QUERY_KEYS.SERVICE],
-    queryFn: () => fetchData(route.params?.serviceId),
-  });
-
-  useEffect(() => {
-    data && getServiceProvider(data.providerId);
-  }, [data]);
-
   if (isLoading) return <LoadingView />;
   else if (isError || !data || data === undefined) return <EmptyState />;
 
   return (
-    <Container>
-      <Animated.ScrollView
-        overScrollMode="never"
-        showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: {
-                  y: yOffset,
+    <SafeComponent
+      request={{ data: data, error: error, loading: isLoading }}
+      refetch={refetch}
+    >
+      <Container>
+        <Animated.ScrollView
+          overScrollMode="never"
+          showsVerticalScrollIndicator={false}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    y: yOffset,
+                  },
                 },
               },
-            },
-          ],
-          { useNativeDriver: true }
-        )}
-        scrollEventThrottle={16}
-        refreshControl={<RefreshControl refreshing={isRefetching} />}
-        style={{ paddingBottom: bottomInset }}
-      >
-        <ServiceBanner banner={data.coverImage} />
-        <ServiceInfoContainer>
-          <View
+            ],
+            { useNativeDriver: true }
+          )}
+          scrollEventThrottle={16}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+          }
+          style={{ paddingBottom: bottomInset }}
+        >
+          <ServiceBanner banner={data.coverImage} />
+          <ServiceInfoContainer>
+            <View
+              style={{
+                width: "80%",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              }}
+            >
+              <IconBtn style={{ marginRight: 5 }}>
+                <TagLabel>{data?.category?.name}</TagLabel>
+              </IconBtn>
+              <IconBtn
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <Iconify
+                  icon="fluent-emoji-flat:star"
+                  size={10}
+                  strokeWidth={10}
+                />
+                <TagLabel>
+                  {data?.rating ?? 0.0} ({data?.numberOfReviews ?? 0} reviews)
+                </TagLabel>
+              </IconBtn>
+            </View>
+            <View style={{ marginTop: 10 }}>
+              <Title style={{ marginBottom: 4 }}>{data?.name}</Title>
+              <Description
+                style={{ color: themeContext?.colors.secondaryText }}
+              >
+                {data.location?.name}
+              </Description>
+            </View>
+          </ServiceInfoContainer>
+          {data?.description && (
+            <ServiceInfoContainer>
+              <ServiceInfoHeaderLabel>About Service</ServiceInfoHeaderLabel>
+              <Description style={{ lineHeight: 24 }}>
+                {data.description}
+              </Description>
+            </ServiceInfoContainer>
+          )}
+          <ServiceInfoContainer
             style={{
-              width: "80%",
               flexDirection: "row",
-              justifyContent: "flex-start",
+              justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            <IconBtn style={{ marginRight: 5 }}>
-              <TagLabel>{data?.category.name}</TagLabel>
-            </IconBtn>
-            <IconBtn
-              style={{
-                flexDirection: "row",
-              }}
-            >
-              <Iconify
-                icon="fluent-emoji-flat:star"
-                size={10}
-                strokeWidth={10}
-              />
-              <TagLabel>
-                {data?.rating ?? 0.0} ({data?.numberOfReviews ?? 0} reviews)
-              </TagLabel>
-            </IconBtn>
-          </View>
-          <View style={{ marginTop: 10 }}>
-            <Title style={{ marginBottom: 4 }}>{data.name}</Title>
-            <Description style={{ color: themeContext?.colors.secondaryText }}>
-              {data.location.name}
-            </Description>
-          </View>
-        </ServiceInfoContainer>
-        {data?.description && (
-          <ServiceInfoContainer>
-            <ServiceInfoHeaderLabel>About Service</ServiceInfoHeaderLabel>
-            <Description style={{ lineHeight: 24 }}>
-              {data.description}
-            </Description>
+            {serviceSocialItems.map((item, index) => (
+              <IconBtn
+                key={item?.name}
+                onPress={item.action}
+                style={{ height: 80, width: 80 }}
+              >
+                <>{item.icon}</>
+                <Description style={{ marginTop: 10, fontSize: 12 }}>
+                  {item?.name}
+                </Description>
+              </IconBtn>
+            ))}
           </ServiceInfoContainer>
-        )}
-        <ServiceInfoContainer
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          {serviceSocialItems.map((item, index) => (
-            <IconBtn
-              key={index}
-              onPress={item.action}
-              style={{ height: 80, width: 80 }}
-            >
-              <>{item.icon}</>
-              <Description style={{ marginTop: 10, fontSize: 12 }}>
-                {item.name}
-              </Description>
-            </IconBtn>
-          ))}
-        </ServiceInfoContainer>
-        {serviceProvider && (
-          <ServiceInfoContainer>
-            <ServiceInfoHeaderLabel>
-              About Service Provider
-            </ServiceInfoHeaderLabel>
-            <ServiceProviderCard provider={serviceProvider} />
-          </ServiceInfoContainer>
-        )}
-        {data?.subServices && (
-          <ServiceInfoContainer>
-            <ServiceInfoHeaderLabel>Sub services</ServiceInfoHeaderLabel>
-            <BookingInfoCard>
-              {data.subServices.map((subService) => (
-                <View style={{ paddingVertical: 15 }} key={subService.id}>
-                  <View
-                    style={{
-                      width: "100%",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
+          {serviceProvider && (
+            <ServiceInfoContainer>
+              <ServiceInfoHeaderLabel>
+                About Service Provider
+              </ServiceInfoHeaderLabel>
+              <ServiceProviderCard provider={serviceProvider} showContactInfo />
+            </ServiceInfoContainer>
+          )}
+          {data?.subServices && (
+            <ServiceInfoContainer>
+              <ServiceInfoHeaderLabel>Sub services</ServiceInfoHeaderLabel>
+              <BookingInfoCard>
+                {data.subServices.map((subService) => (
+                  <View style={{ paddingVertical: 15 }} key={subService.id}>
                     <View
                       style={{
+                        width: "100%",
                         flexDirection: "row",
+                        justifyContent: "space-between",
                         alignItems: "center",
                       }}
                     >
-                      <View>
-                        <Description>{subService.name}</Description>
-                        {subService?.description && (
-                          <Description
-                            style={{
-                              fontSize: 12,
-                              color: themeContext?.colors.secondaryText,
-                              paddingTop: 5,
-                            }}
-                          >
-                            {subService?.description}
-                          </Description>
-                        )}
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <View>
+                          <Description>{subService?.name}</Description>
+                          {subService?.description && (
+                            <Description
+                              style={{
+                                fontSize: 12,
+                                color: themeContext?.colors.secondaryText,
+                                paddingTop: 5,
+                              }}
+                            >
+                              {subService?.description}
+                            </Description>
+                          )}
+                        </View>
                       </View>
+                      <Description>
+                        {formatCurrency(subService?.price ?? 0)}
+                      </Description>
                     </View>
-                    <Description>
-                      {formatCurrency(subService?.price ?? 0)}
-                    </Description>
                   </View>
-                </View>
-              ))}
-            </BookingInfoCard>
+                ))}
+              </BookingInfoCard>
+            </ServiceInfoContainer>
+          )}
+          {/* Galllery goes here... */}
+          <ServiceInfoContainer>
+            <ServiceInfoHeaderLabel>Gallery</ServiceInfoHeaderLabel>
+            <GridView
+              items={[
+                {
+                  imageProps: {
+                    source: {
+                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                    },
+                  },
+                },
+                {
+                  imageProps: {
+                    source: {
+                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                    },
+                  },
+                },
+                {
+                  imageProps: {
+                    source: {
+                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                    },
+                  },
+                },
+                {
+                  imageProps: {
+                    source: {
+                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+                    },
+                  },
+                },
+              ]}
+              itemSpacing={2}
+              numColumns={2}
+            />
           </ServiceInfoContainer>
-        )}
-        {/* Galllery goes here... */}
-        <ServiceInfoContainer>
-          <ServiceInfoHeaderLabel>Gallery</ServiceInfoHeaderLabel>
-          <GridView
-            items={[
-              {
-                imageProps: {
-                  source: {
-                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-                  },
-                },
-              },
-              {
-                imageProps: {
-                  source: {
-                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-                  },
-                },
-              },
-              {
-                imageProps: {
-                  source: {
-                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-                  },
-                },
-              },
-              {
-                imageProps: {
-                  source: {
-                    uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-                  },
-                },
-              },
-            ]}
-            itemSpacing={2}
-            numColumns={2}
-          />
-        </ServiceInfoContainer>
-        {/* Reviews goes here... */}
-        <GridView />
-        <ServiceInfoContainer>
-          <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
-          <StackAggregator
-            bg-transparent
-            contentContainerStyle={{
-              backgroundColor: "transparent",
-            }}
-            buttonProps={{
-              "bg-transparent": true,
-              bottom: true,
-            }}
-          >
-            {[...new Array(8)].map((item) => renderReviewCard(item))}
-          </StackAggregator>
-        </ServiceInfoContainer>
-        {/* More for you goes here... */}
-        {/* <ServiceInfoContainer>
+          {/* Reviews goes here... */}
+          <GridView />
+          <ServiceInfoContainer>
+            <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
+            <StackAggregator
+              bg-transparent
+              contentContainerStyle={{
+                backgroundColor: "transparent",
+              }}
+              buttonProps={{
+                "bg-transparent": true,
+                bottom: true,
+              }}
+            >
+              {[...new Array(8)].map((item) => renderReviewCard(item))}
+            </StackAggregator>
+          </ServiceInfoContainer>
+          {/* More for you goes here... */}
+          {/* <ServiceInfoContainer>
           <ServiceInfoHeaderLabel>More for you</ServiceInfoHeaderLabel>
           <FlatList
             data={[...new Array(5)]}
@@ -453,27 +464,30 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
             showsHorizontalScrollIndicator={false}
           />
         </ServiceInfoContainer> */}
-      </Animated.ScrollView>
-      <BottomCard>
-        <View>
-          <Description style={{ marginBottom: 10 }}>Starting Price</Description>
-          <HighlightedDescription>
-            {formatCurrency(data?.startingPrice ?? 0)}
-          </HighlightedDescription>
-        </View>
-        <Button
-          style={{ width: 240, height: 60, padding: 12 }}
-          onPress={() =>
-            navigation.navigate(APP_PAGES.BOOKING_SUMMARY, {
-              service: data,
-              serviceProvider,
-            })
-          }
-        >
-          Book now
-        </Button>
-      </BottomCard>
-    </Container>
+        </Animated.ScrollView>
+        <BottomCard>
+          <View>
+            <Description style={{ marginBottom: 10 }}>
+              Starting Price
+            </Description>
+            <HighlightedDescription>
+              {formatCurrency(data?.startingPrice ?? 0)}
+            </HighlightedDescription>
+          </View>
+          <Button
+            style={{ width: 240, height: 60, padding: 12 }}
+            onPress={() =>
+              navigation.navigate(APP_PAGES.BOOKING_SUMMARY, {
+                service: data,
+                serviceProvider,
+              })
+            }
+          >
+            Book now
+          </Button>
+        </BottomCard>
+      </Container>
+    </SafeComponent>
   );
 };
 

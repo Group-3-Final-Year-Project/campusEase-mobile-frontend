@@ -15,6 +15,7 @@ import {
   SystemMessage,
   SystemMessageProps,
   User as GiftedChatUser,
+  MessageTextProps,
 } from "react-native-gifted-chat";
 import AccessoryBar from "./AccessoryBar";
 import CustomActions from "./CustomActions";
@@ -37,6 +38,7 @@ import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
 import { VerifiedUser } from "~src/@types/types";
 import moment from "moment";
+import { Description } from "../Home/styles";
 
 const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
@@ -122,7 +124,6 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
 
       dispatch({ type: ACTION_TYPES.SEND_MESSAGE, payload: newMessages });
       const { _id, createdAt, text, user } = messages[0];
-      // console.log("id: ", _id, createdAt, text, user);
       addDoc(
         collection(
           firestoreDatabase,

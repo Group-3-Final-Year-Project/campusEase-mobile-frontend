@@ -10,7 +10,7 @@ import {
   ChatCardLabel,
   Description,
 } from "./styles";
-import { EmptyState, IconBtn, LoadingView } from "~components";
+import { EmptyState, IconBtn, LoadingView, SafeComponent } from "~components";
 import { Iconify } from "react-native-iconify";
 import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -26,6 +26,8 @@ import {
 import { firestoreDatabase } from "firebaseConfig";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { UserForFirebase, VerifiedUser } from "~src/@types/types";
+import { useQuery } from "@tanstack/react-query";
+import { RefreshControl } from "react-native";
 
 const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -43,16 +45,6 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     (state) => state.user
   );
 
-  const currentUserForFirebase: UserForFirebase = {
-    id: authorized_account.id,
-    email: authorized_account.email,
-    username: authorized_account.username,
-    phoneNumber: authorized_account.phoneNumber,
-    isEmailVerified: authorized_account.isEmailVerified,
-    isPhoneVerified: authorized_account.isPhoneVerified,
-    profilePicture: authorized_account.profilePicture,
-    userType: authorized_account.userType,
-  };
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
@@ -140,8 +132,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
           };
         })
       );
-      console.log("Chats dATA: ", chatData[0].users);
-      setChatList(chatData);
+      return chatData;
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }
@@ -151,32 +142,42 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     navigation.navigate(APP_PAGES.CHAT, { chatId });
   };
 
-  useEffect(() => {
-    getChatHistory();
-  }, []);
+  const { data, isLoading, error, isError, refetch, isRefetching } = useQuery({
+    queryKey: [STORAGE_KEYS.CHATROOMS],
+    queryFn: () => getChatHistory(),
+  });
 
-  if (loading) return <LoadingView />;
+  if (isLoading) return <LoadingView />;
+  else if (isError || !data || data === undefined) return <EmptyState />;
 
   return (
-    <Container
-      style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
+    <SafeComponent
+      refetch={refetch}
+      request={{ data, loading: isLoading, error }}
     >
-      <StatusBar style={themeContext?.dark ? "light" : "dark"} />
-      <FlatList
-        data={chatList}
-        renderItem={renderChatCard}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              height: 0.8,
-              backgroundColor: themeContext?.colors.secondaryBackground,
-            }}
-          />
-        )}
-        showsHorizontalScrollIndicator={false}
-        ListEmptyComponent={() => <EmptyState />}
-      />
-    </Container>
+      <Container
+        style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
+      >
+        <StatusBar style={themeContext?.dark ? "light" : "dark"} />
+        <FlatList
+          data={chatList}
+          renderItem={renderChatCard}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 0.8,
+                backgroundColor: themeContext?.colors.secondaryBackground,
+              }}
+            />
+          )}
+          showsHorizontalScrollIndicator={false}
+          ListEmptyComponent={() => <EmptyState />}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+          }
+        />
+      </Container>
+    </SafeComponent>
   );
 };
 

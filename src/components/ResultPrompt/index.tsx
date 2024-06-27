@@ -5,13 +5,37 @@ import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "styled-components/native";
 import { Description, Title } from "./styles";
 import Button from "../Button";
+import { NavigationProp } from "@react-navigation/native";
+import { navigateAndResetStack } from "~services";
+import { APP_PAGES } from "~src/shared/constants";
+import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import { clearBookingData } from "~store/actions/bookingActions";
 
 type ResultProps = DialogProps & {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  navigation?: NavigationProp<any>;
+  bookingId?: number;
 };
 
 const ResultPrompt = (props: ResultProps) => {
   const themeContext = useContext(ThemeContext);
+  const dispatch = useAppDispatch();
+
+  const handlePress = () => {
+    props.setIsVisible(false);
+    console.log(props.bookingId);
+    if (props.navigation && props.bookingId) {
+      console.log("Yh");
+      navigateAndResetStack(props.navigation, [
+        APP_PAGES.USER_TAB,
+        APP_PAGES.BOOKING_DETAILS,
+      ]);
+      // props.navigation.navigate(APP_PAGES.BOOKING_DETAILS, {
+      //   bookingId: props.bookingId,
+      // });
+    }
+    dispatch(clearBookingData());
+  };
 
   return (
     <Dialog
@@ -19,8 +43,7 @@ const ResultPrompt = (props: ResultProps) => {
       onDismiss={() => props.setIsVisible(false)}
       panDirection={PanningProvider.Directions.DOWN}
       //   center
-      top
-      //   bottom
+      bottom
       overlayBackgroundColor="rgba(0,0,0,0.5)"
       containerStyle={{
         backgroundColor: themeContext?.colors.background,
@@ -64,13 +87,10 @@ const ResultPrompt = (props: ResultProps) => {
           </View>
         </View>
         <Title>Booking confirmed successfully</Title>
-        <Description>
-          Congratulations{"\n"}Your booking has been confirmed
+        <Description style={{ fontSize: 12 }}>
+          Congratulations{"\n"}Your request has been sent to service provider
         </Description>
-        <Button
-          style={{ width: "100%" }}
-          onPress={() => props.setIsVisible(false)}
-        >
+        <Button style={{ width: "100%" }} onPress={handlePress}>
           Done
         </Button>
       </View>

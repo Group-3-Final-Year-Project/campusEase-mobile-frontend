@@ -1,34 +1,91 @@
-import { View, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import React, { useContext, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
-
-import Avatar from "react-native-ui-lib/avatar";
 import { Iconify } from "react-native-iconify";
-import { AddAttachmentBtn, Container, Description } from "./styles";
 import {
-  Button,
-  Input,
-  ServiceProviderCard,
-  TertiaryServiceCard,
-} from "~components";
-import { BottomCard, HighlightedDescription } from "../Service/styles";
+  AddAttachmentBtn,
+  Container,
+  DateContainer,
+  Description,
+} from "./styles";
+import { Button, Input } from "~components";
+import { BottomCard } from "../Service/styles";
 import {
   BookingInfoContainer,
   BookingInfoHeaderLabel,
 } from "../BookingDetail/styles";
-import { formatCurrency, pickDocuments } from "~services";
+import { createBooking, navigateAndResetStack, pickDocuments } from "~services";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
-import { CountryCodeText, FormControl } from "../SignInOrUp/styles";
+import { CountryCodeText, ErrorLabel, FormControl } from "../SignInOrUp/styles";
 import ResultPrompt from "~components/ResultPrompt";
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { Booking, VerifiedUser } from "~src/@types/types";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
+import moment from "moment";
+import DateTimePicker from "react-native-ui-lib/dateTimePicker";
+import {
+  clearBookingData,
+  updateBookingData,
+} from "~store/actions/bookingActions";
+import { NavigationProp } from "@react-navigation/native";
+
+export const bookingInfoSchema = yup.object().shape({
+  username: yup.string().required("Username required!"),
+  email: yup.string().email("Email not valid!").required("Email required!"),
+  phoneNumber: yup.string().required("Phone number required!"),
+  scheduledTime: yup.date().notRequired(),
+  scheduledDate: yup.date().notRequired(),
+  noteToProvider: yup.string().notRequired(),
+});
 
 const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
-  const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const { authorized_account }: VerifiedUser = useAppSelector(
+    (state) => state.user
+  );
+  const booking: Booking = useAppSelector((state) => state.booking);
+  const dispatch = useAppDispatch();
+  console.log(booking);
+  const bookingInfoInitialValues = {
+    username: authorized_account.username,
+    email: authorized_account.email,
+    phoneNumber: authorized_account.phoneNumber,
+    scheduledTime: new Date(),
+    scheduledDate: new Date(),
+    noteToProvider: "",
+  };
+
+  const formik = useFormik({
+    initialValues: bookingInfoInitialValues,
+    validationSchema: bookingInfoSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        dispatch(
+          updateBookingData({
+            customerEmail: values.email,
+            customerName: values.username,
+            customerPhone: values.phoneNumber,
+            notes: values.noteToProvider,
+            scheduledDate: moment(values.scheduledDate).toLocaleString(),
+            scheduledTime: moment(values.scheduledTime).toLocaleString(),
+            createdAt: new Date().toLocaleString(),
+          })
+        );
+        createBooking(booking);
+        setIsVisible(true);
+        resetForm();
+      } catch (error) {
+        throw Error(error as any);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
     <Container>
@@ -43,6 +100,9 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
           <BookingInfoHeaderLabel>Customer Information</BookingInfoHeaderLabel>
           <FormControl>
             <Input
+              onChangeText={formik.handleChange("username")}
+              onBlur={formik.handleBlur("username")}
+              value={formik.values?.username}
               textContentType="name"
               placeholder="Username"
               icon={
@@ -52,9 +112,15 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
                 />
               }
             />
+            {formik.touched?.username && formik.errors?.username ? (
+              <ErrorLabel>{formik.errors?.username}</ErrorLabel>
+            ) : null}
           </FormControl>
           <FormControl>
             <Input
+              onChangeText={formik.handleChange("email")}
+              onBlur={formik.handleBlur("email")}
+              value={formik.values?.email}
               textContentType="emailAddress"
               placeholder="Email"
               icon={
@@ -64,44 +130,60 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
                 />
               }
             />
+            {formik.touched?.email && formik.errors?.email ? (
+              <ErrorLabel>{formik.errors?.email}</ErrorLabel>
+            ) : null}
           </FormControl>
           <FormControl>
             <Input
+              onChangeText={formik.handleChange("phoneNumber")}
+              onBlur={formik.handleBlur("phoneNumber")}
+              value={formik.values?.phoneNumber}
               textContentType="telephoneNumber"
               keyboardType="phone-pad"
               placeholder="Phone number"
               icon={<CountryCodeText>🇬🇭 +233</CountryCodeText>}
             />
+            {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
+              <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
+            ) : null}
           </FormControl>
         </BookingInfoContainer>
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Other Information</BookingInfoHeaderLabel>
           <FormControl>
-            <Input
-              textContentType="name"
-              placeholder="Preferred date of service"
-              icon={
-                <Iconify
-                  color={themeContext?.colors.secondaryText2}
-                  icon="solar:calendar-outline"
-                />
+            <DateContainer
+              placeholder={"Placeholder"}
+              mode={"date"}
+              onChange={(date: string | number | Date) =>
+                formik.setFieldValue("scheduledDate", new Date(date))
               }
+              onBlur={formik.handleBlur("scheduledDate")}
+              value={formik.values?.scheduledDate}
             />
           </FormControl>
           <FormControl>
-            <Input
-              textContentType="name"
-              placeholder="Preferred time of service"
-              icon={
+            <DateContainer
+              leadingAccessory={
                 <Iconify
                   color={themeContext?.colors.secondaryText2}
                   icon="solar:clock-circle-outline"
                 />
               }
+              placeholder={"Placeholder"}
+              mode={"time"}
+              onChange={(date: string | number | Date) =>
+                formik.setFieldValue("scheduledTime", date)
+              }
+              onBlur={formik.handleBlur("scheduledTime")}
+              value={formik.values?.scheduledTime}
             />
           </FormControl>
           <FormControl>
             <Input
+              onChangeText={formik.handleChange("noteToProvider")}
+              onBlur={formik.handleBlur("noteToProvider")}
+              value={formik.values?.noteToProvider}
               textContentType="name"
               placeholder="Note to service provider"
               multiline
@@ -140,12 +222,18 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
       <BottomCard>
         <Button
           style={{ width: "100%", height: 60, padding: 12 }}
-          onPress={() => setIsVisible(true)}
+          loading={formik.isSubmitting}
+          onPress={formik.submitForm}
         >
           Confirm booking
         </Button>
       </BottomCard>
-      <ResultPrompt visible={isVisible} setIsVisible={setIsVisible} />
+      <ResultPrompt
+        navigation={navigation as NavigationProp<any>}
+        bookingId={booking.id}
+        visible={isVisible}
+        setIsVisible={setIsVisible}
+      />
     </Container>
   );
 };

@@ -159,7 +159,6 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   placeholder="Phone number"
                   icon={<CountryCodeText>🇬🇭 +233</CountryCodeText>}
                 />
-                {/* <PhoneInput /> */}
                 {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
                   <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
                 ) : null}

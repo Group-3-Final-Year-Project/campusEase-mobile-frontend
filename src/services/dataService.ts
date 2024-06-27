@@ -1,7 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { collection, getDoc } from "firebase/firestore";
-import { firestoreDatabase } from "firebaseConfig";
-import { ServiceListService } from "~src/@types/types";
+import {
+  Booking,
+  Service,
+  ServiceListService,
+  ServiceProvider,
+  User,
+  UserForFirebase,
+} from "~src/@types/types";
+import bookingsData from "~src/data/bookingsData";
+import servicesData from "~src/data/servicesData";
+import usersData from "~src/data/usersData";
 import { STORAGE_KEYS } from "~src/shared/constants";
 
 export const getServices = () => {};
@@ -16,17 +24,41 @@ export const setBookmarks = async (services: ServiceListService[]) => {
   bookmarks.push(...services);
   AsyncStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(bookmarks));
 };
+export const extractUserDataForFirebase = (userData: User) => {
+  const currentUserForFirebase: UserForFirebase = {
+    id: userData.id,
+    email: userData.email,
+    username: userData.username,
+    phoneNumber: userData.phoneNumber,
+    isEmailVerified: userData.isEmailVerified,
+    isPhoneVerified: userData.isPhoneVerified,
+    profilePicture: userData.profilePicture,
+    userType: userData.userType,
+  };
+  return currentUserForFirebase;
+};
 
-export const createChatRoom = async (firstId: number, secondId: number) => {
-  const chatRoomId = `${Math.min(firstId, secondId)}-${Math.max(
-    firstId,
-    secondId
-  )}`;
-  const collectionRef = collection(
-    firestoreDatabase,
-    "chatRooms",
-    chatRoomId,
-    "messages"
-  );
-  return collectionRef;
+export const getServiceProviderData = (providerId: number): ServiceProvider => {
+  const { authorized_account } = usersData.filter(
+    ({ authorized_account }) => authorized_account.id === providerId
+  )[0];
+  return {
+    id: authorized_account.id,
+    username: authorized_account.username,
+    email: authorized_account.email,
+    phoneNumber: authorized_account.phoneNumber,
+    profilePicture: authorized_account.profilePicture,
+    isEmailVerified: authorized_account.isEmailVerified,
+    isPhoneVerified: authorized_account.isPhoneVerified,
+    userType: authorized_account.userType,
+  };
+};
+
+export const getServiceData = (serviceId: number): Service => {
+  const service = servicesData.filter((service) => service.id === serviceId)[0];
+  return service;
+};
+
+export const createBooking = (booking: Booking) => {
+  bookingsData.push(booking);
 };

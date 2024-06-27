@@ -15,6 +15,7 @@ import {
   SecondaryServiceCard,
   LoadingView,
   EmptyState,
+  SafeComponent,
 } from "~components";
 import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
@@ -123,7 +124,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
     };
   }, []);
 
-  const { data, isLoading, isError, isRefetching } = useQuery({
+  const { data, isLoading, isError, error, isRefetching, refetch } = useQuery({
     queryKey: [QUERY_KEYS.HOME_SCREEN_DATA],
     queryFn: () => fetchData(),
   });
@@ -142,83 +143,90 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   } = data;
 
   return (
-    <Container>
-      <VirtualisedContainer
-        style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
-        renderItem={undefined}
-        refreshControl={<RefreshControl refreshing={isRefetching} />}
-      >
-        <>
-          <SearchFilterBtn />
-          <HomeBanner />
-          <ProviderServices
-            services={providerServices}
-            navigation={navigation as NavigationProp<any>}
-          />
+    <SafeComponent
+      request={{ data: data, error: error, loading: isLoading }}
+      refetch={refetch}
+    >
+      <Container>
+        <VirtualisedContainer
+          style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
+          renderItem={undefined}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+          }
+        >
+          <>
+            <SearchFilterBtn />
+            <HomeBanner />
+            <ProviderServices
+              services={providerServices}
+              navigation={navigation as NavigationProp<any>}
+            />
 
-          {!popularServices?.length && !nearYouServices?.length ? (
-            <EmptyState />
-          ) : (
-            <>
-              {!!serviceCategories?.length && (
-                <Categories
-                  categories={serviceCategories}
-                  navigation={navigation as NavigationProp<any>}
-                />
-              )}
-              {/* Upcoming bookings should also be here... */}
-              {/* Earnings summary should be displayed here for service providers... */}
-              {!!popularServices?.length && (
-                <View style={{ marginTop: 20 }}>
-                  <ListLabel style={{ marginBottom: 10 }}>
-                    Popular services
-                  </ListLabel>
-                  <FlatList
-                    data={popularServices}
-                    renderItem={({ item }) => (
-                      <ServiceCard
-                        key={item.id}
-                        service={item}
-                        navigation={navigation as NavigationProp<any>}
-                      />
-                    )}
-                    horizontal
-                    ItemSeparatorComponent={() => (
-                      <View style={{ marginHorizontal: 7 }} />
-                    )}
-                    showsHorizontalScrollIndicator={false}
+            {!popularServices?.length && !nearYouServices?.length ? (
+              <EmptyState />
+            ) : (
+              <>
+                {!!serviceCategories?.length && (
+                  <Categories
+                    categories={serviceCategories}
+                    navigation={navigation as NavigationProp<any>}
                   />
-                </View>
-              )}
-              {!!nearYouServices?.length && (
-                <View style={{ marginTop: 20 }}>
-                  <ListLabel style={{ marginBottom: 10 }}>
-                    Services near you
-                  </ListLabel>
-                  <FlatList
-                    data={nearYouServices}
-                    renderItem={({ item }) => (
-                      <SecondaryServiceCard
-                        key={item.id}
-                        service={item}
-                        navigation={navigation as NavigationProp<any>}
-                        style={{
-                          width: "100%",
-                        }}
-                      />
-                    )}
-                    ItemSeparatorComponent={() => (
-                      <View style={{ marginVertical: 7 }} />
-                    )}
-                    showsHorizontalScrollIndicator={false}
-                  />
-                </View>
-              )}
-            </>
-          )}
-        </>
-      </VirtualisedContainer>
-    </Container>
+                )}
+                {/* Upcoming bookings should also be here... */}
+                {/* Earnings summary should be displayed here for service providers... */}
+                {!!popularServices?.length && (
+                  <View style={{ marginTop: 20 }}>
+                    <ListLabel style={{ marginBottom: 10 }}>
+                      Popular services
+                    </ListLabel>
+                    <FlatList
+                      data={popularServices}
+                      renderItem={({ item }) => (
+                        <ServiceCard
+                          key={item.id}
+                          service={item}
+                          navigation={navigation as NavigationProp<any>}
+                        />
+                      )}
+                      horizontal
+                      ItemSeparatorComponent={() => (
+                        <View style={{ marginHorizontal: 7 }} />
+                      )}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  </View>
+                )}
+                {!!nearYouServices?.length && (
+                  <View style={{ marginTop: 20 }}>
+                    <ListLabel style={{ marginBottom: 10 }}>
+                      Services near you
+                    </ListLabel>
+                    <FlatList
+                      data={nearYouServices}
+                      renderItem={({ item }) => (
+                        <SecondaryServiceCard
+                          key={item.id}
+                          service={item}
+                          navigation={navigation as NavigationProp<any>}
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                      ItemSeparatorComponent={() => (
+                        <View style={{ marginVertical: 7 }} />
+                      )}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  </View>
+                )}
+              </>
+            )}
+          </>
+        </VirtualisedContainer>
+      </Container>
+    </SafeComponent>
   );
 };
 export default Home;

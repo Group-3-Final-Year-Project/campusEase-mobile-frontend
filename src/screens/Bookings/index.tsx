@@ -7,7 +7,7 @@ import { Iconify } from "react-native-iconify";
 import { Container, HeaderCard, HeaderItemLabel } from "./styles";
 import BookingCard from "./components/BookingCard";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { EmptyState, IconBtn, LoadingView } from "~components";
+import { EmptyState, IconBtn, LoadingView, SafeComponent } from "~components";
 import { getIsServiceProvider } from "~services";
 import { BookingStatus } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
@@ -61,40 +61,49 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
     [activeStatusBtn]
   );
 
-  const { data, isLoading, isError, isRefetching } = useQuery({
+  const { data, isLoading, isError, refetch, error, isRefetching } = useQuery({
     queryKey: [QUERY_KEYS.BOOKINGS],
     queryFn: () => fetchData(activeStatusBtn),
   });
 
   return (
-    <Container>
-      <HeaderCard>
-        <FlatList
-          horizontal
-          data={statuses}
-          renderItem={renderStatusBtn}
-          ItemSeparatorComponent={() => (
-            <View style={{ marginHorizontal: 3.5 }} />
-          )}
-        />
-      </HeaderCard>
-      {isLoading ? (
-        <LoadingView />
-      ) : isError || !data || data === undefined ? (
-        <EmptyState />
-      ) : (
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <BookingCard booking={item} navigation={navigation} />
-          )}
-          ItemSeparatorComponent={() => <View style={{ marginVertical: 7 }} />}
-          ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
-          ListEmptyComponent={() => <EmptyState />}
-          refreshControl={<RefreshControl refreshing={isRefetching} />}
-        />
-      )}
-    </Container>
+    <SafeComponent
+      request={{ data, error, loading: isLoading }}
+      refetch={refetch}
+    >
+      <Container>
+        <HeaderCard>
+          <FlatList
+            horizontal
+            data={statuses}
+            renderItem={renderStatusBtn}
+            ItemSeparatorComponent={() => (
+              <View style={{ marginHorizontal: 3.5 }} />
+            )}
+          />
+        </HeaderCard>
+        {isLoading ? (
+          <LoadingView />
+        ) : isError || !data || data === undefined ? (
+          <EmptyState />
+        ) : (
+          <FlatList
+            data={data}
+            renderItem={({ item }) => (
+              <BookingCard booking={item} navigation={navigation} />
+            )}
+            ItemSeparatorComponent={() => (
+              <View style={{ marginVertical: 7 }} />
+            )}
+            ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
+            ListEmptyComponent={() => <EmptyState />}
+            refreshControl={
+              <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+            }
+          />
+        )}
+      </Container>
+    </SafeComponent>
   );
 };
 

@@ -10,7 +10,7 @@ const LoadingView = () => {
       style={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}
     >
       <Iconify
-        icon={"svg-spinners:6-dots-rotate"}
+        icon={"svg-spinners:270-ring-with-bg"}
         color={themeContext?.colors.primary}
         size={30}
       />
