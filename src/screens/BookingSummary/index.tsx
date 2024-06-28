@@ -20,7 +20,7 @@ import {
   LocationObject,
   PaymentMethodObject,
   Service,
-  ServiceProvider,
+  VerifiedUserPreview,
   SubService,
   VerifiedUser,
 } from "~src/@types/types";
@@ -36,9 +36,7 @@ import ACTION_TYPES from "~store/actionTypes";
 const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const [selectedSubService, setSelectedSubService] =
     useState<SubService | null>(null);
@@ -57,7 +55,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
     ) {
       console.log({
         id: Math.round(Math.random() * 1000000),
-        userId: authorized_account.id,
+        userId: user.id,
         serviceId: route.params?.service.id,
         providerId: route.params?.service.providerId,
         location: selectedAddress,
@@ -68,7 +66,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
         type: ACTION_TYPES.UPDATE_BOOKING_DATA,
         payload: {
           id: Math.round(Math.random() * 1000000),
-          userId: authorized_account.id,
+          userId: user.id,
           serviceId: route.params?.service.id,
           providerId: route.params?.service.providerId,
           location: selectedAddress,
@@ -101,7 +99,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
           </BookingInfoHeaderLabel>
           <ServiceProviderCard
             showContactInfo
-            provider={route.params?.serviceProvider as ServiceProvider}
+            provider={route.params?.serviceProvider as VerifiedUserPreview}
           />
         </BookingInfoContainer>
         {route.params?.service.subServices && (
@@ -117,7 +115,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Address</BookingInfoHeaderLabel>
           <AddressSelection
-            addresses={authorized_account.locations}
+            addresses={user.locations}
             selectedAddress={selectedAddress}
             setSelectedAddress={setSelectedAddress}
           />

@@ -10,11 +10,7 @@ import Avatar from "react-native-ui-lib/avatar";
 import { ThemeContext } from "styled-components/native";
 import IconBtn from "~components/IconBtn";
 import { Iconify } from "react-native-iconify";
-import {
-  ServiceProvider,
-  UserForFirebase,
-  VerifiedUser,
-} from "~src/@types/types";
+import { VerifiedUserPreview } from "~src/@types/types";
 import { extractUserDataForFirebase, openChat, openLink } from "~services";
 import usersData from "~src/data/usersData";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -22,7 +18,7 @@ import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { RootState } from "~store/store";
 
 interface IServiceProviderCard {
-  provider: ServiceProvider;
+  provider: VerifiedUserPreview;
   showContactInfo?: boolean;
 }
 
@@ -30,11 +26,9 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
   const themeContext = useContext(ThemeContext);
   const { provider, showContactInfo } = props;
   const navigation = useNavigation();
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
-  const currentUserForFirebase: UserForFirebase =
-    extractUserDataForFirebase(authorized_account);
+  const user: VerifiedUser = useAppSelector((state) => state.user);
+  const currentUserForFirebase: VerifiedUserPreview =
+    extractUserDataForFirebase(user);
 
   return (
     <ServiceProviderCardContainer>

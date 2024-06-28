@@ -66,7 +66,7 @@ export const DarkTheme: DefaultThemeProps = {
   colors: {
     primary: "#5F55FE",
     text: "#D5D9EB",
-    secondaryText: "#D5D9EB",
+    secondaryText: "#DDD9EB",
     secondaryText2: Color("#D5D9EB").fade(0.5).rgb().string(),
     background: "#181820",
     secondaryBackground: "#21212b",

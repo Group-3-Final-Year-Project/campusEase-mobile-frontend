@@ -9,18 +9,51 @@ import {
 } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
-import { Button } from "~components";
+import { Button, Input } from "~components";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
 import PhoneInput from "./components/PhoneInput";
+import { CountryCodeText, ErrorLabel } from "../SignInOrUp/styles";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { VerifiedUser } from "~src/@types/types";
 
-const EnterPhone = ({ navigation, route }) => {
+export const phoneNumberSchema = yup.object().shape({
+  phoneNumber: yup
+    .string()
+    .min(9, "Phone number not valid!")
+    .max(10, "Phone number is not valid!")
+    .required("Phone number required!"),
+});
+
+const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [loading, setLoading] = useState(false);
+  const {}: VerifiedUser = useAppSelector((state) => state.user);
+
+  const formik = useFormik({
+    initialValues: { phoneNumber: "" },
+    validationSchema: phoneNumberSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        // if (result.user) {
+        //   dispatch(updateUserData(result.user));
+        //   resetForm();
+        //   navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+        // } else {
+        // }
+      } catch (error) {
+        throw Error(error as any);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
     <Container>
@@ -43,17 +76,27 @@ const EnterPhone = ({ navigation, route }) => {
           <View style={{ marginTop: 40, width: "100%" }}>
             <FormControl>
               <InputLabel>Your phone number</InputLabel>
-              <PhoneInput
-                enablesReturnKeyAutomatically
-                returnKeyType="send"
-                // onSubmitEditing={}
-                blurOnSubmit={false}
-                placeholder="(99) 99999-9999"
+              <Input
+                onChangeText={formik.handleChange("phoneNumber")}
+                onBlur={formik.handleBlur("phoneNumber")}
+                value={formik.values?.phoneNumber}
+                textContentType="telephoneNumber"
+                keyboardType="phone-pad"
+                placeholder="Phone number"
+                icon={<CountryCodeText>🇬🇭 +233</CountryCodeText>}
               />
+              {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
+                <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
+              ) : null}
             </FormControl>
 
             <FormControl>
-              <Button loading={loading}>Continue</Button>
+              <Button
+                loading={formik.isSubmitting}
+                onPress={() => formik.handleSubmit}
+              >
+                Continue
+              </Button>
             </FormControl>
           </View>
         </ContentCard>

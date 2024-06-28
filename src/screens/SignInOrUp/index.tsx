@@ -6,14 +6,11 @@ import {
   ContentCard,
   ErrorLabel,
   HighlightedDescription,
-  CountryCodeText,
+  Title,
 } from "./styles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
-import { Button, Input, AdvancedDialog } from "~components";
-import HeroText from "./components/HeroText";
+import { Button, Input } from "~components";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -29,10 +26,9 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { signUserUp } from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
-import { updateUserData } from "~store/actions/userActions";
-import { User } from "~src/@types/types";
+import { signupUserWithEmailAndPassword } from "~services";
+import ACTION_TYPES from "~store/actionTypes";
 
 export const signupSchema = yup.object().shape({
   name: yup.string().min(3, "Name not valid!").required("Name required!"),
@@ -41,11 +37,6 @@ export const signupSchema = yup.object().shape({
     .string()
     .min(8, "Password should be 8 characters long!")
     .required("Password required!"),
-  phoneNumber: yup
-    .string()
-    .min(9, "Phone number not valid!")
-    .max(10, "Phone number not valid!")
-    .required("Phone number required!"),
   acceptedTerms: yup
     .boolean()
     .oneOf([true], "Agree to terms and conditions to continue")
@@ -53,19 +44,16 @@ export const signupSchema = yup.object().shape({
 });
 
 const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
-  const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [showPassword, setShowPassword] = useState<boolean>(true);
 
   const dispatch = useAppDispatch();
-  const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
   const signupInitialValues = {
     name: "",
     email: "",
     password: "",
-    phoneNumber: "",
     acceptedTerms: false,
   };
 
@@ -73,21 +61,27 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
     initialValues: signupInitialValues,
     validationSchema: signupSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      navigation.navigate(APP_PAGES.VERIFY_EMAIL);
-      // try {
-      //   console.log("Res:", values);
-      //   const res = await signUserUp(values);
-      //   console.log("Res after submit: ", res);
-      //   // dispatch(updateUserData(res));
-      //   // resetForm();
-      //   // navigation.navigate(APP_PAGES.VERIFY_EMAIL);
-      // } catch (error) {
-      //   // setDialogVisible(true);
-      //   console.log("ERRORRR!!");
-      //   throw Error(error as any);
-      // } finally {
-      //   setSubmitting(false);
-      // }
+      try {
+        const result = await signupUserWithEmailAndPassword(
+          values.name,
+          values.email,
+          values.password
+        );
+
+        if (result.user) {
+          dispatch({
+            type: ACTION_TYPES.UPDATE_USER_DATA,
+            payload: result.user,
+          });
+          resetForm();
+          navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+        } else {
+        }
+      } catch (error) {
+        throw Error(error as any);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
@@ -99,10 +93,8 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
       >
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar style={themeContext?.dark ? "light" : "dark"} />
-          <ContentCard
-            style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
-          >
-            <HeroText isSignup={true} />
+          <ContentCard style={{ paddingBottom: bottomInset }}>
+            <Title>Sign up</Title>
 
             <Description
               style={{
@@ -147,20 +139,6 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 />
                 {formik.touched?.email && formik.errors?.email ? (
                   <ErrorLabel>{formik.errors?.email}</ErrorLabel>
-                ) : null}
-              </FormControl>
-              <FormControl>
-                <Input
-                  onChangeText={formik.handleChange("phoneNumber")}
-                  onBlur={formik.handleBlur("phoneNumber")}
-                  value={formik.values?.phoneNumber}
-                  textContentType="telephoneNumber"
-                  keyboardType="phone-pad"
-                  placeholder="Phone number"
-                  icon={<CountryCodeText>🇬🇭 +233</CountryCodeText>}
-                />
-                {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
-                  <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
                 ) : null}
               </FormControl>
               <FormControl>
@@ -267,14 +245,6 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
           </ContentCard>
         </ScrollView>
       </KeyboardAvoidingView>
-      <AdvancedDialog
-        centerH
-        centerV
-        ignoreBackgroundPress={false}
-        visible={dialogVisible}
-      >
-        <Description>Hello world</Description>
-      </AdvancedDialog>
     </Container>
   );
 };

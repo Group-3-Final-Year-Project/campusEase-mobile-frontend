@@ -18,9 +18,7 @@ interface IBookingCard {
 
 const BookingCard = (props: IBookingCard) => {
   const themeContext = useContext(ThemeContext);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
 
   return (
     <BookingCardContainer

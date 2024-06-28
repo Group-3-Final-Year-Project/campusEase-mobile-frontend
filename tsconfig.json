@@ -24,7 +24,8 @@
       "~assets/*": ["src/assets/*"],
       "~images/*": ["src/assets/images/*"],
       "~animations/*": ["src/assets/animations/*"],
-      "~src/*": ["src/*"]
+      "~src/*": ["src/*"],
+      "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
     }
   }
 }

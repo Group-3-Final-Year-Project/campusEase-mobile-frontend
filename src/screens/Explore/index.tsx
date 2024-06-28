@@ -19,10 +19,8 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
-  const userLocation = authorized_account.locations[0]?.location;
+  const user: VerifiedUser = useAppSelector((state) => state.user);
+  const userLocation = user.locations[0]?.location;
   const mapRef = useRef();
   const [initialRegion, setInitialRegion] = useState<Region>({
     latitude: userLocation.latitude,

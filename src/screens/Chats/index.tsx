@@ -25,7 +25,7 @@ import {
 } from "firebase/firestore";
 import { firestoreDatabase } from "firebaseConfig";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { UserForFirebase, VerifiedUser } from "~src/@types/types";
+import { VerifiedUserPreview, VerifiedUser } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
 import { RefreshControl } from "react-native";
 
@@ -41,9 +41,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     }[]
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
 
   useFocusEffect(
     useCallback(() => {
@@ -74,9 +72,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
       messages?: DocumentData[] | undefined;
     };
   }) => {
-    const user = item.users.filter(
-      (user) => user.id !== authorized_account.id
-    )[0];
+    const user = item.users.filter((user) => user.id !== user.id)[0];
     return (
       <ChatCardContainer onPress={() => handleChatPress(item.id)}>
         <Avatar

@@ -11,10 +11,11 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { signUserIn, mockSignin, navigateAndResetStack } from "~services";
+import {
+  navigateAndResetStack,
+  signinUserWithEmailAndPassword,
+} from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
-import { updateUserData } from "~store/actions/userActions";
-import { User } from "~src/@types/types";
 import {
   ContentCard,
   Container,
@@ -24,10 +25,9 @@ import {
   HighlightedDescription,
 } from "../SignInOrUp/styles";
 import HeroText from "../SignInOrUp/components/HeroText";
-import usersData from "~src/data/usersData";
+import ACTION_TYPES from "~store/actionTypes";
 
 export const signinSchema = yup.object().shape({
-  username: yup.string().required("Username required!"),
   email: yup.string().email("Email not valid!").required("Email required!"),
   password: yup.string().required("Password required!"),
 });
@@ -41,7 +41,6 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
   const signinInitialValues = {
-    username: "",
     email: "",
     password: "",
   };
@@ -51,10 +50,20 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
     validationSchema: signinSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        await mockSignin(usersData[0]);
-        dispatch(updateUserData(usersData[0]));
-        resetForm();
-        navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+        const result = await signinUserWithEmailAndPassword(
+          values.email,
+          values.password
+        );
+        if (result.user) {
+          dispatch({
+            type: ACTION_TYPES.UPDATE_USER_DATA,
+            payload: result.user,
+          });
+          resetForm();
+          navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+        } else {
+          alert(result.error.errorMessage);
+        }
       } catch (error) {
         setDialogVisible(true);
         throw Error(error as any);
@@ -82,24 +91,6 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
             Hey there! Welcome back. You've been missed.
           </Description>
           <View style={{ marginTop: 40, width: "100%" }}>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("username")}
-                onBlur={formik.handleBlur("username")}
-                value={formik.values?.username}
-                textContentType="username"
-                placeholder="Username"
-                icon={
-                  <Iconify
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:user-rounded-outline"
-                  />
-                }
-              />
-              {formik.touched?.username && formik.errors?.username ? (
-                <ErrorLabel>{formik.errors?.username}</ErrorLabel>
-              ) : null}
-            </FormControl>
             <FormControl>
               <Input
                 onChangeText={formik.handleChange("email")}

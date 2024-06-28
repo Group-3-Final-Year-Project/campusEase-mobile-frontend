@@ -45,16 +45,14 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
   const booking: Booking = useAppSelector((state) => state.booking);
   const dispatch = useAppDispatch();
   console.log(booking);
   const bookingInfoInitialValues = {
-    username: authorized_account.username,
-    email: authorized_account.email,
-    phoneNumber: authorized_account.phoneNumber,
+    username: user.username,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
     scheduledTime: new Date(),
     scheduledDate: new Date(),
     noteToProvider: "",

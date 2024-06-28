@@ -35,18 +35,13 @@ import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
 import { APP_PAGES, QUERY_KEYS } from "~src/shared/constants";
-import {
-  ServiceProvider,
-  UserForFirebase,
-  VerifiedUser,
-} from "~src/@types/types";
+import { VerifiedUser, VerifiedUserPreview } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
-import servicesData from "~src/data/servicesData";
-import usersData from "~src/data/usersData";
 import { BookingInfoCard } from "../BookingSummary/styles";
 import {
   extractUserDataForFirebase,
-  getServiceProviderData,
+  getService,
+  getUserDataPreview,
   openChat,
 } from "~services";
 import { NavigationProp } from "@react-navigation/native";
@@ -56,12 +51,10 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [serviceProvider, setServiceProvider] =
-    useState<ServiceProvider | null>(null);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
-  const currentUserForFirebase: UserForFirebase =
-    extractUserDataForFirebase(authorized_account);
+    useState<VerifiedUserPreview | null>(null);
+  const user: VerifiedUser = useAppSelector((state) => state.user);
+  const currentUserForFirebase: VerifiedUserPreview =
+    extractUserDataForFirebase(user);
 
   const yOffset = useRef(new Animated.Value(0)).current;
   const headerOpacity = yOffset.interpolate({
@@ -115,8 +108,9 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   }, [headerOpacity, navigation]);
 
   const fetchData = useCallback(
-    (serviceId: number) => {
-      return servicesData.filter((service) => service.id === serviceId)[0];
+    async (serviceId: string) => {
+      const service = await getService(serviceId);
+      return service;
     },
     [route.params, navigation]
   );
@@ -131,8 +125,8 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   }, [data]);
 
   const getServiceProvider = useCallback(
-    (providerId: number) => {
-      setServiceProvider(getServiceProviderData(providerId));
+    async (providerId: string) => {
+      setServiceProvider(await getUserDataPreview(providerId));
     },
     [route.params?.bookingId]
   );

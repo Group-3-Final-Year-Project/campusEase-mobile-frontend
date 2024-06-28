@@ -17,8 +17,8 @@ export type NullableArray<T> = T[] | null;
 export type NonEmptyArray<T> = [T, ...T[]];
 
 export type ErrorObject = {
-  error: Error;
-  status?: number;
+  errorMessage: Error | string | null;
+  errorCode: number | string | null;
 };
 
 export type StringError = {
@@ -48,8 +48,8 @@ export enum BookingStatus {
   MY_SERVICE = "My Service",
 }
 
-export type User = {
-  id: number;
+export type VerifiedUser = {
+  id: string;
   token: NullableString;
   userType: UserType.SERVICE_PROVIDER | UserType.USER;
   username: string;
@@ -63,11 +63,6 @@ export type User = {
   isLoggedIn: boolean;
   createdAt?: string;
   updatedAt?: string;
-};
-
-export type VerifiedUser = {
-  token: string;
-  authorized_account: User;
 };
 
 export type ChatData = {
@@ -101,7 +96,7 @@ export type ApiRequestResult<TData = any, SData = any> = {
 };
 
 export type SubService = {
-  id: number;
+  id: string;
   name: string;
   description?: NullableString;
   price: number;
@@ -119,13 +114,13 @@ export enum PaymentStatus {
 }
 
 export type PaymentMethodObject = {
-  id: number;
+  id: string;
   name: string;
   extraData?: object;
 };
 
 export type BookingAttachment = {
-  id: number;
+  id: string;
   type: string;
   url: string;
 };
@@ -136,8 +131,8 @@ export type BookingState = {
 };
 
 export type Service = {
-  id: number;
-  providerId: number;
+  id: string;
+  providerId: string;
   name: string;
   description?: NullableString;
   category: ServiceCategory;
@@ -156,9 +151,9 @@ export type Service = {
 };
 
 export type Booking = {
-  id: number;
-  providerId: number;
-  userId: number;
+  id: string;
+  providerId: string;
+  userId: string;
   serviceId: number;
   createdAt: string;
   updatedAt: string;
@@ -177,31 +172,20 @@ export type Booking = {
 };
 
 export type ServiceCategory = {
-  id: number;
+  id: string;
   name: string;
   description?: NullableString;
   image?: string;
 };
 
 export type ServiceListService = {
-  id: number;
+  id: string;
   name: string;
   description?: NullableString;
   coverImage: string;
   rating?: number;
   startingPrice?: number;
   isAvailable: boolean;
-};
-
-export type ServiceProvider = {
-  id: number;
-  userType: UserType.SERVICE_PROVIDER | UserType.USER;
-  username: string;
-  email: string;
-  phoneNumber: string;
-  profilePicture: NullableString;
-  isEmailVerified: boolean;
-  isPhoneVerified: boolean;
 };
 
 export type SearchFilters = {
@@ -215,8 +199,8 @@ export type SearchFilters = {
   };
 };
 
-export type UserForFirebase = {
-  id: number;
+export type VerifiedUserPreview = {
+  id: string;
   userType: UserType.SERVICE_PROVIDER | UserType.USER;
   username: string;
   email: string;

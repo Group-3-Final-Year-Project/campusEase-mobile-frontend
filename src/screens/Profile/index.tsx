@@ -26,9 +26,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
 
   useFocusEffect(
     useCallback(() => {
@@ -170,8 +168,8 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
         <ProfileImageView>
           <ProfileImage
             source={{
-              uri: authorized_account?.profilePicture
-                ? authorized_account?.profilePicture
+              uri: user?.profilePicture
+                ? user?.profilePicture
                 : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
             }}
           />
@@ -192,7 +190,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
             />
           </IconBtn>
         </ProfileImageView>
-        <Title>{authorized_account.username}</Title>
+        <Title>{user.username}</Title>
       </HeaderCard>
     );
   };

@@ -19,7 +19,7 @@ import {
   TertiaryServiceCard,
 } from "~components";
 import BookingStatus from "./components/BookingStatus";
-import { Service, ServiceProvider, VerifiedUser } from "~src/@types/types";
+import { Service, VerifiedUserPreview, VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import bookingsData from "~src/data/bookingsData";
@@ -33,11 +33,9 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
   const [serviceProvider, setServiceProvider] =
-    useState<ServiceProvider | null>(null);
+    useState<VerifiedUserPreview | null>(null);
   const [service, setService] = useState<Service | null>(null);
   const fetchData = useCallback(
     (bookingId: number) => {
@@ -64,7 +62,7 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
     queryFn: () => fetchData(route.params?.bookingId),
   });
 
-  const isMyService = authorized_account.id === data?.providerId;
+  const isMyService = user.id === data?.providerId;
 
   useEffect(() => {
     if (data) {

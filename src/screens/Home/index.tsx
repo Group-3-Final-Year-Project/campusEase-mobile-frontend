@@ -1,6 +1,6 @@
 import { FlatList, View, RefreshControl } from "react-native";
 import React, { useCallback, useContext } from "react";
-import { Container, Description, ListLabel, LogoLabel } from "./styles";
+import { Container, ListLabel, LogoLabel } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
@@ -9,7 +9,6 @@ import { NavigationProp, useFocusEffect } from "@react-navigation/native";
 import Avatar from "react-native-ui-lib/avatar";
 import { Iconify } from "react-native-iconify";
 import {
-  Searchbar,
   IconBtn,
   ServiceCard,
   SecondaryServiceCard,
@@ -23,45 +22,22 @@ import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import ProviderServices from "./components/ProviderServices";
 import { QUERY_KEYS } from "~src/shared/constants";
-import { ServiceListService, VerifiedUser } from "~src/@types/types";
+import { VerifiedUser } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
-import { categoriesData } from "~src/data/categories";
-import ServicesData from "~src/data/servicesData";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { getIsServiceProvider } from "../../services/authService";
 import SearchFilterBtn from "~components/SearchFilterBtn";
+import {
+  extractServiceForServiceList,
+  getMyServices,
+  getServiceCategories,
+  getServices,
+} from "~services";
 
 const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
-
-  const getServiceListServices = (
-    providerId?: number,
-    getMyServices?: boolean
-  ): ServiceListService[] => {
-    const data = ServicesData.filter((service) =>
-      providerId
-        ? getMyServices
-          ? service.providerId === providerId
-          : service.providerId !== providerId
-        : service
-    ).map((service) => {
-      return {
-        id: service.id,
-        name: service.name,
-        description: service?.description,
-        coverImage: service.coverImage,
-        rating: service?.rating,
-        startingPrice: service?.startingPrice,
-        isAvailable: service.isAvailable,
-      };
-    });
-    return data;
-  };
+  const user: VerifiedUser = useAppSelector((state) => state.user);
 
   useFocusEffect(
     useCallback(() => {
@@ -99,8 +75,8 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                 marginLeft: 10,
               }}
               source={{
-                uri: authorized_account?.profilePicture
-                  ? authorized_account?.profilePicture
+                uri: user?.profilePicture
+                  ? user?.profilePicture
                   : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
               }}
             />
@@ -114,13 +90,14 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   );
 
   const fetchData = useCallback(async () => {
-    setTimeout(() => null, 5000);
+    const serviceCategories = await getServiceCategories();
+    const providerServices = await getMyServices(user.id);
+    const services = await getServices(user.id);
     return {
-      serviceCategories: Object.values(categoriesData),
-      popularServices: getServiceListServices(authorized_account.id),
-      nearYouServices: getServiceListServices(authorized_account.id),
-      providerServices: getServiceListServices(authorized_account.id, true),
-      // serviceRequests:await getIsServiceProvider() ? :
+      serviceCategories,
+      providerServices: extractServiceForServiceList(providerServices),
+      popularServices: extractServiceForServiceList(services),
+      nearYouServices: extractServiceForServiceList(services),
     };
   }, []);
 

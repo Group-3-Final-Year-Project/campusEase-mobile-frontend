@@ -16,7 +16,7 @@ export const ContentCard = styled.View`
     props.theme.colors.background};
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 40px 20px;
+  padding: 0 20px 20px;
 `;
 
 export const Title = styled(Text).attrs({

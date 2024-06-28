@@ -57,6 +57,9 @@ export const STORAGE_KEYS = {
   CHATROOMS: "campusEase_chatRooms",
   MESSAGES: "chatRoom_messages",
   USERS: "chatRoom_users",
+  SERVICES: "campusEase_services",
+  DB_USERS: "campusEase_users",
+  SERVICE_CATEGORIES: "campusEase_service_categories",
 };
 
 export const QUERY_KEYS = {

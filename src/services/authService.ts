@@ -1,16 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  ErrorObject,
-  StringError,
-  User,
-  UserType,
-  VerifiedUser,
-} from "~src/@types/types";
+import { ErrorObject, UserType, VerifiedUser } from "~src/@types/types";
 import { API_URLS, STORAGE_KEYS } from "~src/shared/constants";
-import { apiPost } from "./apiService";
 import { formatPhoneNumber } from "./uiService";
 import axios from "axios";
 import { processErrorResponse } from "./errorService";
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { firebaseAuth } from "firebaseConfig";
+import type { User } from "firebase/auth";
+import { createUser } from "./dataService";
 
 let LOGGED_IN_USER: VerifiedUser | null | undefined;
 
@@ -89,68 +93,32 @@ export const setLoginDataToAsyncStorage = async (loginData: VerifiedUser) => {
   AsyncStorage.setItem(STORAGE_KEYS.ACTIVE_USER, JSON.stringify(loginData));
 };
 
-export const signUserUp = async (signUpData: {
-  name: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  acceptedTerms?: boolean;
-}): Promise<VerifiedUser> => {
-  const userType = await getUserType();
-  const data = {
-    username: signUpData.name,
-    email: signUpData.email.toLowerCase(),
-    password: signUpData.password,
-    phoneNumber: formatPhoneNumber(signUpData.phoneNumber),
-    userType,
-  };
+export const saveUserDetails = async (
+  signInData: User,
+  username?: string
+): Promise<VerifiedUser> => {
   try {
-    const url = `${API_URLS.BASE_URL}${API_URLS.SIGNUP}`;
-    console.log("url: ", url);
-    const response = await axios.post(url, data);
-    const userData: User = {
-      token: response.data.data.token,
-      ...response.data.data.authorized_account,
+    const userData: VerifiedUser = {
+      id: signInData.uid,
+      email: signInData.email ?? "",
+      token: null,
+      userType: UserType.USER,
+      username: signInData.displayName ?? username ?? "",
+      phoneNumber: signInData.phoneNumber ?? "",
+      locations: [],
+      profilePicture: signInData.photoURL,
+      isEmailVerified: signInData.emailVerified,
+      isPhoneVerified: false,
+      isActive: false,
+      isLoggedIn: false,
+      createdAt: new Date().toLocaleString(),
     };
-    saveCurrentlyLoggedInUser(response.data.data as VerifiedUser);
-    await setLoginDataToAsyncStorage(response.data.data as VerifiedUser);
-    await setIsAlreadyUser();
-    await setUserType(userData.userType);
-    return response.data.data as VerifiedUser;
-  } catch (error) {
-    return processErrorResponse(error as any, "Error signing up user");
-  }
-};
-
-export const signUserIn = async (signInData: {
-  username: string;
-  email: string;
-  password: string;
-}): Promise<VerifiedUser> => {
-  try {
-    const url = `${API_URLS.BASE_URL}${API_URLS.SIGNIN}`;
-    const response = await axios.post(url, signInData);
-    const userData: User = {
-      token: response.data.data.token,
-      ...response.data.data.authorized_account,
-    };
-    saveCurrentlyLoggedInUser(response.data.data as VerifiedUser);
-    await setLoginDataToAsyncStorage(response.data.data as VerifiedUser);
-    await setIsAlreadyUser();
-    await setUserType(userData.userType);
-    return response.data.data as VerifiedUser;
-  } catch (error) {
-    return processErrorResponse(error as any, "Error logging in user");
-  }
-};
-
-export const mockSignin = async (userData: VerifiedUser) => {
-  try {
+    await createUser(userData);
     saveCurrentlyLoggedInUser(userData);
     await setLoginDataToAsyncStorage(userData);
-    await setAsLoggedIn();
     await setIsAlreadyUser();
-    await setUserType(userData.authorized_account.userType);
+    await setUserType(userData.userType);
+    return userData;
   } catch (error) {
     return processErrorResponse(error as any, "Error logging in user");
   }
@@ -167,4 +135,101 @@ export const logoutUser = async () => {
   } catch (error) {
     return processErrorResponse(error as any, "Error logging out user");
   }
+};
+
+export const signinUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
+  const result = signInWithEmailAndPassword(firebaseAuth, email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      return {
+        user: await saveUserDetails(user),
+        error: null,
+      };
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      return {
+        user: null,
+        error: {
+          errorCode,
+          errorMessage,
+        } as ErrorObject,
+      };
+    });
+  return result;
+};
+
+export const signupUserWithEmailAndPassword = async (
+  name: string,
+  email: string,
+  password: string
+) => {
+  const result = createUserWithEmailAndPassword(firebaseAuth, email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      await sendEmailVerification(user);
+      return {
+        user: await saveUserDetails(user, name),
+        error: null,
+      };
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      const errorCode = error.code;
+      return {
+        user: null,
+        error: {
+          errorCode,
+          errorMessage,
+        } as ErrorObject,
+      };
+    });
+
+  return result;
+};
+
+export const monitorAuthState = () => {
+  onAuthStateChanged(firebaseAuth, (user) => {
+    if (user) {
+    } else {
+    }
+  });
+};
+
+// export const signinUserWithGoogle = async () => {
+//   const provider = new GoogleAuthProvider();
+//   provider.addScope("profile");
+//   provider.addScope("email");
+//   const result = signInWithPopup(firebaseAuth, provider)
+//     .then(async (result) => {
+//       const user = result.user;
+//       return {
+//         user: await saveUserDetails(user),
+//         error: null,
+//       };
+//     })
+//     .catch((error) => {
+//       const errorCode = error.code;
+//       const errorMessage = error.message;
+//       return {
+//         user: null,
+//         error: {
+//           errorCode,
+//           errorMessage,
+//         } as ErrorObject,
+//       };
+//     });
+//   return result;
+// };
+
+export const signoutUser = async () => {
+  signOut(firebaseAuth)
+    .then(() => {
+      logoutUser();
+    })
+    .catch((error) => {});
 };

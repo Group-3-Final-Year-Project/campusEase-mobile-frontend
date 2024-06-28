@@ -45,12 +45,10 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const { chatId } = route.params;
   const dispatch = useAppDispatch();
   const chat = useAppSelector((state) => state.chat);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
   const giftedChatUser: GiftedChatUser = {
-    _id: authorized_account.id,
-    name: authorized_account.username,
+    _id: user.id,
+    name: user.username,
   };
 
   useEffect(() => {

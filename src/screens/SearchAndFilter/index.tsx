@@ -28,9 +28,7 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const { authorized_account }: VerifiedUser = useAppSelector(
-    (state) => state.user
-  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
   const [originalList, setOriginalList] = useState<ServiceListService[]>([]);
   const [visibleList, setVisibleList] = useState<ServiceListService[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -57,7 +55,7 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
   };
 
   const fetchData = useCallback(() => {
-    return getServiceListServices(authorized_account.id);
+    return getServiceListServices(user.id);
   }, []);
 
   const { data, isLoading, isError, isRefetching } = useQuery({
