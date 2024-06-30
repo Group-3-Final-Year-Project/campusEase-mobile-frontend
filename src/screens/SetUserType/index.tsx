@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
@@ -15,26 +15,38 @@ import {
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-// import { useAppSelector } from "~store/hooks/useTypedRedux";
-// import { VerifiedUser } from "~src/@types/types";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { UserType, VerifiedUser } from "~src/@types/types";
 import { APP_PAGES } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
+import AdvancedActionSheet from "~components/AdvancedActionSheet";
+import { navigateAndResetStack } from "~services";
 
-export const locationSchema = yup.object().shape({
-  location: yup.string().required("Address required!"),
+export const userTypeSchema = yup.object().shape({
+  userType: yup
+    .string()
+    .oneOf(
+      [UserType.SERVICE_PROVIDER, UserType.USER],
+      "User type should either User or Service rovider"
+    )
+    .required("User type required!"),
 });
 
-const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
+const SetUserType = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  // const {}: VerifiedUser = useAppSelector((state) => state.user);
+  const {}: VerifiedUser = useAppSelector((state) => state.user);
 
   const formik = useFormik({
-    initialValues: { location: "" },
-    validationSchema: locationSchema,
+    initialValues: { userType: "" },
+    validationSchema: userTypeSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        navigation.navigate(APP_PAGES.SET_USER_TYPE);
+        if (values.userType === UserType.USER)
+          navigateAndResetStack(navigation, APP_PAGES.HOME);
+        else if (values.userType === UserType.SERVICE_PROVIDER)
+          navigateAndResetStack(navigation, APP_PAGES.SET_SERVICE_DETAILS);
+        else return;
       } catch (error) {
         throw Error(error as any);
       } finally {
@@ -42,6 +54,20 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
       }
     },
   });
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  const options = [
+    {
+      label: "User",
+      onPress: () => formik.setFieldValue("userType", UserType.USER),
+    },
+    {
+      label: "Service Provider",
+      onPress: () =>
+        formik.setFieldValue("userType", UserType.SERVICE_PROVIDER),
+    },
+  ];
 
   return (
     <Container>
@@ -52,14 +78,15 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
         <StatusBar style={themeContext?.dark ? "light" : "dark"} />
         <ContentCard style={{ paddingBottom: bottomInset }}>
           <View>
-            <HeroText text={"Address"} />
+            <HeroText text={"Start as..."} />
             <Description
               style={{
                 marginTop: 10,
                 color: themeContext?.colors.secondaryText2,
               }}
             >
-              Set your home address to get personalised services.
+              Choose whether to start as a service proovider or user. You can
+              change it later.
             </Description>
           </View>
           <View style={{ marginTop: 40, width: "100%" }}>
@@ -67,12 +94,15 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
               <View style={{ flexDirection: "row" }}>
                 <Input
                   // readOnly
-                  // onPress={}
-                  onChangeText={formik.handleChange("location")}
-                  onBlur={formik.handleBlur("location")}
-                  value={formik.values.location}
+
+                  onPress={() => {
+                    setIsVisible(true);
+                    Keyboard.dismiss();
+                  }}
+                  onBlur={formik.handleBlur("userType")}
+                  value={formik.values.userType}
                   textContentType="addressCityAndState"
-                  placeholder="Location"
+                  placeholder="User Type"
                   icon={
                     <Iconify
                       icon="solar:map-point-outline"
@@ -83,8 +113,8 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 />
               </View>
 
-              {formik.touched?.location && formik.errors?.location ? (
-                <ErrorLabel>{formik.errors?.location}</ErrorLabel>
+              {formik.touched?.userType && formik.errors?.userType ? (
+                <ErrorLabel>{formik.errors?.userType}</ErrorLabel>
               ) : null}
             </FormControl>
           </View>
@@ -95,12 +125,20 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
             // @ts-ignore
             onPress={formik.handleSubmit}
           >
-            Continue
+            Finish up
           </Button>
         </View>
       </KeyboardAvoidingView>
+      <AdvancedActionSheet
+        visible={isVisible}
+        message="Select user type"
+        options={options}
+        title="Select user type"
+        useNativeIOS
+        onDismiss={() => setIsVisible(false)}
+      />
     </Container>
   );
 };
 
-export default SetLocation;
+export default SetUserType;

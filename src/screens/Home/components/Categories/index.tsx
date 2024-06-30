@@ -60,11 +60,7 @@ const Categories = ({ categories, navigation }: CategoriesProps) => {
           >
             {item.image ? (
               <AnimatedImage
-                source={
-                  item?.image
-                    ? { uri: item.image }
-                    : require("src/assets/images/HeartEyesEmoji.png")
-                }
+                source={item?.image ? { uri: item.image } : require("")}
                 width={30}
                 height={30}
               />

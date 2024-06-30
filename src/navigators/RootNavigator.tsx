@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UserTabNavigator from "./UserTabNavigator";
 import Onboard from "~src/screens/Onboard";
-import SignInOrUp from "~src/screens/SignInOrUp";
+import Signup from "~src/screens/Signup";
 import { APP_PAGES } from "~src/shared/constants";
 import { ThemeContext } from "styled-components/native";
 import VerifyEmail from "~src/screens/VerifyEmail";
@@ -20,26 +20,60 @@ import Bookmarks from "~src/screens/Bookmarks";
 import Chat from "~src/screens/Chat";
 import PrivacyPolicy from "~src/screens/PrivacyPolicy";
 import SearchAndFilter from "~src/screens/SearchAndFilter";
+import EnterPhone from "~src/screens/EnterPhone";
+import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import { createUser, getUser, saveUserDetails } from "~services";
+import ACTION_TYPES from "~store/actionTypes";
+import { onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth } from "firebaseConfig";
+import { VerifiedUser } from "~src/@types/types";
+import SetUserType from "~src/screens/SetUserType";
+import SetServiceDetails from "~src/screens/SetServiceDetails";
+import SetServiceGallery from "~src/screens/SetServiceGallery";
+import SetServicePricing from "~src/screens/SetServicePricing";
+import SetServiceLocation from "~src/screens/SetServiceLocation";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
+  const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+  //     if (user) {
+  //       const userFromDB = await getUser(user.uid);
+  //       const userData: VerifiedUser = {
+  //         id: user.uid,
+  //         email: user.email ?? userFromDB.email ?? "",
+  //         userType: userFromDB.userType,
+  //         username: user.displayName ?? userFromDB.username ?? "",
+  //         phoneNumber: user.phoneNumber ?? userFromDB.phoneNumber ?? "",
+  //         locations: userFromDB.locations,
+  //         profilePicture: user.photoURL ?? userFromDB.profilePicture,
+  //         isEmailVerified: user.emailVerified,
+  //         isPhoneVerified: userFromDB.isPhoneVerified,
+  //         isActive: userFromDB.isActive,
+  //         isLoggedIn: userFromDB.isActive,
+  //       };
+  //       await createUser(userData);
+  //       const result = await saveUserDetails(userData);
+  //       dispatch({
+  //         type: ACTION_TYPES.UPDATE_USER_DATA,
+  //         payload: result,
+  //       });
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
+
   return (
     <Stack.Navigator
-      initialRouteName={APP_PAGES.LANDING}
+      initialRouteName={APP_PAGES.ONBOARD}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: false,
         headerStyle: {
-          // @ts-ignore
-          // elevation: 1,
           backgroundColor: theme?.colors.background,
-          // shadowColor: theme?.colors.secondaryBackground,
-          // shadowOffset: {
-          //   height: 6,
-          //   width: 0,
-          // },
-          // shadowRadius: 40,
         },
         headerTitleStyle: {
           fontFamily: `${theme?.typography.fontFamily.bold}`,
@@ -62,14 +96,28 @@ const RootNavigator = () => {
           name={APP_PAGES.ONBOARD}
           component={Onboard}
         />
-        <Stack.Screen name={APP_PAGES.SIGNUP} component={SignInOrUp} />
+        <Stack.Screen name={APP_PAGES.SIGNUP} component={Signup} />
         <Stack.Screen name={APP_PAGES.SIGNIN} component={Login} />
         <Stack.Screen name={APP_PAGES.VERIFY_EMAIL} component={VerifyEmail} />
         <Stack.Screen
-          name={APP_PAGES.REGISTER_SERVICE}
-          component={RegisterService}
+          name={APP_PAGES.SET_SERVICE_DETAILS}
+          component={SetServiceDetails}
         />
         <Stack.Screen name={APP_PAGES.SET_LOCATION} component={SetLocation} />
+        <Stack.Screen name={APP_PAGES.SET_USER_TYPE} component={SetUserType} />
+        <Stack.Screen name={APP_PAGES.ENTER_PHONE} component={EnterPhone} />
+        <Stack.Screen
+          name={APP_PAGES.SET_SERVICE_GALLERY}
+          component={SetServiceGallery}
+        />
+        <Stack.Screen
+          name={APP_PAGES.SET_SERVICE_PRICING}
+          component={SetServicePricing}
+        />
+        <Stack.Screen
+          name={APP_PAGES.SET_SERVICE_LOCATION}
+          component={SetServiceLocation}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

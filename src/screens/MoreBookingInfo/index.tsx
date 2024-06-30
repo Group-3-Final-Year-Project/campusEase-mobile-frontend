@@ -18,7 +18,7 @@ import {
 import { createBooking, navigateAndResetStack, pickDocuments } from "~services";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
-import { CountryCodeText, ErrorLabel, FormControl } from "../SignInOrUp/styles";
+import { CountryCodeText, ErrorLabel, FormControl } from "../Signup/styles";
 import ResultPrompt from "~components/ResultPrompt";
 import * as yup from "yup";
 import { useFormik } from "formik";

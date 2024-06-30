@@ -12,10 +12,11 @@ export const Container = styled.View`
 `;
 
 export const Title = styled(Text).attrs({
-  fontSize: "h2",
   fontWeight: "bold",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
+  font-size: 30px;
+  line-height: 35px;
 `;
 
 export const TextHighlight = styled(Title)`
@@ -37,14 +38,19 @@ export const Line = styled.View`
 `;
 
 export const RotatedRectangle = styled.View`
+  border-bottom-width: 7px;
+  border-color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
+  margin-top: -10px;
   position: absolute;
   right: 0;
   left: 0;
   width: 110%;
   margin-left: -1%;
-  top: 3px;
-  height: 34px;
-  transform: rotate(-3deg);
-  background-color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
+  bottom: 3px;
+  height: 7px;
+  z-index: -10;
+  /* transform: rotate(-3deg); */
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondary};
   border-radius: 4px;
 `;

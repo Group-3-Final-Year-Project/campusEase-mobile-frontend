@@ -6,6 +6,9 @@ import * as Linking from "expo-linking";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { Alert } from "react-native";
+import { StringError } from "~src/@types/types";
+import { eventEmitter } from "./eventEmitter";
+import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -31,9 +34,17 @@ export const useDidMountEffect = (
   }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export const showAlert = () => {};
-
-export const showToast = () => {};
+export const showAlert = (title: string, message: string) => {
+  eventEmitter.emit(SUBSCRIBABLE_EVENTS.SHOW_ALERT, {
+    title: title,
+    message: message,
+  });
+};
+export const showToast = (message: string) => {
+  eventEmitter.emit(SUBSCRIBABLE_EVENTS.SHOW_TOAST, {
+    message: message,
+  });
+};
 
 export const pickDocuments = () => {};
 
@@ -146,3 +157,22 @@ export async function takePictureAsync(
 }
 
 export const openLink = (url: string) => Linking.openURL(url);
+
+export const getFirebaseErrorMessage = (errorCode: string) => {
+  const messages = {
+    "auth/wrong-password": "Incorrect email or password.",
+    "auth/user-not-found": "User not found. Please check your email address.",
+    "auth/weak-password":
+      "Password is too weak. Please choose a stronger password.",
+    "auth/email-already-in-use":
+      "The email address is already in use by another account.",
+    "auth/invalid-email": "The email address is invalid.",
+    "auth/operation-not-allowed":
+      "This operation is not allowed. Please contact support.",
+    // Add more error codes and messages here...
+  };
+
+  return (
+    messages[errorCode] || "An unknown error occurred. Please try again later."
+  );
+};

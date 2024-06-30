@@ -8,6 +8,7 @@ export const Container = styled(SafeAreaView).attrs({
   edges: ["left", "right"],
 })`
   flex: 1;
+  padding: 20px 20px 10px 20px;
 `;
 
 export const ContentCard = styled.View`
@@ -16,15 +17,14 @@ export const ContentCard = styled.View`
     props.theme.colors.background};
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 0 20px 20px;
 `;
 
 export const Title = styled(Text).attrs({
-  fontSize: "h3",
   fontWeight: "bold",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
-  margin-bottom: 5px;
+  font-size: 30px;
+  line-height: 35px;
 `;
 
 export const Highlight = styled(Title)`
@@ -38,7 +38,7 @@ export const Description = styled(Text)`
 `;
 
 export const FormControl = styled.View`
-  margin: 15px 0;
+  margin: 10px 0;
   width: 100%;
 `;
 
@@ -63,12 +63,4 @@ export const ErrorLabel = styled(Text).attrs({
 export const HighlightedDescription = styled(Description)`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
-`;
-
-export const CountryCodeText = styled.Text`
-  font-family: ${(props: DefaultThemeProps) =>
-    props.theme.typography.fontFamily.bold};
-  font-size: ${(props: DefaultThemeProps) =>
-    props.theme.typography.sizes.regular.size}px;
-  color: ${(props: DefaultThemeProps) => props.theme.colors.text};
 `;

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 type EmptyProps = {
@@ -13,7 +13,7 @@ const EmptyState = (props: EmptyProps) => {
     <View
       style={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <Text>EmptyState</Text>
+      <Image source={require("~assets/images/empty.png")} />
     </View>
   );
 };

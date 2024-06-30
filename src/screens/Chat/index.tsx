@@ -15,9 +15,7 @@ import {
   SystemMessage,
   SystemMessageProps,
   User as GiftedChatUser,
-  MessageTextProps,
 } from "react-native-gifted-chat";
-import AccessoryBar from "./AccessoryBar";
 import CustomActions from "./CustomActions";
 import CustomView from "./CustomView";
 import { Container } from "./styles";
@@ -236,7 +234,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   // }, [onSendFromUser, setIsTyping]);
 
   const renderCustomActions = useCallback(
-    (props) =>
+    (props: any) =>
       Platform.OS === "web" ? null : (
         <CustomActions {...props} onSend={onSendFromUser} />
       ),

@@ -1,11 +1,7 @@
-import { View, ScrollView, StyleSheet } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { ScrollView, StyleSheet, RefreshControl } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
-import { ThemeContext } from "styled-components/native";
-
-import Avatar from "react-native-ui-lib/avatar";
-import { Iconify } from "react-native-iconify";
 import {
   BookingInfoContainer,
   BookingInfoHeaderLabel,
@@ -22,37 +18,36 @@ import BookingStatus from "./components/BookingStatus";
 import { Service, VerifiedUserPreview, VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import bookingsData from "~src/data/bookingsData";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~src/shared/constants";
-import usersData from "~src/data/usersData";
-import { RefreshControl } from "react-native";
-import { getServiceData, getServiceProviderData } from "~services";
+import { getBooking, getService, getUserDataPreview } from "~services";
 
 const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
-  const themeContext = useContext(ThemeContext);
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const [serviceProvider, setServiceProvider] =
     useState<VerifiedUserPreview | null>(null);
   const [service, setService] = useState<Service | null>(null);
+
   const fetchData = useCallback(
-    (bookingId: number) => {
-      return bookingsData.filter((booking) => booking.id === bookingId)[0];
+    async (bookingId: string) => {
+      const booking = await getBooking(bookingId);
+      return booking;
     },
     [route.params, navigation]
   );
 
-  const getServiceProvider = useCallback(
-    (providerId: number) => {
-      setServiceProvider(getServiceProviderData(providerId));
+  const getServiceProviderData = useCallback(
+    async (providerId: string) => {
+      setServiceProvider(await getUserDataPreview(providerId));
     },
     [route.params?.bookingId]
   );
-  const getService = useCallback(
-    (serviceId: number) => {
-      setService(getServiceData(serviceId));
+
+  const getServiceData = useCallback(
+    async (serviceId: string) => {
+      setService(await getService(serviceId));
     },
     [route.params?.bookingId]
   );
@@ -66,11 +61,11 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
 
   useEffect(() => {
     if (data) {
-      getService(data.serviceId);
+      getServiceData(data.serviceId);
       if (isMyService) {
-        getServiceProvider(data.userId);
+        getServiceProviderData(data.userId);
       } else {
-        getServiceProvider(data.providerId);
+        getServiceProviderData(data.providerId);
       }
     }
   }, [data]);

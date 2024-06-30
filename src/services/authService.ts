@@ -1,11 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ErrorObject, UserType, VerifiedUser } from "~src/@types/types";
-import { API_URLS, STORAGE_KEYS } from "~src/shared/constants";
-import { formatPhoneNumber } from "./uiService";
-import axios from "axios";
+import { STORAGE_KEYS } from "~src/shared/constants";
 import { processErrorResponse } from "./errorService";
 import {
-  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendEmailVerification,
@@ -13,8 +10,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { firebaseAuth } from "firebaseConfig";
-import type { User } from "firebase/auth";
-import { createUser } from "./dataService";
+import { createUser, getUser } from "./dataService";
 
 let LOGGED_IN_USER: VerifiedUser | null | undefined;
 
@@ -24,18 +20,6 @@ export const saveCurrentlyLoggedInUser = (userData: VerifiedUser) => {
 
 export const getCurrentlyLoggedInUser = () => {
   return LOGGED_IN_USER;
-};
-
-export const getSecureAxiosInstance = () => {
-  if (!LOGGED_IN_USER) {
-    throw new Error(
-      `Attempting to securely connect to api when there is no token!`
-    );
-  }
-  return axios.create({
-    baseURL: API_URLS.BASE_URL,
-    headers: { Authorization: `Bearer ${LOGGED_IN_USER.token}` },
-  });
 };
 
 export async function setAsLoggedIn() {
@@ -94,46 +78,17 @@ export const setLoginDataToAsyncStorage = async (loginData: VerifiedUser) => {
 };
 
 export const saveUserDetails = async (
-  signInData: User,
-  username?: string
+  signInData: VerifiedUser
 ): Promise<VerifiedUser> => {
   try {
-    const userData: VerifiedUser = {
-      id: signInData.uid,
-      email: signInData.email ?? "",
-      token: null,
-      userType: UserType.USER,
-      username: signInData.displayName ?? username ?? "",
-      phoneNumber: signInData.phoneNumber ?? "",
-      locations: [],
-      profilePicture: signInData.photoURL,
-      isEmailVerified: signInData.emailVerified,
-      isPhoneVerified: false,
-      isActive: false,
-      isLoggedIn: false,
-      createdAt: new Date().toLocaleString(),
-    };
-    await createUser(userData);
-    saveCurrentlyLoggedInUser(userData);
-    await setLoginDataToAsyncStorage(userData);
+    saveCurrentlyLoggedInUser(signInData);
+    await setAsLoggedIn();
+    await setLoginDataToAsyncStorage(signInData);
     await setIsAlreadyUser();
-    await setUserType(userData.userType);
-    return userData;
+    await setUserType(signInData.userType);
+    return signInData;
   } catch (error) {
     return processErrorResponse(error as any, "Error logging in user");
-  }
-};
-
-export const logoutUser = async () => {
-  try {
-    LOGGED_IN_USER = null;
-    AsyncStorage.multiRemove([
-      STORAGE_KEYS.USER_TYPE,
-      STORAGE_KEYS.ACTIVE_USER,
-    ]);
-    await setAsLoggedOut();
-  } catch (error) {
-    return processErrorResponse(error as any, "Error logging out user");
   }
 };
 
@@ -144,8 +99,9 @@ export const signinUserWithEmailAndPassword = async (
   const result = signInWithEmailAndPassword(firebaseAuth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
+      const userDataFromDB = await getUser(user.uid);
       return {
-        user: await saveUserDetails(user),
+        user: await saveUserDetails(userDataFromDB),
         error: null,
       };
     })
@@ -172,8 +128,24 @@ export const signupUserWithEmailAndPassword = async (
     .then(async (userCredential) => {
       const user = userCredential.user;
       await sendEmailVerification(user);
+
+      const userData: VerifiedUser = {
+        id: user.uid,
+        email: user.email ?? "",
+        userType: UserType.USER,
+        username: user.displayName ?? name ?? "",
+        phoneNumber: user.phoneNumber ?? "",
+        locations: [],
+        profilePicture: user.photoURL,
+        isEmailVerified: user.emailVerified,
+        isPhoneVerified: false,
+        isActive: true,
+        isLoggedIn: true,
+        createdAt: new Date().toLocaleString(),
+      };
+      await createUser(userData);
       return {
-        user: await saveUserDetails(user, name),
+        user: await saveUserDetails(userData),
         error: null,
       };
     })
@@ -190,14 +162,6 @@ export const signupUserWithEmailAndPassword = async (
     });
 
   return result;
-};
-
-export const monitorAuthState = () => {
-  onAuthStateChanged(firebaseAuth, (user) => {
-    if (user) {
-    } else {
-    }
-  });
 };
 
 // export const signinUserWithGoogle = async () => {
@@ -228,8 +192,13 @@ export const monitorAuthState = () => {
 
 export const signoutUser = async () => {
   signOut(firebaseAuth)
-    .then(() => {
-      logoutUser();
+    .then(async () => {
+      LOGGED_IN_USER = null;
+      AsyncStorage.multiRemove([
+        STORAGE_KEYS.USER_TYPE,
+        STORAGE_KEYS.ACTIVE_USER,
+      ]);
+      await setAsLoggedOut();
     })
     .catch((error) => {});
 };

@@ -6,10 +6,9 @@ import {
   ContentCard,
   ErrorLabel,
   HighlightedDescription,
-  Title,
 } from "./styles";
 import { useCustomBottomInset } from "~hooks";
-import { Button, Input } from "~components";
+import { Button, Input, HeroText } from "~components";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -31,7 +30,10 @@ import { signupUserWithEmailAndPassword } from "~services";
 import ACTION_TYPES from "~store/actionTypes";
 
 export const signupSchema = yup.object().shape({
-  name: yup.string().min(3, "Name not valid!").required("Name required!"),
+  name: yup
+    .string()
+    .min(3, "Name should be more than 3 characters!")
+    .required("Name required!"),
   email: yup.string().email("Email not valid!").required("Email required!"),
   password: yup
     .string()
@@ -67,6 +69,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
           values.email,
           values.password
         );
+        console.log("User: ", result);
 
         if (result.user) {
           dispatch({
@@ -94,16 +97,18 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar style={themeContext?.dark ? "light" : "dark"} />
           <ContentCard style={{ paddingBottom: bottomInset }}>
-            <Title>Sign up</Title>
+            <View>
+              <HeroText text={"Sign up"} />
+              <Description
+                style={{
+                  marginTop: 10,
+                  color: themeContext?.colors.secondaryText2,
+                }}
+              >
+                Hey there! Sign up with your email to continue.
+              </Description>
+            </View>
 
-            <Description
-              style={{
-                marginTop: 20,
-                color: themeContext?.colors.secondaryText,
-              }}
-            >
-              Hey there! Sign up with your email to continue.
-            </Description>
             <View style={{ marginTop: 40, width: "100%" }}>
               <FormControl>
                 <Input
@@ -114,6 +119,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   placeholder="Username"
                   icon={
                     <Iconify
+                      size={18}
                       color={themeContext?.colors.secondaryText2}
                       icon="solar:user-rounded-outline"
                     />
@@ -132,6 +138,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   placeholder="Email"
                   icon={
                     <Iconify
+                      size={18}
                       color={themeContext?.colors.secondaryText2}
                       icon="solar:letter-outline"
                     />
@@ -151,6 +158,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   placeholder="Password"
                   icon={
                     <Iconify
+                      size={18}
                       color={themeContext?.colors.secondaryText2}
                       icon="solar:shield-keyhole-outline"
                     />
@@ -159,11 +167,13 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                     <Pressable onPress={() => setShowPassword(!showPassword)}>
                       {showPassword ? (
                         <Iconify
+                          size={18}
                           color={themeContext?.colors.secondaryText2}
                           icon="solar:eye-closed-outline"
                         />
                       ) : (
                         <Iconify
+                          size={18}
                           color={themeContext?.colors.secondaryText2}
                           icon="solar:eye-outline"
                         />
@@ -182,6 +192,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   labelStyle={{
                     color: themeContext?.colors.secondaryText,
                     fontFamily: themeContext?.typography.fontFamily.regular,
+                    fontSize: 12,
                   }}
                   color={themeContext?.colors.secondaryBackground}
                   iconColor={themeContext?.colors.primary}
@@ -191,59 +202,37 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   onBlur={formik.handleBlur("acceptedTerms")}
                 />
               </FormControl>
-              <FormControl>
-                <Button
-                  loading={formik.isSubmitting}
-                  // @ts-ignore
-                  onPress={formik.handleSubmit}
-                >
-                  Continue
-                </Button>
-              </FormControl>
-              <FormControl>
-                <Button
-                  // @ts-ignore
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "transparent",
-                    borderColor: themeContext?.colors.secondaryBackground,
-                  }}
-                >
-                  <Iconify
-                    icon="devicon:google"
-                    size={18}
-                    strokeWidth={18}
-                    color={themeContext?.colors.text}
-                    style={{ marginRight: 10 }}
-                  />
-                  <Description style={{ marginLeft: 15 }}>
-                    Continue with Google
-                  </Description>
-                </Button>
-              </FormControl>
-              <Pressable onPress={() => navigation.replace(APP_PAGES.SIGNIN)}>
-                <Description
-                  style={{
-                    textAlign: "center",
-                    marginTop: 20,
-                    fontSize: 12,
-                  }}
-                >
-                  Already have an account?{" "}
-                  <HighlightedDescription
-                    style={{
-                      textAlign: "center",
-                      fontSize: 12,
-                    }}
-                  >
-                    Log in
-                  </HighlightedDescription>
-                </Description>
-              </Pressable>
             </View>
           </ContentCard>
         </ScrollView>
+        <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+          <Button
+            loading={formik.isSubmitting}
+            // @ts-ignore
+            onPress={formik.handleSubmit}
+          >
+            Continue
+          </Button>
+          <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNIN)}>
+            <Description
+              style={{
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 12,
+              }}
+            >
+              Already have an account?{" "}
+              <HighlightedDescription
+                style={{
+                  textAlign: "center",
+                  fontSize: 12,
+                }}
+              >
+                Log in
+              </HighlightedDescription>
+            </Description>
+          </Pressable>
+        </View>
       </KeyboardAvoidingView>
     </Container>
   );

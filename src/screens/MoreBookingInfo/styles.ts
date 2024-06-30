@@ -31,12 +31,12 @@ export const AddAttachmentBtn = styled.TouchableOpacity`
   border-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
   border-width: 2px;
-  border-radius: 15px;
+  border-radius: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 15px;
+  padding: 12px 5px;
   border-style: dashed;
 `;
 

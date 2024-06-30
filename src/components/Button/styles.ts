@@ -15,15 +15,15 @@ export interface ContainerProps extends VariantProps, TouchableOpacityProps {
 }
 
 export const Container = styled.TouchableOpacity<ContainerProps>`
-  padding: 18px;
-  border-radius: 16px;
+  height: 50px;
+  padding: 12px 5px;
+  border-radius: 10px;
   justify-content: center;
   align-items: center;
 
   overflow: hidden;
-  /* height: 68px; */
 
-  border: 1px ${(props: DefaultThemeProps) => props.theme.colors.primary};
+  border: 0.8px ${(props: DefaultThemeProps) => props.theme.colors.primary};
 
   ${(props: DefaultThemeProps) =>
     props.variant !== "outline" &&
@@ -32,7 +32,10 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
     `}
 `;
 
-export const ButtonText = styled(Text)<VariantProps>`
+export const ButtonText = styled(Text).attrs({
+  fontWeight: "bold",
+})<VariantProps>`
   color: ${(props: DefaultThemeProps) =>
     props.variant === "outline" ? props.theme.colors.primary : "white"};
+  font-size: 12px;
 `;

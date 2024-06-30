@@ -22,13 +22,16 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const userLocation = user.locations[0]?.location;
   const mapRef = useRef();
-  const [initialRegion, setInitialRegion] = useState<Region>({
-    latitude: userLocation.latitude,
-    longitude: userLocation.longitude,
-    latitudeDelta: 0,
-    longitudeDelta: 0,
-  });
-  console.log(initialRegion);
+  const [initialRegion, setInitialRegion] = useState<Region | null>(
+    !user.locations
+      ? null
+      : {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          latitudeDelta: 0,
+          longitudeDelta: 0,
+        }
+  );
 
   return (
     <Container

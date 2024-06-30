@@ -19,10 +19,10 @@ import {
   VerifiedUser,
 } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
-import servicesData from "~src/data/servicesData";
 import { QUERY_KEYS } from "~src/shared/constants";
 import { useQuery } from "@tanstack/react-query";
 import { NavigationProp } from "@react-navigation/native";
+import { getServices } from "~services";
 
 const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -33,29 +33,8 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
   const [visibleList, setVisibleList] = useState<ServiceListService[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const getServiceListServices = (
-    providerId?: number
-  ): ServiceListService[] => {
-    const data = servicesData
-      .filter((service) =>
-        providerId ? service.providerId !== providerId : service
-      )
-      .map((service) => {
-        return {
-          id: service.id,
-          name: service.name,
-          description: service?.description,
-          coverImage: service.coverImage,
-          rating: service?.rating,
-          startingPrice: service?.startingPrice,
-          isAvailable: service.isAvailable,
-        };
-      });
-    return data;
-  };
-
   const fetchData = useCallback(() => {
-    return getServiceListServices(user.id);
+    return getServices(user.id);
   }, []);
 
   const { data, isLoading, isError, isRefetching } = useQuery({

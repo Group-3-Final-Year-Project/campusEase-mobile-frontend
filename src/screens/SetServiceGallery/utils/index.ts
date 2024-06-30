@@ -23,8 +23,11 @@ export const pictures = [
     disabledDrag: false,
     disabledReSorted: false,
   },
-  { key: "2", disabledDrag: true, disabledReSorted: true },
-  { key: "3", disabledDrag: true, disabledReSorted: true },
+  { key: "realid5", disabledDrag: true, disabledReSorted: true },
+  { key: "realid8", disabledDrag: true, disabledReSorted: true },
+  { key: "realid7", disabledDrag: true, disabledReSorted: true },
+  { key: "realid522", disabledDrag: true, disabledReSorted: true },
+  { key: "realid5222", disabledDrag: true, disabledReSorted: true },
 ];
 
 export const sortByUrl = (firstItem, secondItem) =>

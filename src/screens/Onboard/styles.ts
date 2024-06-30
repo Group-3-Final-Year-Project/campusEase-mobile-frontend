@@ -8,20 +8,14 @@ export const Container = styled(SafeAreaView).attrs({
   edges: ["left", "right"],
 })`
   flex: 1;
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
 `;
 
-const getTopCardProps = (props: DefaultThemeProps) => ({
-  imageStyle: {
-    opacity: 0.2,
-    backgroundColor: props.theme.colors.background,
-    transform: [{ scale: 1.05 }],
-  },
-});
-
-export const TopCard = styled.ImageBackground.attrs(getTopCardProps)`
+export const TopCard = styled.View`
   flex: 1;
   background-color: ${(props: DefaultThemeProps) =>
-    props.theme.colors.background};
+    props.theme.colors.secondaryBackground};
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
@@ -30,10 +24,12 @@ export const TopCard = styled.ImageBackground.attrs(getTopCardProps)`
 export const BottomCard = styled.View`
   background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.background};
-  padding: 22px;
+  padding: 20px;
   /* border-top-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.border}; */
   /* border-top-width: 1px; */
+  border-top-right-radius: 30px;
+  border-top-left-radius: 30px;
 `;
 
 export const Description = styled(Text)`

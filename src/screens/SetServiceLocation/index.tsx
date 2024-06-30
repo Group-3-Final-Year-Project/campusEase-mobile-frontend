@@ -1,6 +1,4 @@
-import React, { useCallback, useContext } from "react";
-import { CountryCodeContainer, CountryCodeText } from "./styles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import React, { useContext } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
@@ -17,30 +15,27 @@ import {
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { VerifiedUser } from "~src/@types/types";
-import { MaskService } from "react-native-masked-text";
 import { APP_PAGES } from "~src/shared/constants";
+import { Iconify } from "react-native-iconify";
 
-export const phoneNumberSchema = yup.object().shape({
-  phoneNumber: yup
-    .string()
-    .min(9, "Phone number not valid!")
-    .max(10, "Phone number is not valid!")
-    .required("Phone number required!"),
+export const locationSchema = yup.object().shape({
+  location: yup.string().required("Address required!"),
 });
 
-const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
+const SetServiceLocation = ({
+  navigation,
+  route,
+}: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const {}: VerifiedUser = useAppSelector((state) => state.user);
+  // const {}: VerifiedUser = useAppSelector((state) => state.user);
 
   const formik = useFormik({
-    initialValues: { phoneNumber: "" },
-    validationSchema: phoneNumberSchema,
+    initialValues: { location: "" },
+    validationSchema: locationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        navigation.navigate(APP_PAGES.SET_LOCATION);
+        navigation.navigate(APP_PAGES.SET_USER_TYPE);
       } catch (error) {
         throw Error(error as any);
       } finally {
@@ -48,11 +43,6 @@ const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
       }
     },
   });
-
-  const formatPhone = useCallback((tel: string) => {
-    const formattedNumber = MaskService.toMask("cel-phone", tel || "");
-    return formattedNumber;
-  }, []);
 
   return (
     <Container>
@@ -63,34 +53,37 @@ const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
         <StatusBar style={themeContext?.dark ? "light" : "dark"} />
         <ContentCard style={{ paddingBottom: bottomInset }}>
           <View>
-            <HeroText text={"Phone number"} />
+            <HeroText text={"Service Location"} />
             <Description
               style={{
                 marginTop: 10,
                 color: themeContext?.colors.secondaryText2,
               }}
             >
-              Enter your phone number so that we can send you notifications.
+              Set your service location.
             </Description>
           </View>
           <View style={{ marginTop: 40, width: "100%" }}>
             <FormControl>
               <View style={{ flexDirection: "row" }}>
-                <CountryCodeContainer>
-                  <CountryCodeText>🇬🇭 {"  "}+233</CountryCodeText>
-                </CountryCodeContainer>
                 <Input
-                  onChangeText={formik.handleChange("phoneNumber")}
-                  onBlur={formik.handleBlur("phoneNumber")}
-                  value={formik.values.phoneNumber}
-                  textContentType="telephoneNumber"
-                  keyboardType="phone-pad"
-                  placeholder="Phone number"
+                  onChangeText={formik.handleChange("location")}
+                  onBlur={formik.handleBlur("location")}
+                  value={formik.values.location}
+                  textContentType="addressCityAndState"
+                  placeholder="Location"
+                  icon={
+                    <Iconify
+                      icon="solar:map-point-outline"
+                      size={18}
+                      color={themeContext?.colors.secondaryText2}
+                    />
+                  }
                 />
               </View>
 
-              {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
-                <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
+              {formik.touched?.location && formik.errors?.location ? (
+                <ErrorLabel>{formik.errors?.location}</ErrorLabel>
               ) : null}
             </FormControl>
           </View>
@@ -101,7 +94,7 @@ const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
             // @ts-ignore
             onPress={formik.handleSubmit}
           >
-            Continue
+            Finish up
           </Button>
         </View>
       </KeyboardAvoidingView>
@@ -109,4 +102,4 @@ const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
   );
 };
 
-export default EnterPhone;
+export default SetServiceLocation;

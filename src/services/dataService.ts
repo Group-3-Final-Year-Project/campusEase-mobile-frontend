@@ -20,9 +20,9 @@ import {
   VerifiedUserPreview,
 } from "~src/@types/types";
 import bookingsData from "~src/data/bookingsData";
+import { categoriesData } from "~src/data/categories";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 
-export const getBookings = () => {};
 export const getBookmarks = async () => {
   const bookmarks = await AsyncStorage.getItem(STORAGE_KEYS.BOOKMARKS);
   return bookmarks ? (JSON.parse(bookmarks) as ServiceListService[]) : [];
@@ -147,17 +147,8 @@ export const getMyServices = async (providerId: string) => {
   return services;
 };
 
-export const getServiceCategories = async () => {
-  const querySnapshot = await getDocs(
-    collection(firestoreDatabase, STORAGE_KEYS.SERVICE_CATEGORIES)
-  );
-  const categories = querySnapshot.docs.map((doc) => {
-    return {
-      id: doc.id,
-      ...doc.data(),
-    } as ServiceCategory;
-  });
-  return categories;
+export const getServiceCategories = (): ServiceCategory[] => {
+  return Object.values(categoriesData);
 };
 
 export const generateChatId = (id1: string, id2: string) => {
@@ -205,4 +196,44 @@ export const openChat = async (
     console.log("Chat already exists.");
   }
   navigation.navigate(APP_PAGES.CHAT, { chatId });
+};
+
+export const getMyBookingsAsUser = async (userId: string) => {
+  const q = query(
+    collection(firestoreDatabase, STORAGE_KEYS.BOOKINGS),
+    where("userId", "==", userId)
+  );
+  const querySnapshot = await getDocs(q);
+  const bookings = querySnapshot.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data(),
+    } as Booking;
+  });
+  return bookings;
+};
+
+export const getMyBookingsAsServiceProvider = async (userId: string) => {
+  const q = query(
+    collection(firestoreDatabase, STORAGE_KEYS.BOOKINGS),
+    where("userId", "!=", userId)
+  );
+  const querySnapshot = await getDocs(q);
+  const bookings = querySnapshot.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data(),
+    } as Booking;
+  });
+  return bookings;
+};
+
+export const getBooking = async (bookingId: string) => {
+  const docRef = await getDoc(
+    doc(firestoreDatabase, STORAGE_KEYS.SERVICES, bookingId)
+  );
+  return {
+    id: docRef.id,
+    ...docRef.data(),
+  } as Booking;
 };

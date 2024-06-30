@@ -20,7 +20,12 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES } from "~src/shared/constants";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
-import { logoutUser, navigateAndResetStack, pickImageAsync } from "~services";
+import {
+  logoutUser,
+  navigateAndResetStack,
+  pickImageAsync,
+  signoutUser,
+} from "~services";
 
 const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -152,7 +157,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
         />
       ),
       action: async () => {
-        await logoutUser();
+        await signoutUser();
         navigateAndResetStack(
           navigation as NavigationProp<any>,
           APP_PAGES.LANDING

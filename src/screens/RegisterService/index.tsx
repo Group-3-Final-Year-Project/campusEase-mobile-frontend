@@ -16,24 +16,10 @@ import {
   Description,
   FormControl,
   ErrorLabel,
-} from "../SignInOrUp/styles";
-import HeroText from "../SignInOrUp/components/HeroText";
-import Animated, {
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
-import {
-  AddRemoveContainer,
-  numOfColumns,
-  UserPictureContainer,
-  UserPictureContent,
-  userPictureHeight,
-} from "./styles";
-// import Placeholder from "~images/placeholder.svg";
-// import AddRemove from "~images/AddRemove.svg";
-import { pictures, sortByUrl, deleteUrlFromItem, addUrlToItem } from "./utils";
+} from "../Signup/styles";
+import HeroText from "../../components/HeroText";
+
 import { PickerSingleValue } from "react-native-ui-lib/src/components/picker/types";
-import { DraggableGrid } from "react-native-draggable-grid";
 
 export const schema = yup.object().shape({
   name: yup.string().min(3, "Name not valid!").required("Name required!"),
@@ -49,44 +35,6 @@ export const schema = yup.object().shape({
   bio: yup.string().notRequired(),
 });
 
-const AddUserPhoto = ({ picture, onDelete, onAdd }) => {
-  const themeContext = useContext(ThemeContext);
-
-  const hasPicture = !!picture.url;
-
-  const style = useAnimatedStyle(() => {
-    const rotation = withSpring(hasPicture ? `45deg` : `0deg`);
-    return { transform: [{ rotateZ: rotation }] };
-  });
-
-  return (
-    <UserPictureContainer>
-      <UserPictureContent
-        key={picture?.url}
-        {...(picture?.url && { source: { uri: picture?.url } })}
-      >
-        {/* {!hasPicture && (
-          <Svg>
-            <Placeholder />
-          </Svg>
-        )} */}
-      </UserPictureContent>
-      <AddRemoveContainer
-        inverted={hasPicture}
-        onPress={hasPicture ? onDelete : onAdd}
-      >
-        <Animated.View style={style}>
-          {/* <Svg>
-            <AddRemove
-              fill={hasPicture ? themeContext?.colors.primary : "white"}
-            />
-          </Svg> */}
-        </Animated.View>
-      </AddRemoveContainer>
-    </UserPictureContainer>
-  );
-};
-
 const RegisterService = ({
   navigation,
   route,
@@ -94,12 +42,10 @@ const RegisterService = ({
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [pics, setPics] = useState(pictures);
 
   // Swipe gestures need to be disabled when Draggable is active,
   // othewise the user will perform multiple gestures and the behavior
   // will be undesirable
-  const [gesturesEnabled, setgesturesEnabled] = useState(true);
   const [pickerValue, setPickerValue] = useState<PickerSingleValue>("food");
 
   const initialValues = {
@@ -139,46 +85,6 @@ const RegisterService = ({
               Almost done! Enter your service details to continue.
             </Description>
             <View style={{ marginTop: 40, width: "100%" }}>
-              <FormControl>
-                <DraggableGrid
-                  numColumns={numOfColumns}
-                  renderItem={(picture) => (
-                    <View>
-                      <AddUserPhoto
-                        onDelete={() => {
-                          const newPics = pics
-                            .map(deleteUrlFromItem(picture))
-                            .sort(sortByUrl);
-                          setPics(newPics);
-                        }}
-                        onAdd={() => {
-                          const newPics = pics
-                            .map(addUrlToItem(picture))
-                            .sort(sortByUrl);
-                          setPics(newPics);
-                        }}
-                        picture={picture}
-                      />
-                    </View>
-                  )}
-                  data={pics}
-                  itemHeight={userPictureHeight}
-                  style={{ zIndex: 10 }}
-                  onDragStart={() => setgesturesEnabled(false)}
-                  onDragRelease={(newPics) => {
-                    setgesturesEnabled(true);
-                    setPics(newPics);
-                  }}
-                />
-                <ErrorLabel
-                  style={{
-                    color: themeContext?.colors.secondaryText2,
-                    fontSize: 10,
-                  }}
-                >
-                  *First image will be used as the cover image of service
-                </ErrorLabel>
-              </FormControl>
               <FormControl>
                 <Input
                   // onChangeText={formik.handleChange("name")}

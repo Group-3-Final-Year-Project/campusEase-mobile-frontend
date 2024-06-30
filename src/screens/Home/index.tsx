@@ -90,7 +90,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   );
 
   const fetchData = useCallback(async () => {
-    const serviceCategories = await getServiceCategories();
+    const serviceCategories = getServiceCategories();
     const providerServices = await getMyServices(user.id);
     const services = await getServices(user.id);
     return {

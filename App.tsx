@@ -3,7 +3,15 @@ import { useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { useMemo } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import { useFonts } from "@expo-google-fonts/urbanist";
+import {
+  useFonts,
+  Urbanist_300Light,
+  Urbanist_400Regular,
+  Urbanist_500Medium,
+  Urbanist_600SemiBold,
+  Urbanist_700Bold,
+  Urbanist_800ExtraBold,
+} from "@expo-google-fonts/urbanist";
 import {
   setCustomTextInput,
   setCustomText,
@@ -12,7 +20,7 @@ import {
 import { enableScreens } from "react-native-screens";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "styled-components/native";
-import { useNavigationBar, useStatusBar } from "~hooks";
+import { useNavigationBar } from "~hooks";
 import { DarkTheme, DefaultTheme, Font, LightTheme } from "~src/shared/theme";
 import { useDidMountEffect } from "~services";
 import { SafeComponent } from "~components";
@@ -21,21 +29,31 @@ import { Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
 import store from "~store/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CustomAlert from "~src/hocs/CustomAlert";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import CustomToast from "~src/hocs/CustomToast";
 
 enableScreens();
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
-  useStatusBar(true, "", "light-content");
+function App() {
   useNavigationBar();
   const queryClient = new QueryClient();
+  // const [fontsLoaded, error] = useFonts({
+  //   [Font.EuclidBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
+  //   [Font.EuclidExtraBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
+  //   [Font.EuclidLight]: require("./src/assets/fonts/Euclid Circular B Light.ttf"),
+  //   [Font.EuclidMedium]: require("./src/assets/fonts/Euclid Circular B Medium.ttf"),
+  //   [Font.EuclidRegular]: require("./src/assets/fonts/Euclid Circular B Regular.ttf"),
+  //   [Font.EuclidSemiBold]: require("./src/assets/fonts/Euclid Circular B SemiBold.ttf"),
+  // });
   const [fontsLoaded, error] = useFonts({
-    [Font.EuclidBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
-    [Font.EuclidExtraBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
-    [Font.EuclidLight]: require("./src/assets/fonts/Euclid Circular B Light.ttf"),
-    [Font.EuclidMedium]: require("./src/assets/fonts/Euclid Circular B Medium.ttf"),
-    [Font.EuclidRegular]: require("./src/assets/fonts/Euclid Circular B Regular.ttf"),
-    [Font.EuclidSemiBold]: require("./src/assets/fonts/Euclid Circular B SemiBold.ttf"),
+    [Font.UrbanistLight]: Urbanist_300Light,
+    [Font.UrbanistRegular]: Urbanist_400Regular,
+    [Font.UrbanistMedium]: Urbanist_500Medium,
+    [Font.UrbanistSemiBold]: Urbanist_600SemiBold,
+    [Font.UrbanistBold]: Urbanist_700Bold,
+    [Font.UrbanistExtraBold]: Urbanist_800ExtraBold,
   });
   const colorScheme = useColorScheme();
   const theme = useMemo(() => {
@@ -47,21 +65,15 @@ export default function App() {
     if (fontsLoaded) setTimeout(SplashScreen.hideAsync, 100);
   }, [fontsLoaded]);
 
-  if (error) {
-    throw error;
-  }
-  if (!fontsLoaded) {
-    return null;
-  }
   setCustomText({
     style: {
-      fontFamily: Font.EuclidRegular,
+      fontFamily: Font.UrbanistRegular,
       color: theme.colors.text,
     },
   });
   setCustomTextInput({
     style: {
-      fontFamily: Font.EuclidRegular,
+      fontFamily: Font.UrbanistRegular,
     },
   });
 
@@ -70,20 +82,35 @@ export default function App() {
     showsVerticalScrollIndicator: false,
   });
 
+  if (error) {
+    throw error;
+  }
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <SafeAreaProvider>
       <ThemeProvider theme={theme}>
-        <SafeComponent request={{ loading: !fontsLoaded, data: true }}>
-          <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-              <StatusBar style="dark" />
-              <NavigationContainer theme={theme as any}>
-                <RootNavigator />
-              </NavigationContainer>
-            </QueryClientProvider>
-          </Provider>
-        </SafeComponent>
+        <CustomAlert>
+          <CustomToast>
+            <SafeComponent request={{ loading: !fontsLoaded, data: true }}>
+              <Provider store={store}>
+                <QueryClientProvider client={queryClient}>
+                  <StatusBar
+                    style={colorScheme === "dark" ? "light" : "dark"}
+                  />
+                  <NavigationContainer theme={theme as any}>
+                    <RootNavigator />
+                  </NavigationContainer>
+                </QueryClientProvider>
+              </Provider>
+            </SafeComponent>
+          </CustomToast>
+        </CustomAlert>
       </ThemeProvider>
     </SafeAreaProvider>
   );
 }
+
+export default gestureHandlerRootHOC(App);

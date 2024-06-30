@@ -15,8 +15,10 @@ export const APP_PAGES = {
   NEW_PASSWORD: "New Password",
   VERIFY_EMAIL: "Verify Email",
   VERIFY_PHONE: "Verify Phone",
+  ENTER_PHONE: "Enter Phone",
   SET_LOCATION_PROMPT: "Set Location Prompt",
   SET_LOCATION: "Set Location",
+  SET_USER_TYPE: "Set User Type",
   EXPLORE: "Explore",
   BOOKMARKS: "Bookmarks",
   CHATS: "Chats",
@@ -33,6 +35,10 @@ export const APP_PAGES = {
   SERVICE_CATEGORIES: "Service Categories",
   PRIVACY_POLICY: "Privacy Policy",
   SEARCH_AND_FILTER: "Search and Filter",
+  SET_SERVICE_DETAILS: "Set Service Details",
+  SET_SERVICE_GALLERY: "Set Service Gallery",
+  SET_SERVICE_PRICING: "Set Service Pricing",
+  SET_SERVICE_LOCATION: "Set Service Location",
 };
 
 export const API_URLS = {
@@ -60,6 +66,7 @@ export const STORAGE_KEYS = {
   SERVICES: "campusEase_services",
   DB_USERS: "campusEase_users",
   SERVICE_CATEGORIES: "campusEase_service_categories",
+  BOOKINGS: "campuseEase_bookings",
 };
 
 export const QUERY_KEYS = {
@@ -71,6 +78,13 @@ export const QUERY_KEYS = {
   CHATS: "campusEase_chats",
   SERVICES: "campusEase_services",
   SERVICE_REQUEST: "campusEase_service_request",
+};
+
+export const SUBSCRIBABLE_EVENTS = {
+  SHOW_TOAST: "show_toast",
+  HIDE_TOAST: "hide_toast",
+  SHOW_ALERT: "show_alert",
+  HIDE_ALERT: "hide_alert",
 };
 
 export const MISC = {};

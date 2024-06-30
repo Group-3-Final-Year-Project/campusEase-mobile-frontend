@@ -21,14 +21,13 @@ const fontStyle = css`
 `;
 
 export const Container = styled.View`
-  border-radius: 16px;
-  border-color: ${(props: DefaultThemeProps) =>
+  border-radius: 10px;
+  background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
   flex-direction: row;
   overflow: hidden;
   flex-grow: 1;
-  border-width: 1px;
-
+  height: 50px;
   /* margin: 25px 0; */
 `;
 
@@ -38,15 +37,21 @@ export const TextInput = styled.TextInput.attrs((props: DefaultThemeProps) => ({
     .rgb()
     .string(),
 }))<IInput>`
-  padding: ${(props: DefaultThemeProps) =>
-    props.padding ? props.padding : 15}px;
+  padding-top: ${(props: DefaultThemeProps) =>
+    props.padding ? props.padding : 12}px;
+  padding-bottom: ${(props: DefaultThemeProps) =>
+    props.padding ? props.padding : 12}px;
+  padding-left: ${(props: DefaultThemeProps) =>
+    props.padding ? props.padding : 10}px;
+  padding-right: ${(props: DefaultThemeProps) =>
+    props.padding ? props.padding : 10}px;
   flex: 1;
   ${fontStyle}
 `;
 
 export const IconContainer = styled.View<IInput>`
   padding-left: ${(props: DefaultThemeProps) =>
-    props.padding ? props.padding : 15}px;
+    props.padding ? props.padding : 10}px;
   align-items: center;
   justify-content: center;
   vertical-align: top;
@@ -54,7 +59,7 @@ export const IconContainer = styled.View<IInput>`
 
 export const RightIconContainer = styled.View<IInput>`
   padding-right: ${(props: DefaultThemeProps) =>
-    props.padding ? props.padding : 15}px;
+    props.padding ? props.padding : 10}px;
   align-items: center;
   justify-content: center;
   /* vertical-align: top; */

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
-import { Button, Input, AdvancedDialog } from "~components";
+import { Button, Input, HeroText } from "~components";
 import { KeyboardAvoidingView, Platform, Pressable, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
@@ -23,8 +23,7 @@ import {
   ErrorLabel,
   FormControl,
   HighlightedDescription,
-} from "../SignInOrUp/styles";
-import HeroText from "../SignInOrUp/components/HeroText";
+} from "../Signup/styles";
 import ACTION_TYPES from "~store/actionTypes";
 
 export const signinSchema = yup.object().shape({
@@ -36,7 +35,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [showPassword, setShowPassword] = useState<boolean>(true);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
@@ -54,6 +53,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
           values.email,
           values.password
         );
+        console.log("User: ", result);
         if (result.user) {
           dispatch({
             type: ACTION_TYPES.UPDATE_USER_DATA,
@@ -80,16 +80,18 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
         style={{ flexGrow: 1 }}
       >
         <StatusBar style={themeContext?.dark ? "light" : "dark"} />
-        <ContentCard
-          style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
-        >
-          <HeroText isSignup={false} />
-
-          <Description
-            style={{ marginTop: 20, color: themeContext?.colors.secondaryText }}
-          >
-            Hey there! Welcome back. You've been missed.
-          </Description>
+        <ContentCard style={{ paddingBottom: bottomInset }}>
+          <View>
+            <HeroText text={"Sign in"} />
+            <Description
+              style={{
+                marginTop: 10,
+                color: themeContext?.colors.secondaryText2,
+              }}
+            >
+              Hey there! Welcome back. You've been missed.
+            </Description>
+          </View>
           <View style={{ marginTop: 40, width: "100%" }}>
             <FormControl>
               <Input
@@ -100,6 +102,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 placeholder="Email"
                 icon={
                   <Iconify
+                    size={18}
                     color={themeContext?.colors.secondaryText2}
                     icon="solar:letter-outline"
                   />
@@ -119,6 +122,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 placeholder="Password"
                 icon={
                   <Iconify
+                    size={18}
                     color={themeContext?.colors.secondaryText2}
                     icon="solar:shield-keyhole-outline"
                   />
@@ -127,11 +131,13 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   <Pressable onPress={() => setShowPassword(!showPassword)}>
                     {showPassword ? (
                       <Iconify
+                        size={18}
                         color={themeContext?.colors.secondaryText2}
                         icon="solar:eye-closed-outline"
                       />
                     ) : (
                       <Iconify
+                        size={18}
                         color={themeContext?.colors.secondaryText2}
                         icon="solar:eye-outline"
                       />
@@ -143,45 +149,39 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 <ErrorLabel>{formik.errors?.password}</ErrorLabel>
               ) : null}
             </FormControl>
-            <FormControl>
-              <Button
-                loading={formik.isSubmitting}
-                // @ts-ignore
-                onPress={formik.handleSubmit}
-                // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
-              >
-                Sign in
-              </Button>
-            </FormControl>
-            <Pressable onPress={() => navigation.replace(APP_PAGES.SIGNUP)}>
-              <Description
+          </View>
+        </ContentCard>
+        <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+          <Button
+            loading={formik.isSubmitting}
+            // @ts-ignore
+            onPress={formik.handleSubmit}
+            // onPress={() => navigation.navigate(APP_PAGES.VERIFY_EMAIL)}
+          >
+            Sign in
+          </Button>
+          <Pressable onPress={() => navigation.navigate(APP_PAGES.ENTER_PHONE)}>
+            <Description
+              style={{
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 12,
+              }}
+            >
+              Don't have an account?{" "}
+              <HighlightedDescription
                 style={{
                   textAlign: "center",
                   marginTop: 20,
                   fontSize: 12,
                 }}
               >
-                Don't have an account?{" "}
-                <HighlightedDescription
-                  style={{
-                    textAlign: "center",
-                    marginTop: 20,
-                    fontSize: 12,
-                  }}
-                >
-                  Sign up
-                </HighlightedDescription>
-              </Description>
-            </Pressable>
-          </View>
-        </ContentCard>
+                Sign up
+              </HighlightedDescription>
+            </Description>
+          </Pressable>
+        </View>
       </KeyboardAvoidingView>
-      <AdvancedDialog
-        centerH
-        centerV
-        ignoreBackgroundPress={false}
-        visible={dialogVisible}
-      ></AdvancedDialog>
     </Container>
   );
 };

@@ -50,7 +50,6 @@ export enum BookingStatus {
 
 export type VerifiedUser = {
   id: string;
-  token: NullableString;
   userType: UserType.SERVICE_PROVIDER | UserType.USER;
   username: string;
   email: string;
@@ -154,7 +153,7 @@ export type Booking = {
   id: string;
   providerId: string;
   userId: string;
-  serviceId: number;
+  serviceId: string;
   createdAt: string;
   updatedAt: string;
   location: LocationObject;
