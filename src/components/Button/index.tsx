@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, ButtonText, ContainerProps } from "./styles";
 import Loading from "~components/Loading";
+import LoaderScreen from "react-native-ui-lib/loaderScreen";
+import { ThemeContext } from "styled-components/native";
 
 interface IButtonProps extends ContainerProps {
   buttonTextWeight?: string;
@@ -10,6 +12,8 @@ interface IButtonProps extends ContainerProps {
 const Button: React.FC<IButtonProps> = (props) => {
   const enabled = !props.loading && !props.disabled;
 
+  const themeContext = useContext(ThemeContext);
+
   return (
     <Container
       activeOpacity={enabled ? 0.7 : 1}
@@ -17,7 +21,16 @@ const Button: React.FC<IButtonProps> = (props) => {
       onPress={enabled ? props.onPress : undefined}
       {...props}
     >
-      {props.loading && <Loading />}
+      {props.loading && (
+        <LoaderScreen
+          size={"small"}
+          loaderColor={
+            props.variant === "outline"
+              ? themeContext?.colors.primary
+              : themeContext?.colors.text
+          }
+        />
+      )}
       {!props.loading && (
         <ButtonText
           fontWeight={props.buttonTextWeight || "bold"}

@@ -346,10 +346,6 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
           renderCustomView={renderCustomView}
           renderSend={renderSend}
           keyboardShouldPersistTaps="never"
-          timeTextStyle={{
-            left: { color: "red" },
-            right: { color: "yellow" },
-          }}
           isTyping={chat.isTyping}
           inverted={Platform.OS !== "web"}
           infiniteScroll

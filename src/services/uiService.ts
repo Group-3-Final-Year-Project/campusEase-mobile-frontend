@@ -9,6 +9,7 @@ import { Alert, Platform } from "react-native";
 import { StringError } from "~src/@types/types";
 import { eventEmitter } from "./eventEmitter";
 import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
+import { getMyServices } from "./dataService";
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -196,4 +197,11 @@ export const normalizeFilePath = (filePath: string) => {
 
 export const formatLatLng = (lat: number, lng: number) => {
   return `Lat: ${lat}, Lng: ${lng}`;
+};
+
+export const checkIfServiceProviderHasService = async (providerId: string) => {
+  const serviceProviderServices = await getMyServices(providerId);
+  return !(
+    !serviceProviderServices.length || serviceProviderServices.length === 0
+  );
 };

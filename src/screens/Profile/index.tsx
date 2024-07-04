@@ -20,12 +20,7 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES } from "~src/shared/constants";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
-import {
-  logoutUser,
-  navigateAndResetStack,
-  pickImageAsync,
-  signoutUser,
-} from "~services";
+import { navigateAndResetStack, pickImageAsync, signoutUser } from "~services";
 
 const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -42,7 +37,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
               icon="solar:logout-3-outline"
               size={18}
               strokeWidth={18}
-              color={"red"}
+              color={themeContext?.colors.secondary}
             />
           </IconBtn>
         ),
@@ -153,7 +148,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           icon="solar:logout-3-outline"
           size={18}
           strokeWidth={18}
-          color={"red"}
+          color={themeContext?.colors.secondary}
         />
       ),
       action: async () => {
@@ -214,7 +209,10 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           <>{item.icon}</>
           <ProfileItemLabel
             style={{
-              color: item.name == "Log out" ? "red" : themeContext?.colors.text,
+              color:
+                item.name == "Log out"
+                  ? themeContext?.colors.secondary
+                  : themeContext?.colors.text,
             }}
           >
             {item.name}

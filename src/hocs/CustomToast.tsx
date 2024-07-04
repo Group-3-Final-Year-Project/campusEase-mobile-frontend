@@ -39,7 +39,7 @@ const CustomToast = (props: { children: any }) => {
       {props.children}
       {showToast && (
         <Incubator.Toast
-          ref={emitterListenerRef}
+          // ref={emitterListenerRef}
           visible={showToast}
           onDismiss={hideToast}
           // buttons={toastButtons}

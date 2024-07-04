@@ -38,4 +38,5 @@ export const LogoLabel = styled(Text).attrs({
   fontWeight: "bold",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.primary};
+  font-size: 20px;
 `;

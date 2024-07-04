@@ -159,7 +159,6 @@ export type Service = {
   description?: NullableString;
   category: ServiceCategory;
   location: LocationObj;
-  coverImage: string;
   gallery?: GalleryFile[];
   email: NullableString;
   website?: NullableString;

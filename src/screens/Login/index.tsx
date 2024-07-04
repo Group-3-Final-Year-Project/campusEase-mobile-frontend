@@ -12,6 +12,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
+  checkIfServiceProviderHasService,
   getFirebaseErrorMessage,
   navigateAndResetStack,
   showAlert,
@@ -27,6 +28,7 @@ import {
   HighlightedDescription,
 } from "../Signup/styles";
 import ACTION_TYPES from "~store/actionTypes";
+import { UserType } from "~src/@types/types";
 
 export const signinSchema = yup.object().shape({
   email: yup.string().email("Email not valid!").required("Email required!"),
@@ -62,7 +64,18 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
             payload: result.user,
           });
           resetForm();
-          navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+          if (result.user.userType === UserType.SERVICE_PROVIDER) {
+            const serviceProviderHasService =
+              await checkIfServiceProviderHasService(result.user.id);
+            serviceProviderHasService
+              ? navigateAndResetStack(navigation, APP_PAGES.USER_TAB)
+              : navigateAndResetStack(
+                  navigation,
+                  APP_PAGES.SET_SERVICE_DETAILS
+                );
+          } else {
+            navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+          }
         } else {
           showAlert(
             "Oops, authentication failed!",

@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import LoaderScreen from "react-native-ui-lib/loaderScreen";
+import EmptyIcon from "~assets/images/empty.svg";
 
 type EmptyProps = {
   message?: string;
@@ -14,7 +14,7 @@ const EmptyState = (props: EmptyProps) => {
     <View
       style={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <LoaderScreen />
+      <EmptyIcon width={150} height={150} />
     </View>
   );
 };

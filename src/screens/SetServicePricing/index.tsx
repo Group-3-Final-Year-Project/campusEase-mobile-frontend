@@ -114,7 +114,7 @@ const SetServicePricing = ({
 
   const renderSubServiceForm = (form: SubService, index: number) => {
     return (
-      <View style={{ width: "100%", marginBottom: 15 }}>
+      <View style={{ width: "100%", marginBottom: 15 }} key={index}>
         <View
           style={{
             flexDirection: "row",
@@ -154,7 +154,7 @@ const SetServicePricing = ({
           >
             <Iconify
               size={18}
-              color={themeContext?.colors.red}
+              color={themeContext?.colors.secondary}
               icon="solar:close-circle-bold"
             />
           </TouchableOpacity>

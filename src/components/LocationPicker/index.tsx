@@ -92,7 +92,7 @@ const LocationPicker = (props: LocationPickerProps) => {
       >
         <Iconify
           size={28}
-          color={themeContext?.colors.red}
+          color={themeContext?.colors.secondary}
           icon="solar:close-circle-bold"
         />
       </TouchableOpacity>

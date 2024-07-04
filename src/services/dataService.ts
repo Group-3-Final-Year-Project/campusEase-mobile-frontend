@@ -125,9 +125,9 @@ export const getServices = async (
 ): Promise<Service[]> => {
   const q = query(
     collection(firestoreDatabase, STORAGE_KEYS.SERVICES),
-    where("providerId", "!=", userId),
-    limit(lim),
-    startAt(offst)
+    where("providerId", "!=", userId)
+    // limit(lim),
+    // startAt(offst)
   );
   const querySnapshot = await getDocs(q);
   const services = querySnapshot.docs.map((doc) => {

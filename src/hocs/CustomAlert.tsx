@@ -64,20 +64,29 @@ const CustomAlert = (props: { children: any }) => {
           contentContainerStyle={{
             backgroundColor: themeContext?.colors.background,
             width: Dimensions.get("screen").width - 40,
+            borderRadius: 20,
+          }}
+          overlayStyle={{
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
           messageStyle={{
             fontFamily: themeContext?.typography.fontFamily.regular,
+            textAlign: "center",
+            color: themeContext?.colors.text,
           }}
           titleStyle={{
             fontFamily: themeContext?.typography.fontFamily.bold,
+            color: themeContext?.colors.text,
           }}
           confirmButtonStyle={{
-            height: 50,
-            width: 50,
+            height: 40,
+            width: 100,
             alignItems: "center",
             justifyContent: "center",
             paddingVertical: 12,
             paddingHorizontal: 5,
+          }}
+          confirmButtonTextStyle={{
             fontFamily: themeContext?.typography.fontFamily.regular,
           }}
           alertContainerStyle={{

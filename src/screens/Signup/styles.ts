@@ -57,7 +57,7 @@ export const ErrorLabel = styled(Text).attrs({
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.regular};
   width: 100%;
-  color: red;
+  color: ${(props: DefaultThemeProps) => props.theme.colors.secondary};
 `;
 
 export const HighlightedDescription = styled(Description)`

@@ -16,17 +16,23 @@ import NetInfo, {
 import ErrorBoundary from "react-native-error-boundary";
 import LottieView from "lottie-react-native";
 import LoadingView from "~components/LoadingView";
+import { Image } from "react-native";
+import { connectionLost } from "~src/data/connectionlost";
 
 export const OfflineComponent = ({ refetch }: { refetch: () => void }) => {
   return (
     <Container>
       <Content>
-        <DisconnectedIllustration />
+        {/* <DisconnectedIllustration /> */}
+        <Image source={{ uri: connectionLost }} />
+
         <Title>Oops, you are offline</Title>
         <ContainedText>
           Wait a while and try again when the connection is stable
         </ContainedText>
-        <Button onPress={() => refetch()}>Try again</Button>
+        <Button onPress={() => refetch()} style={{ paddingHorizontal: 20 }}>
+          Try again
+        </Button>
       </Content>
     </Container>
   );
@@ -36,13 +42,16 @@ export const RequestErrorComponent = ({ refetch }: { refetch: () => void }) => {
   return (
     <Container>
       <Content>
-        <ErrorIllustration />
+        {/* <ErrorIllustration /> */}
+        <Image source={{ uri: connectionLost }} />
         <Title>Oops, something went wrong</Title>
         <ContainedText>
           We are unable to process your request at this time, but we are working
           to resolve the issue.
         </ContainedText>
-        <Button onPress={() => refetch()}>Try again</Button>
+        <Button onPress={() => refetch()} style={{ paddingHorizontal: 20 }}>
+          Try again
+        </Button>
       </Content>
     </Container>
   );
@@ -53,7 +62,9 @@ export const UnknownErrorComponent = () => {
     <Container>
       <Content>
         {/* <ErrorIllustration /> */}
-        <LottieView source={require("~animations/error.json")} autoPlay loop />
+        <Image source={{ uri: connectionLost }} />
+
+        {/* <LottieView source={require("~animations/error.json")} autoPlay loop /> */}
         <Title>Oops, something went wrong</Title>
         <ContainedText>Try again</ContainedText>
       </Content>

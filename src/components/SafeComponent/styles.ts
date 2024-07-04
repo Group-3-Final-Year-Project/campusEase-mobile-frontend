@@ -32,6 +32,7 @@ export const Title = styled(Text).attrs({
 export const ContainedText = styled(Text)`
   max-width: 350px;
   margin-bottom: 25px;
+  text-align: center;
 `;
 
 export const DisconnectedIllustration = styled(LottieView).attrs({

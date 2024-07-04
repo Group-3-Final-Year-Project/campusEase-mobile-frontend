@@ -76,6 +76,7 @@ const SetServiceLocation = ({
             },
           });
           resetForm();
+          navigation.navigate(APP_PAGES.USER_TAB);
         });
       } catch (error) {
         throw Error(error as any);
