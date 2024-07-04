@@ -26,7 +26,11 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
-import { signupUserWithEmailAndPassword } from "~services";
+import {
+  getFirebaseErrorMessage,
+  showAlert,
+  signupUserWithEmailAndPassword,
+} from "~services";
 import ACTION_TYPES from "~store/actionTypes";
 
 export const signupSchema = yup.object().shape({
@@ -77,11 +81,15 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
             payload: result.user,
           });
           resetForm();
-          navigation.navigate(APP_PAGES.VERIFY_EMAIL);
+          navigation.navigate(APP_PAGES.ENTER_PHONE);
         } else {
+          showAlert(
+            "Oops, authentication failed!",
+            getFirebaseErrorMessage(result.error.errorCode ?? "")
+          );
         }
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Oops, authentication failed!", getFirebaseErrorMessage());
       } finally {
         setSubmitting(false);
       }

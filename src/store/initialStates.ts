@@ -9,7 +9,6 @@ const INITIAL_STATE: ReduxState = {
   user: {
     id: "",
     userType: UserType.USER,
-    token: null,
     username: "",
     email: "",
     phoneNumber: "",
@@ -25,7 +24,7 @@ const INITIAL_STATE: ReduxState = {
   // bookings: [],
   filters: {
     [Filters.SERVICE_CATEGORY]: {
-      id: 0,
+      id: "",
       name: "",
     },
   },
@@ -37,12 +36,12 @@ const INITIAL_STATE: ReduxState = {
     isTyping: false,
   },
   booking: {
-    id: 0,
-    providerId: 0,
-    userId: 0,
-    serviceId: 0,
-    createdAt: 0,
-    updatedAt: 0,
+    id: "",
+    providerId: "",
+    userId: "",
+    serviceId: "",
+    createdAt: "",
+    updatedAt: "",
     location: {
       name: "",
       location: {
@@ -56,7 +55,7 @@ const INITIAL_STATE: ReduxState = {
       },
     },
     paymentMethodObject: {
-      id: 0,
+      id: "",
       name: "",
       extraData: undefined,
     },
@@ -64,11 +63,39 @@ const INITIAL_STATE: ReduxState = {
     customerName: "",
     customerEmail: "",
     customerPhone: "",
-    scheduledDate: 0,
-    scheduledTime: 0,
+    scheduledDate: "",
+    scheduledTime: "",
     notes: "",
     attachments: [],
     bookingStates: [],
+  },
+  serviceInCreation: {
+    id: "",
+    providerId: "",
+    name: "",
+    category: {
+      id: "",
+      name: "",
+      description: undefined,
+      image: undefined,
+    },
+    location: {
+      name: "",
+      address: undefined,
+      location: {
+        latitude: 0,
+        longitude: 0,
+        altitude: null,
+        accuracy: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null,
+      },
+    },
+    coverImage: "",
+    email: null,
+    createdAt: "",
+    isAvailable: false,
   },
 };
 

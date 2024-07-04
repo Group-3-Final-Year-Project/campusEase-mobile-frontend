@@ -5,7 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Linking from "expo-linking";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 import { StringError } from "~src/@types/types";
 import { eventEmitter } from "./eventEmitter";
 import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
@@ -158,7 +158,7 @@ export async function takePictureAsync(
 
 export const openLink = (url: string) => Linking.openURL(url);
 
-export const getFirebaseErrorMessage = (errorCode: string) => {
+export const getFirebaseErrorMessage = (errorCode?: string) => {
   const messages = {
     "auth/wrong-password": "Incorrect email or password.",
     "auth/user-not-found": "User not found. Please check your email address.",
@@ -166,13 +166,34 @@ export const getFirebaseErrorMessage = (errorCode: string) => {
       "Password is too weak. Please choose a stronger password.",
     "auth/email-already-in-use":
       "The email address is already in use by another account.",
-    "auth/invalid-email": "The email address is invalid.",
+    "auth/invalid-credential": "Credentials provided are not valid!.",
     "auth/operation-not-allowed":
       "This operation is not allowed. Please contact support.",
+    "auth/too-many-requests":
+      "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later",
     // Add more error codes and messages here...
   };
 
   return (
     messages[errorCode] || "An unknown error occurred. Please try again later."
   );
+};
+
+export const normalizeFilePath = (filePath: string) => {
+  if (Platform.OS === "ios" || Platform.OS === "android") {
+    const filePrefix = "file://";
+    if (filePath.startsWith(filePrefix)) {
+      filePath = filePath.substring(filePrefix.length);
+      try {
+        filePath = decodeURI(filePath);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  return filePath;
+};
+
+export const formatLatLng = (lat: number, lng: number) => {
+  return `Lat: ${lat}, Lng: ${lng}`;
 };

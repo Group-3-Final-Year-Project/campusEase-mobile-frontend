@@ -3,6 +3,7 @@ import UserReducer from "./reducers/userReducer";
 import FilterReducer from "./reducers/filterReducer";
 import ChatReducer from "./reducers/chatReducer";
 import BookingReducer from "./reducers/bookingReducer";
+import ServiceInCreationReducer from "./reducers/serviceInCreationReducer";
 // import ServicesReducer from "./reducers/servicesReducer";
 
 const appReducer = combineReducers({
@@ -10,6 +11,7 @@ const appReducer = combineReducers({
   filters: FilterReducer,
   chat: ChatReducer,
   booking: BookingReducer,
+  serviceInCreation: ServiceInCreationReducer,
   // services: ServicesReducer,
 });
 

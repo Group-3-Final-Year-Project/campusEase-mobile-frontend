@@ -1,6 +1,7 @@
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocationObjectCoords } from "expo-location";
+import type { Region } from "react-native-maps";
 
 export type CustomNavigationProp = {
   navigation: NativeStackNavigationProp<ParamListBase, any>;
@@ -18,7 +19,7 @@ export type NonEmptyArray<T> = [T, ...T[]];
 
 export type ErrorObject = {
   errorMessage: Error | string | null;
-  errorCode: number | string | null;
+  errorCode: string | null;
 };
 
 export type StringError = {
@@ -54,7 +55,7 @@ export type VerifiedUser = {
   username: string;
   email: string;
   phoneNumber: string;
-  locations: LocationObject[];
+  locations: LocationObj[];
   profilePicture: NullableString;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
@@ -80,6 +81,7 @@ export type ReduxState = {
     [Filters.SERVICE_CATEGORY]: ServiceCategory;
   };
   chat: ChatData;
+  serviceInCreation: Service;
 };
 
 export type ApiRequestResult<TData = any, SData = any> = {
@@ -101,9 +103,22 @@ export type SubService = {
   price: number;
 };
 
-export type LocationObject = {
-  name: string;
-  location: LocationObjectCoords;
+export type LocationParams = {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+  accuracy?: number | null;
+  altitude?: number | null;
+  altitudeAccuracy?: number | null;
+  heading?: number | null;
+  speed?: number | null;
+};
+
+export type LocationObj = {
+  name?: string;
+  address?: string;
+  location: LocationParams;
 };
 
 export enum PaymentStatus {
@@ -129,18 +144,26 @@ export type BookingState = {
   description: string;
 };
 
+export type GalleryFile = {
+  key: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  downloadURL: string;
+};
+
 export type Service = {
   id: string;
   providerId: string;
   name: string;
   description?: NullableString;
   category: ServiceCategory;
-  location: LocationObject;
+  location: LocationObj;
   coverImage: string;
-  gallery?: string[];
+  gallery?: GalleryFile[];
   email: NullableString;
   website?: NullableString;
-  startingPrice?: number;
+  startingPrice: number;
   subServices?: SubService[];
   createdAt: string;
   updatedAt?: string;
@@ -156,7 +179,7 @@ export type Booking = {
   serviceId: string;
   createdAt: string;
   updatedAt: string;
-  location: LocationObject;
+  location: LocationObj;
   paymentMethodObject: PaymentMethodObject;
   paymentStatus: PaymentStatus;
   serviceType?: SubService;
@@ -207,4 +230,15 @@ export type VerifiedUserPreview = {
   profilePicture: NullableString;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
+};
+
+export type ImageForGallery = {
+  key: string;
+  disabledDrag: boolean;
+  disabledReSorted: boolean;
+  url?: string;
+  fileName?: string;
+  base64Url?: string;
+  fileType?: string;
+  fileSize?: number;
 };

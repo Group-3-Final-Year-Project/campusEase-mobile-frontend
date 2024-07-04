@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Incubator } from "react-native-ui-lib";
 import { Text } from "~components";
 import { eventEmitter } from "~services";
 import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { ThemeContext } from "styled-components/native";
+import { Dimensions } from "react-native";
 
 const CustomAlert = (props: { children: any }) => {
   const [showAlert, setShowAlert] = useState(false);
@@ -10,6 +13,7 @@ const CustomAlert = (props: { children: any }) => {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertButtons, setAlertButtons] = useState([]);
   const emitterListenerRef = useRef<any>(null);
+  const themeContext = useContext(ThemeContext);
 
   useEffect(() => {
     emitterListenerRef.current = eventEmitter.addListener(
@@ -40,18 +44,46 @@ const CustomAlert = (props: { children: any }) => {
     <>
       {props.children}
       {showAlert && (
-        <Incubator.Dialog
-          center
-          direction="up"
+        <AwesomeAlert
           ref={emitterListenerRef}
-          visible={showAlert}
+          show={showAlert}
+          showProgress={false}
+          title={alertTitle}
+          message={alertMessage}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          // cancelText="No, cancel"
+          confirmText="Ok"
+          confirmButtonColor={themeContext?.colors.primary}
+          onCancelPressed={hideAlert}
+          onConfirmPressed={hideAlert}
           onDismiss={hideAlert}
-          // buttons={alertButtons}
-          // onClose={hideAlert}
-        >
-          <Incubator.Dialog.Header title={alertTitle} />
-          <Text>{alertMessage}</Text>
-        </Incubator.Dialog>
+          cancelButtonColor={themeContext?.colors.secondary}
+          contentContainerStyle={{
+            backgroundColor: themeContext?.colors.background,
+            width: Dimensions.get("screen").width - 40,
+          }}
+          messageStyle={{
+            fontFamily: themeContext?.typography.fontFamily.regular,
+          }}
+          titleStyle={{
+            fontFamily: themeContext?.typography.fontFamily.bold,
+          }}
+          confirmButtonStyle={{
+            height: 50,
+            width: 50,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingVertical: 12,
+            paddingHorizontal: 5,
+            fontFamily: themeContext?.typography.fontFamily.regular,
+          }}
+          alertContainerStyle={{
+            backgroundColor: "transparent",
+          }}
+        />
       )}
     </>
   );

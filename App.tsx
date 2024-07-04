@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import { useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -32,6 +32,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import CustomAlert from "~src/hocs/CustomAlert";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import CustomToast from "~src/hocs/CustomToast";
+import * as Location from "expo-location";
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 
 enableScreens();
 SplashScreen.preventAutoHideAsync();
@@ -61,8 +64,15 @@ function App() {
     return colorScheme === "dark" ? DarkTheme : LightTheme;
   }, [colorScheme]);
 
+  const getPermissions = useCallback(async () => {
+    await Location.getForegroundPermissionsAsync();
+    await ImagePicker.getCameraPermissionsAsync();
+    await ImagePicker.getMediaLibraryPermissionsAsync();
+  }, []);
+
   useDidMountEffect(() => {
     if (fontsLoaded) setTimeout(SplashScreen.hideAsync, 100);
+    getPermissions();
   }, [fontsLoaded]);
 
   setCustomText({

@@ -1,7 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useCustomBottomInset } from "~hooks";
-import { Button, Input, HeroText } from "~components";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { Button, Input, HeroText, LocationPicker } from "~components";
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
@@ -17,9 +23,13 @@ import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
+import { LocationObj, LocationParams } from "~src/@types/types";
+import { formatLatLng, getFormattedAddressFromGeocode } from "~services";
+import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import ACTION_TYPES from "~store/actionTypes";
 
 export const locationSchema = yup.object().shape({
-  location: yup.string().required("Address required!"),
+  location: yup.object<LocationParams>().required("Address required!"),
 });
 
 const SetServiceLocation = ({
@@ -28,14 +38,45 @@ const SetServiceLocation = ({
 }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const [visible, setVisible] = useState(false);
   // const {}: VerifiedUser = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
-  const formik = useFormik({
-    initialValues: { location: "" },
+  const formik = useFormik<{
+    location: LocationParams;
+  }>({
+    initialValues: {
+      location: {
+        latitude: 0,
+        longitude: 0,
+        accuracy: null,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        latitudeDelta: 0,
+        longitudeDelta: 0,
+        speed: null,
+      },
+    },
     validationSchema: locationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        navigation.navigate(APP_PAGES.SET_USER_TYPE);
+        const formatted_address = await getFormattedAddressFromGeocode(
+          values.location.latitude,
+          values.location.longitude
+        ).then(() => {
+          dispatch({
+            type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
+            payload: {
+              location: {
+                name: "Main",
+                address: formatted_address,
+                location: values.location,
+              },
+            },
+          });
+          resetForm();
+        });
       } catch (error) {
         throw Error(error as any);
       } finally {
@@ -65,11 +106,14 @@ const SetServiceLocation = ({
           </View>
           <View style={{ marginTop: 40, width: "100%" }}>
             <FormControl>
-              <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity onPress={() => setVisible(true)}>
                 <Input
-                  onChangeText={formik.handleChange("location")}
+                  readOnly
                   onBlur={formik.handleBlur("location")}
-                  value={formik.values.location}
+                  value={formatLatLng(
+                    formik.values.location.latitude,
+                    formik.values.location.longitude
+                  )}
                   textContentType="addressCityAndState"
                   placeholder="Location"
                   icon={
@@ -80,8 +124,7 @@ const SetServiceLocation = ({
                     />
                   }
                 />
-              </View>
-
+              </TouchableOpacity>
               {formik.touched?.location && formik.errors?.location ? (
                 <ErrorLabel>{formik.errors?.location}</ErrorLabel>
               ) : null}
@@ -98,6 +141,21 @@ const SetServiceLocation = ({
           </Button>
         </View>
       </KeyboardAvoidingView>
+      <Modal
+        visible={visible}
+        onRequestClose={() => setVisible(false)}
+        onDismiss={() => setVisible(false)}
+        animationType="slide"
+        presentationStyle="fullScreen"
+      >
+        <LocationPicker
+          onClose={() => setVisible(false)}
+          selectedLocation={formik.values.location}
+          setSelectedLocation={(coords) =>
+            formik.setFieldValue("location", coords)
+          }
+        />
+      </Modal>
     </Container>
   );
 };

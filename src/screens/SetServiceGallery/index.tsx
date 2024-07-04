@@ -27,35 +27,54 @@ import {
   UserPictureContent,
   userPictureHeight,
 } from "./styles";
-import { pictures, sortByUrl, deleteUrlFromItem, addUrlToItem } from "./utils";
+import {
+  pictures,
+  sortByUrl,
+  deleteUrlFromItem,
+  pickImages,
+  uploadServiceGallery,
+} from "./utils";
 import { DraggableGrid } from "react-native-draggable-grid";
+import { pickImageAsync } from "~services";
+import { Iconify } from "react-native-iconify";
+import { ImageForGallery } from "~src/@types/types";
+import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import ACTION_TYPES from "~store/actionTypes";
 
 export const serviceGallerySchema = yup.object().shape({
   gallery: yup
     .array()
-    .of(yup.string().required())
-    // .min(1, "At least one image should be provided")
+    .of(yup.object().required())
+    .min(1, "At least one image should be provided")
     .required("Name required!"),
 });
 
-const SetServiceGallery = ({
-  navigation,
-  route,
-}: NativeStackScreenProps<any>) => {
+const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
+  const dispatch = useAppDispatch();
   const [gesturesEnabled, setgesturesEnabled] = useState(true);
-  const [pics, setPics] = useState(pictures);
 
   const serviceGalleryInitialValues = {
-    gallery: [],
+    gallery: [...pictures],
   };
 
-  const formik = useFormik({
+  const formik = useFormik<{
+    gallery: ImageForGallery[];
+  }>({
     initialValues: serviceGalleryInitialValues,
     validationSchema: serviceGallerySchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
+        const updatedGallery = values.gallery.filter((value) => value.url);
+        const res = await uploadServiceGallery(updatedGallery);
+        dispatch({
+          type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
+          payload: {
+            gallery: res,
+          },
+        });
+        resetForm();
         navigation.navigate(APP_PAGES.SET_SERVICE_PRICING);
       } catch (error) {
         throw Error(error as any);
@@ -99,6 +118,19 @@ const SetServiceGallery = ({
               fill={hasPicture ? themeContext?.colors.primary : "white"}
             />
           </Svg> */}
+            {hasPicture ? (
+              <Iconify
+                size={30}
+                color={themeContext?.colors.secondary}
+                icon="solar:close-circle-bold"
+              />
+            ) : (
+              <Iconify
+                size={30}
+                color={themeContext?.colors.primary}
+                icon="solar:add-circle-bold"
+              />
+            )}
           </Animated.View>
         </AddRemoveContainer>
       </UserPictureContainer>
@@ -133,31 +165,53 @@ const SetServiceGallery = ({
                   <View>
                     <AddUserPhoto
                       onDelete={() => {
-                        const newPics = pics
+                        const newPics = formik.values.gallery
                           .map(deleteUrlFromItem(picture))
                           .sort(sortByUrl);
-                        setPics(newPics);
+                        formik.setFieldValue("gallery", newPics);
                       }}
-                      onAdd={() => {
-                        const newPics = pics
-                          .map(addUrlToItem(picture))
+                      onAdd={async () => {
+                        const res = await pickImageAsync(pickImages, {
+                          allowsMultipleSelection: false,
+                          base64: true,
+                        });
+                        const newPics = formik.values.gallery
+                          .map((p) => {
+                            return p.key === picture.key
+                              ? {
+                                  ...picture,
+                                  fileName: res?.[0].fileName,
+                                  base64URL: res?.[0].base64,
+                                  url: res?.[0].uri ?? "",
+                                  disabledDrag: false,
+                                  disabledReSorted: false,
+                                  fileType: res?.[0].mimeType,
+                                  fileSize: res?.[0].fileSize,
+                                }
+                              : p;
+                          })
                           .sort(sortByUrl);
-                        setPics(newPics);
+                        console.log(newPics);
+
+                        formik.setFieldValue("gallery", newPics);
                       }}
                       picture={picture}
                     />
                   </View>
                 )}
-                data={pics}
+                data={formik.values.gallery}
                 itemHeight={userPictureHeight}
                 style={{ zIndex: 10 }}
                 onDragStart={() => setgesturesEnabled(false)}
                 onDragRelease={(newPics) => {
                   setgesturesEnabled(true);
-                  setPics(newPics);
+                  formik.setFieldValue("gallery", newPics);
                 }}
               />
             </FormControl>
+            {formik.touched?.gallery && formik.errors?.gallery ? (
+              <ErrorLabel>{formik.errors?.gallery}</ErrorLabel>
+            ) : null}
           </View>
         </ContentCard>
         <View style={{ position: "absolute", bottom: 0, width: "100%" }}>

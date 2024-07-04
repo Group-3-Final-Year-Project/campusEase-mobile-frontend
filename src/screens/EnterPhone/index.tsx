@@ -20,7 +20,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
 import { MaskService } from "react-native-masked-text";
-import { APP_PAGES } from "~src/shared/constants";
+import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
+import { doc, updateDoc } from "firebase/firestore";
+import { firestoreDatabase } from "firebaseConfig";
+import { formatPhoneNumber, showAlert } from "~services";
 
 export const phoneNumberSchema = yup.object().shape({
   phoneNumber: yup
@@ -33,26 +36,31 @@ export const phoneNumberSchema = yup.object().shape({
 const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const {}: VerifiedUser = useAppSelector((state) => state.user);
+  const user: VerifiedUser = useAppSelector((state) => state.user);
 
   const formik = useFormik({
-    initialValues: { phoneNumber: "" },
+    initialValues: { phoneNumber: user.phoneNumber ?? "" },
     validationSchema: phoneNumberSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        navigation.navigate(APP_PAGES.SET_LOCATION);
+        const docRef = doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id);
+        await updateDoc(docRef, {
+          phoneNumber: formatPhoneNumber(values.phoneNumber),
+        })
+          .then(() => {
+            resetForm();
+            navigation.navigate(APP_PAGES.SET_LOCATION);
+          })
+          .catch((err) => {
+            showAlert("Oops!", err.code);
+          });
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Oops!", "Something went wrong");
       } finally {
         setSubmitting(false);
       }
     },
   });
-
-  const formatPhone = useCallback((tel: string) => {
-    const formattedNumber = MaskService.toMask("cel-phone", tel || "");
-    return formattedNumber;
-  }, []);
 
   return (
     <Container>

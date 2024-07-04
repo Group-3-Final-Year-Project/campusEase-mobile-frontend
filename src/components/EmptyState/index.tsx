@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import LoaderScreen from "react-native-ui-lib/loaderScreen";
 
 type EmptyProps = {
   message?: string;
@@ -13,7 +14,7 @@ const EmptyState = (props: EmptyProps) => {
     <View
       style={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <Image source={require("~assets/images/empty.png")} />
+      <LoaderScreen />
     </View>
   );
 };

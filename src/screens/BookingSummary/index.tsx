@@ -17,7 +17,7 @@ import {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import {
-  LocationObject,
+  LocationObj,
   PaymentMethodObject,
   Service,
   VerifiedUserPreview,
@@ -40,7 +40,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const dispatch = useAppDispatch();
   const [selectedSubService, setSelectedSubService] =
     useState<SubService | null>(null);
-  const [selectedAddress, setSelectedAddress] = useState<LocationObject | null>(
+  const [selectedAddress, setSelectedAddress] = useState<LocationObj | null>(
     null
   );
   const [selectedPaymentMethod, setSelectedPaymentMethod] =

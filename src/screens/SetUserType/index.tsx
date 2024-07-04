@@ -1,7 +1,12 @@
 import React, { useContext, useState } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
-import { Keyboard, KeyboardAvoidingView, Platform, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
@@ -15,12 +20,20 @@ import {
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import { UserType, VerifiedUser } from "~src/@types/types";
-import { APP_PAGES } from "~src/shared/constants";
+import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
 import AdvancedActionSheet from "~components/AdvancedActionSheet";
-import { navigateAndResetStack } from "~services";
+import {
+  getUser,
+  navigateAndResetStack,
+  saveUserDetails,
+  showAlert,
+} from "~services";
+import { firestoreDatabase } from "firebaseConfig";
+import { doc, updateDoc } from "firebase/firestore";
+import ACTION_TYPES from "~store/actionTypes";
 
 export const userTypeSchema = yup.object().shape({
   userType: yup
@@ -35,20 +48,37 @@ export const userTypeSchema = yup.object().shape({
 const SetUserType = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const {}: VerifiedUser = useAppSelector((state) => state.user);
+  const user: VerifiedUser = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const formik = useFormik({
     initialValues: { userType: "" },
     validationSchema: userTypeSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        if (values.userType === UserType.USER)
-          navigateAndResetStack(navigation, APP_PAGES.HOME);
-        else if (values.userType === UserType.SERVICE_PROVIDER)
-          navigateAndResetStack(navigation, APP_PAGES.SET_SERVICE_DETAILS);
-        else return;
+        const docRef = doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id);
+        await updateDoc(docRef, {
+          userType: values.userType,
+        })
+          .then(async () => {
+            resetForm();
+            const userDataFromDB = await getUser(user.id);
+            await saveUserDetails(userDataFromDB);
+            dispatch({
+              type: ACTION_TYPES.UPDATE_USER_DATA,
+              payload: userDataFromDB,
+            });
+            if (values.userType === UserType.USER)
+              navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+            else if (values.userType === UserType.SERVICE_PROVIDER)
+              navigateAndResetStack(navigation, APP_PAGES.SET_SERVICE_DETAILS);
+            else return;
+          })
+          .catch((err) => {
+            showAlert("Oops!", err.code);
+          });
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Oops!", "Something went wrong");
       } finally {
         setSubmitting(false);
       }
@@ -91,14 +121,9 @@ const SetUserType = ({ navigation, route }: NativeStackScreenProps<any>) => {
           </View>
           <View style={{ marginTop: 40, width: "100%" }}>
             <FormControl>
-              <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity onPress={() => setIsVisible(true)}>
                 <Input
-                  // readOnly
-
-                  onPress={() => {
-                    setIsVisible(true);
-                    Keyboard.dismiss();
-                  }}
+                  readOnly
                   onBlur={formik.handleBlur("userType")}
                   value={formik.values.userType}
                   textContentType="addressCityAndState"
@@ -111,7 +136,7 @@ const SetUserType = ({ navigation, route }: NativeStackScreenProps<any>) => {
                     />
                   }
                 />
-              </View>
+              </TouchableOpacity>
 
               {formik.touched?.userType && formik.errors?.userType ? (
                 <ErrorLabel>{formik.errors?.userType}</ErrorLabel>

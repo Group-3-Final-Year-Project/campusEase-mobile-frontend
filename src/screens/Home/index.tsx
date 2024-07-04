@@ -106,24 +106,21 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
     queryFn: () => fetchData(),
   });
 
-  if (isLoading) {
-    return <LoadingView />;
-  } else if (isError || !data || data === undefined) {
-    return <EmptyState />;
-  }
+  const renderContent = () => {
+    if (isLoading) {
+      return <LoadingView />;
+    } else if (isError || !data || data === undefined) {
+      return <EmptyState />;
+    }
 
-  const {
-    nearYouServices,
-    popularServices,
-    providerServices,
-    serviceCategories,
-  } = data;
+    const {
+      nearYouServices,
+      popularServices,
+      providerServices,
+      serviceCategories,
+    } = data;
 
-  return (
-    <SafeComponent
-      request={{ data: data, error: error, loading: isLoading }}
-      refetch={refetch}
-    >
+    return (
       <Container>
         <VirtualisedContainer
           style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
@@ -203,6 +200,14 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
           </>
         </VirtualisedContainer>
       </Container>
+    );
+  };
+  return (
+    <SafeComponent
+      request={{ data: data, error: error, loading: isLoading }}
+      refetch={refetch}
+    >
+      {renderContent()}
     </SafeComponent>
   );
 };

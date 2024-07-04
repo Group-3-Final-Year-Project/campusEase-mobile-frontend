@@ -2,18 +2,16 @@ import { StyleSheet, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { ButtonProps } from "react-native-ui-lib";
 import { BookingInfoCard, Description } from "../../styles";
-import { LocationObject } from "~src/@types/types";
+import { LocationObj } from "~src/@types/types";
 import { ThemeContext } from "styled-components/native";
 import { Iconify } from "react-native-iconify";
 import { IconBtn } from "~components";
 import AdvancedActionSheet from "~components/AdvancedActionSheet";
 
 type AddressSelectionProps = {
-  addresses: LocationObject[];
-  selectedAddress: LocationObject | null;
-  setSelectedAddress: React.Dispatch<
-    React.SetStateAction<LocationObject | null>
-  >;
+  addresses: LocationObj[];
+  selectedAddress: LocationObj | null;
+  setSelectedAddress: React.Dispatch<React.SetStateAction<LocationObj | null>>;
 };
 
 const AddressSelection = ({

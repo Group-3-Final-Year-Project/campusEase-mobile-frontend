@@ -1,25 +1,31 @@
+import { ImagePickerAsset } from "expo-image-picker";
+import truncate from "lodash/truncate";
+import {
+  normalizeFilePath,
+  showAlert,
+  showToast,
+  uploadFileToFirebaseStorage,
+} from "~services";
+import { GalleryFile, ImageForGallery } from "~src/@types/types";
+
 export const pictures = [
   {
     key: "realid1",
-    url: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
     disabledDrag: false,
     disabledReSorted: false,
   },
   {
     key: "realid2",
-    url: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
     disabledDrag: false,
     disabledReSorted: false,
   },
   {
     key: "realid4",
-    url: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
     disabledDrag: false,
     disabledReSorted: false,
   },
   {
     key: "realid6",
-    url: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
     disabledDrag: false,
     disabledReSorted: false,
   },
@@ -30,10 +36,10 @@ export const pictures = [
   { key: "realid5222", disabledDrag: true, disabledReSorted: true },
 ];
 
-export const sortByUrl = (firstItem, secondItem) =>
+export const sortByUrl = (firstItem: any, secondItem: any) =>
   firstItem.url && !secondItem.url ? -1 : 1;
 
-export const deleteUrlFromItem = (picture) => (currentPic) => {
+export const deleteUrlFromItem = (picture: any) => (currentPic: any) => {
   const pictureWithoutURL = {
     ...currentPic,
     url: "",
@@ -44,13 +50,39 @@ export const deleteUrlFromItem = (picture) => (currentPic) => {
   return currentPic.key === picture.key ? pictureWithoutURL : currentPic;
 };
 
-export const addUrlToItem = (picture) => (currentPic) => {
-  const pictureWithURL = {
-    ...currentPic,
-    url: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-    disabledDrag: false,
-    disabledReSorted: false,
-  };
+export const pickImages = (images: ImagePickerAsset[]) => {
+  return images[0];
+};
 
-  return currentPic.key === picture.key ? pictureWithURL : currentPic;
+export const uploadServiceGallery = async (gallery: ImageForGallery[]) => {
+  const uploadPromises = gallery.map(async (file) => {
+    try {
+      const path = normalizeFilePath(file.base64Url ?? "");
+      const downloadURL = await uploadFileToFirebaseStorage({
+        fileName: file.fileName ?? "",
+        base64String: path ?? "",
+        fileType: file.fileType ?? "",
+        fileSize: file.fileSize,
+      });
+      return {
+        fileName: file.fileName,
+        fileSize: file.fileSize,
+        fileType: file.fileType,
+        key: file.key,
+        downloadURL,
+      };
+    } catch (error) {
+      showToast(
+        `${truncate(
+          file.fileName
+        )} could not be uploaded. You can add again later.`
+      );
+      return null;
+    }
+  });
+
+  const results = await Promise.all(uploadPromises);
+
+  const successfulUploads = results.filter((result) => result !== null);
+  return successfulUploads;
 };

@@ -14,6 +14,8 @@ import NetInfo, {
   NetInfoState,
 } from "@react-native-community/netinfo";
 import ErrorBoundary from "react-native-error-boundary";
+import LottieView from "lottie-react-native";
+import LoadingView from "~components/LoadingView";
 
 export const OfflineComponent = ({ refetch }: { refetch: () => void }) => {
   return (
@@ -50,7 +52,8 @@ export const UnknownErrorComponent = () => {
   return (
     <Container>
       <Content>
-        <ErrorIllustration />
+        {/* <ErrorIllustration /> */}
+        <LottieView source={require("~animations/error.json")} autoPlay loop />
         <Title>Oops, something went wrong</Title>
         <ContainedText>Try again</ContainedText>
       </Content>
@@ -96,7 +99,7 @@ export default function SafeComponent({
   if (request?.loading)
     return (
       <Content>
-        <Loading />
+        <LoadingView />
       </Content>
     );
 

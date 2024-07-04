@@ -85,9 +85,9 @@ export const LightTheme: DefaultThemeProps = {
   colors: {
     primary: "#5F55FE",
     secondary: "#ff1a40",
-    text: "#3e4857",
-    secondaryText: "#696464",
-    secondaryText2: Color("#696464").fade(0.5).rgb().string(),
+    text: "#111214",
+    secondaryText: "#3e4857",
+    secondaryText2: Color("#3e4857").fade(0.5).rgb().string(),
     background: "#ffffff",
     secondaryBackground: "#ececec",
     tertiaryBackground: "",

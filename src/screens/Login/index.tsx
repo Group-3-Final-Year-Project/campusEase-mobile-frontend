@@ -12,7 +12,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
+  getFirebaseErrorMessage,
   navigateAndResetStack,
+  showAlert,
   signinUserWithEmailAndPassword,
 } from "~services";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
@@ -62,10 +64,13 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
           resetForm();
           navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
         } else {
-          alert(result.error.errorMessage);
+          showAlert(
+            "Oops, authentication failed!",
+            getFirebaseErrorMessage(result.error.errorCode ?? "")
+          );
         }
       } catch (error) {
-        setDialogVisible(true);
+        showAlert("Oops, authentication failed!", getFirebaseErrorMessage());
         throw Error(error as any);
       } finally {
         setSubmitting(false);
@@ -160,7 +165,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
           >
             Sign in
           </Button>
-          <Pressable onPress={() => navigation.navigate(APP_PAGES.ENTER_PHONE)}>
+          <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNUP)}>
             <Description
               style={{
                 textAlign: "center",

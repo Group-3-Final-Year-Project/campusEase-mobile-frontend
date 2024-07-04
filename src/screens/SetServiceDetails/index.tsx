@@ -1,7 +1,12 @@
 import React, { useState, useContext } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
@@ -10,7 +15,7 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { getServiceCategories, navigateAndResetStack } from "~services";
+import { getServiceCategories } from "~services";
 import {
   ContentCard,
   Container,
@@ -19,15 +24,16 @@ import {
   FormControl,
 } from "../Signup/styles";
 import AdvancedActionSheet from "~components/AdvancedActionSheet";
-import { ServiceCategory } from "~src/@types/types";
-import { Keyboard } from "react-native";
+import { Service, ServiceCategory } from "~src/@types/types";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
+import ACTION_TYPES from "~store/actionTypes";
 
 export const serviceDetailsSchema = yup.object().shape({
   name: yup.string().min(3, "Name not valid!").required("Name required!"),
   email: yup.string().email("Email not valid!").required("Email required!"),
-  category: yup.object<ServiceCategory>().notRequired("Category required!"),
+  category: yup.object<ServiceCategory>().required("Category required!"),
   website: yup.string().notRequired(),
-  bio: yup.string().notRequired(),
+  description: yup.string().notRequired(),
 });
 
 const SetServiceDetails = ({
@@ -37,13 +43,18 @@ const SetServiceDetails = ({
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const serviceInCreation = useAppSelector((state) => state.serviceInCreation);
+  const dispatch = useAppDispatch();
 
   const serviceDetailsInitialValues = {
     name: "",
     email: "",
-    bio: "",
+    description: "",
     website: "",
-    category: "",
+    category: {
+      id: "",
+      name: "",
+    },
   };
 
   const formik = useFormik({
@@ -51,6 +62,11 @@ const SetServiceDetails = ({
     validationSchema: serviceDetailsSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
+        dispatch({
+          type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
+          payload: values,
+        });
+        resetForm();
         navigation.navigate(APP_PAGES.SET_SERVICE_GALLERY);
       } catch (error) {
         throw Error(error as any);
@@ -111,9 +127,9 @@ const SetServiceDetails = ({
             </FormControl>
             <FormControl>
               <Input
-                // onChangeText={formik.handleChange("name")}
-                // onBlur={formik.handleBlur("name")}
-                // value={formik.values?.name}
+                onChangeText={formik.handleChange("description")}
+                onBlur={formik.handleBlur("description")}
+                value={formik.values?.description}
                 textContentType="name"
                 placeholder="Service Bio"
                 // multiline
@@ -131,24 +147,26 @@ const SetServiceDetails = ({
               />
             </FormControl>
             <FormControl>
-              <Input
+              <TouchableOpacity
                 onPress={() => {
                   setIsVisible(true);
-                  Keyboard.dismiss();
                 }}
-                onChangeText={formik.handleChange("category")}
-                onBlur={formik.handleBlur("category")}
-                value={formik.values?.category}
-                textContentType="name"
-                placeholder="Category"
-                icon={
-                  <Iconify
-                    size={18}
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:global-outline"
-                  />
-                }
-              />
+              >
+                <Input
+                  readOnly
+                  onBlur={formik.handleBlur("category")}
+                  value={formik.values?.category?.name}
+                  textContentType="name"
+                  placeholder="Category"
+                  icon={
+                    <Iconify
+                      size={18}
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:global-outline"
+                    />
+                  }
+                />
+              </TouchableOpacity>
               {formik.touched?.category && formik.errors?.category ? (
                 <ErrorLabel>{formik.errors?.category}</ErrorLabel>
               ) : null}
@@ -207,7 +225,7 @@ const SetServiceDetails = ({
       <AdvancedActionSheet
         visible={isVisible}
         message="Select category"
-        options={getCategoryOptions}
+        options={getCategoryOptions()}
         title="Select category"
         useNativeIOS
         onDismiss={() => setIsVisible(false)}

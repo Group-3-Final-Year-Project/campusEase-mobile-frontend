@@ -17,9 +17,6 @@ export const Container = styled.View`
   align-items: center;
   width: 100%;
   height: 70px;
-  border-top-width: 1px;
-  border-top-color: ${(props: DefaultThemeProps) =>
-    props.theme.colors.secondaryBackground};
   ${css`
     elevation: 0.5;
     shadow-color: #000;
@@ -46,7 +43,6 @@ export const TabItemContainer = styled.View`
 `;
 
 export const TabItemLabel = styled(Text).attrs({
-  fontSize: "small",
   fontWeight: "bold",
 })<ITabItemLabel>`
   color: ${(props: DefaultThemeProps) =>
@@ -56,5 +52,5 @@ export const TabItemLabel = styled(Text).attrs({
   margin-top: 5px;
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography?.fontFamily.medium};
-  font-size: 12px;
+  font-size: 11px;
 `;

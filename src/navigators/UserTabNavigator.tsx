@@ -61,7 +61,7 @@ const UserTabNavigator = () => {
       activeIconName: (
         <Iconify
           icon="solar:graph-up-bold"
-          size={24}
+          size={20}
           color={theme?.colors.primary}
           strokeWidth={10}
         />
@@ -69,7 +69,7 @@ const UserTabNavigator = () => {
       inactiveIconName: (
         <Iconify
           icon="solar:graph-up-outline"
-          size={24}
+          size={20}
           color={theme?.colors.secondaryText}
           strokeWidth={10}
         />
@@ -85,7 +85,7 @@ const UserTabNavigator = () => {
       activeIconName: (
         <Iconify
           icon="solar:map-point-bold"
-          size={24}
+          size={20}
           color={theme?.colors.primary}
           strokeWidth={10}
         />
@@ -93,7 +93,7 @@ const UserTabNavigator = () => {
       inactiveIconName: (
         <Iconify
           icon="solar:map-point-outline"
-          size={24}
+          size={20}
           color={theme?.colors.secondaryText}
           strokeWidth={10}
         />
@@ -113,7 +113,7 @@ const UserTabNavigator = () => {
       activeIconName: (
         <Iconify
           icon="solar:home-smile-angle-bold"
-          size={24}
+          size={20}
           color={theme?.colors.primary}
           strokeWidth={10}
         />
@@ -121,7 +121,7 @@ const UserTabNavigator = () => {
       inactiveIconName: (
         <Iconify
           icon="solar:home-smile-angle-outline"
-          size={24}
+          size={20}
           color={theme?.colors.secondaryText}
           strokeWidth={10}
         />
@@ -135,7 +135,7 @@ const UserTabNavigator = () => {
       activeIconName: (
         <Iconify
           icon="solar:clipboard-list-bold"
-          size={24}
+          size={20}
           color={theme?.colors.primary}
           strokeWidth={10}
         />
@@ -143,7 +143,7 @@ const UserTabNavigator = () => {
       inactiveIconName: (
         <Iconify
           icon="solar:clipboard-list-outline"
-          size={24}
+          size={20}
           color={theme?.colors.secondaryText}
           strokeWidth={10}
         />
@@ -157,7 +157,7 @@ const UserTabNavigator = () => {
       activeIconName: (
         <Iconify
           icon="solar:chat-round-line-bold"
-          size={24}
+          size={20}
           color={theme?.colors.primary}
           strokeWidth={10}
         />
@@ -165,7 +165,7 @@ const UserTabNavigator = () => {
       inactiveIconName: (
         <Iconify
           icon="solar:chat-round-line-outline"
-          size={24}
+          size={20}
           color={theme?.colors.secondaryText}
           strokeWidth={10}
         />
@@ -178,7 +178,7 @@ const UserTabNavigator = () => {
       activeIconName: (
         <Iconify
           icon="solar:user-rounded-bold"
-          size={24}
+          size={20}
           color={theme?.colors.primary}
           strokeWidth={10}
         />
@@ -186,7 +186,7 @@ const UserTabNavigator = () => {
       inactiveIconName: (
         <Iconify
           icon="solar:user-rounded-outline"
-          size={24}
+          size={20}
           color={theme?.colors.secondaryText}
           strokeWidth={10}
         />

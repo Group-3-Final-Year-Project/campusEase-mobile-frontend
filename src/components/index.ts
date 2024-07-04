@@ -17,3 +17,4 @@ export { default as ResultPrompt } from "./ResultPrompt";
 export { default as LoadingView } from "./LoadingView";
 export { default as EmptyState } from "./EmptyState";
 export { default as HeroText } from "./HeroText";
+export { default as LocationPicker } from "./LocationPicker";

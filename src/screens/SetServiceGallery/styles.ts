@@ -19,10 +19,10 @@ export const AddRemoveContainer = styled.TouchableOpacity<{
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: ${(props: DefaultThemeProps) =>
+  /* background-color: ${(props: DefaultThemeProps) =>
     props.inverted
-      ? props.theme.colors.secondaryBackground
-      : props.theme.colors.primary};
+      ? props.theme.colors.secondary
+      : props.theme.colors.primary}; */
 `;
 
 export const UserPictureContent = styled.ImageBackground<{
@@ -34,7 +34,6 @@ export const UserPictureContent = styled.ImageBackground<{
   overflow: hidden;
   width: 100%;
   flex: 1;
-  border: 1px ${(props: DefaultThemeProps) => props.theme.colors.border};
   background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
 `;

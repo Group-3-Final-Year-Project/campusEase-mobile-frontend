@@ -11,7 +11,6 @@ import Login from "~src/screens/Login";
 import Service from "~src/screens/Service";
 import BookingSummary from "~src/screens/BookingSummary";
 import BookingDetail from "~src/screens/BookingDetail";
-import RegisterService from "~src/screens/RegisterService";
 import SetLocation from "~src/screens/SetLocation";
 import ManageAddresses from "~src/screens/ManageAddresses";
 import ServiceCategories from "~src/screens/ServiceCategories";
@@ -21,7 +20,7 @@ import Chat from "~src/screens/Chat";
 import PrivacyPolicy from "~src/screens/PrivacyPolicy";
 import SearchAndFilter from "~src/screens/SearchAndFilter";
 import EnterPhone from "~src/screens/EnterPhone";
-import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import { createUser, getUser, saveUserDetails } from "~services";
 import ACTION_TYPES from "~store/actionTypes";
 import { onAuthStateChanged } from "firebase/auth";
@@ -32,43 +31,45 @@ import SetServiceDetails from "~src/screens/SetServiceDetails";
 import SetServiceGallery from "~src/screens/SetServiceGallery";
 import SetServicePricing from "~src/screens/SetServicePricing";
 import SetServiceLocation from "~src/screens/SetServiceLocation";
+import DummyScreen from "~src/screens/DummyScreen";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
   const dispatch = useAppDispatch();
+  const user: VerifiedUser = useAppSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
-  //     if (user) {
-  //       const userFromDB = await getUser(user.uid);
-  //       const userData: VerifiedUser = {
-  //         id: user.uid,
-  //         email: user.email ?? userFromDB.email ?? "",
-  //         userType: userFromDB.userType,
-  //         username: user.displayName ?? userFromDB.username ?? "",
-  //         phoneNumber: user.phoneNumber ?? userFromDB.phoneNumber ?? "",
-  //         locations: userFromDB.locations,
-  //         profilePicture: user.photoURL ?? userFromDB.profilePicture,
-  //         isEmailVerified: user.emailVerified,
-  //         isPhoneVerified: userFromDB.isPhoneVerified,
-  //         isActive: userFromDB.isActive,
-  //         isLoggedIn: userFromDB.isActive,
-  //       };
-  //       await createUser(userData);
-  //       const result = await saveUserDetails(userData);
-  //       dispatch({
-  //         type: ACTION_TYPES.UPDATE_USER_DATA,
-  //         payload: result,
-  //       });
-  //     }
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+      if (user) {
+        const userFromDB = await getUser(user.uid);
+        const userData: VerifiedUser = {
+          id: user.uid,
+          email: user.email ?? userFromDB.email ?? "",
+          userType: userFromDB.userType,
+          username: user.displayName ?? userFromDB.username ?? "",
+          phoneNumber: user.phoneNumber ?? userFromDB.phoneNumber ?? "",
+          locations: userFromDB.locations,
+          profilePicture: user.photoURL ?? userFromDB.profilePicture,
+          isEmailVerified: user.emailVerified,
+          isPhoneVerified: userFromDB.isPhoneVerified,
+          isActive: userFromDB.isActive,
+          isLoggedIn: userFromDB.isActive,
+        };
+        await createUser(userData);
+        const result = await saveUserDetails(userData);
+        dispatch({
+          type: ACTION_TYPES.UPDATE_USER_DATA,
+          payload: result,
+        });
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <Stack.Navigator
-      initialRouteName={APP_PAGES.ONBOARD}
+      initialRouteName={APP_PAGES.LANDING}
       screenOptions={{
         headerShown: false,
         headerShadowVisible: false,
@@ -81,8 +82,61 @@ const RootNavigator = () => {
         headerTintColor: theme?.colors.text,
       }}
     >
+      {user.id ? (
+        <>
+          <Stack.Screen
+            name={APP_PAGES.USER_TAB}
+            component={UserTabNavigator}
+          />
+          <Stack.Group
+            screenOptions={{
+              headerShown: true,
+            }}
+          >
+            <Stack.Screen
+              name={APP_PAGES.SERVICE}
+              component={Service}
+              options={{
+                headerTitle: "",
+                headerTransparent: true,
+              }}
+            />
+            <Stack.Screen name={APP_PAGES.BOOKMARKS} component={Bookmarks} />
+            <Stack.Screen
+              name={APP_PAGES.BOOKING_SUMMARY}
+              component={BookingSummary}
+            />
+            <Stack.Screen
+              name={APP_PAGES.BOOKING_DETAILS}
+              component={BookingDetail}
+            />
+            <Stack.Screen
+              name={APP_PAGES.MANAGE_ADDRESSES}
+              component={ManageAddresses}
+            />
+            <Stack.Screen
+              name={APP_PAGES.SERVICE_CATEGORIES}
+              component={ServiceCategories}
+            />
+            <Stack.Screen
+              name={APP_PAGES.OTHER_BOOKING_INFO}
+              component={MoreBookingInfo}
+            />
+            <Stack.Screen name={APP_PAGES.CHAT} component={Chat} />
+            <Stack.Screen
+              name={APP_PAGES.PRIVACY_POLICY}
+              component={PrivacyPolicy}
+            />
+            <Stack.Screen
+              name={APP_PAGES.SEARCH_AND_FILTER}
+              component={SearchAndFilter}
+            />
+          </Stack.Group>
+        </>
+      ) : (
+        <Stack.Screen name="DummyScreen" component={DummyScreen} />
+      )}
       <Stack.Screen name={APP_PAGES.LANDING} component={Landing} />
-      <Stack.Screen name={APP_PAGES.USER_TAB} component={UserTabNavigator} />
       <Stack.Group
         screenOptions={{
           headerShown: true,
@@ -117,50 +171,6 @@ const RootNavigator = () => {
         <Stack.Screen
           name={APP_PAGES.SET_SERVICE_LOCATION}
           component={SetServiceLocation}
-        />
-      </Stack.Group>
-      <Stack.Group
-        screenOptions={{
-          headerShown: true,
-        }}
-      >
-        <Stack.Screen
-          name={APP_PAGES.SERVICE}
-          component={Service}
-          options={{
-            headerTitle: "",
-            headerTransparent: true,
-          }}
-        />
-        <Stack.Screen name={APP_PAGES.BOOKMARKS} component={Bookmarks} />
-        <Stack.Screen
-          name={APP_PAGES.BOOKING_SUMMARY}
-          component={BookingSummary}
-        />
-        <Stack.Screen
-          name={APP_PAGES.BOOKING_DETAILS}
-          component={BookingDetail}
-        />
-        <Stack.Screen
-          name={APP_PAGES.MANAGE_ADDRESSES}
-          component={ManageAddresses}
-        />
-        <Stack.Screen
-          name={APP_PAGES.SERVICE_CATEGORIES}
-          component={ServiceCategories}
-        />
-        <Stack.Screen
-          name={APP_PAGES.OTHER_BOOKING_INFO}
-          component={MoreBookingInfo}
-        />
-        <Stack.Screen name={APP_PAGES.CHAT} component={Chat} />
-        <Stack.Screen
-          name={APP_PAGES.PRIVACY_POLICY}
-          component={PrivacyPolicy}
-        />
-        <Stack.Screen
-          name={APP_PAGES.SEARCH_AND_FILTER}
-          component={SearchAndFilter}
         />
       </Stack.Group>
     </Stack.Navigator>

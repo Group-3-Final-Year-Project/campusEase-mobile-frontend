@@ -1,29 +1,18 @@
 import React, { useContext } from "react";
-import {
-  BottomCard,
-  Container,
-  HighlightedDescription,
-  TopCard,
-  Description,
-} from "./styles";
+import { BottomCard, Container, TopCard, Description } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCustomBottomInset } from "~hooks";
 import { Button, IconBtn } from "~components";
-import { KeyboardAvoidingView, Platform, View, Pressable } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
 
 import { StatusBar } from "expo-status-bar";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { setUserType } from "~services";
-import { UserType } from "~src/@types/types";
 import { Iconify } from "react-native-iconify";
-import DeliveryImage from "~assets/images/delivery.svg";
-import { Svg, SvgFromUri } from "react-native-svg";
+import LottieView from "lottie-react-native";
 
 const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
-  const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
 
   const handleGoToSignup = async () => {
@@ -65,7 +54,13 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
       >
         <StatusBar style={themeContext?.dark ? "light" : "dark"} />
         <TopCard style={{ paddingTop: insets.top }}>
-          <SvgFromUri uri={require("~assets/images/delivery.svg")} />
+          {/* <SvgFromUri uri={require("~assets/images/delivery.svg")} /> */}
+          <LottieView
+            source={require("../../assets/animations/error.json")}
+            autoPlay
+            loop
+          />
+          {/* <SvgComponent width={180} height={100} /> */}
         </TopCard>
         <BottomCard>
           <View>
@@ -121,5 +116,4 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
     </Container>
   );
 };
-
 export default Onboard;

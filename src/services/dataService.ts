@@ -1,16 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
+import { LocationObjectCoords } from "expo-location";
 import {
   addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
+  limit,
   query,
   setDoc,
+  startAt,
   where,
 } from "firebase/firestore";
-import { firestoreDatabase } from "firebaseConfig";
+import { firebaseCloudStorage, firestoreDatabase } from "firebaseConfig";
 import {
   Booking,
   Service,
@@ -22,6 +25,14 @@ import {
 import bookingsData from "~src/data/bookingsData";
 import { categoriesData } from "~src/data/categories";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
+import axios from "axios";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+  uploadString,
+} from "firebase/storage";
+import RNFetchBlob from "rn-fetch-blob";
 
 export const getBookmarks = async () => {
   const bookmarks = await AsyncStorage.getItem(STORAGE_KEYS.BOOKMARKS);
@@ -107,10 +118,16 @@ export const createUser = async (user: VerifiedUser) => {
   await setDoc(doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id), user);
 };
 
-export const getServices = async (userId: string): Promise<Service[]> => {
+export const getServices = async (
+  userId: string,
+  lim: number = 15,
+  offst: number = 0
+): Promise<Service[]> => {
   const q = query(
     collection(firestoreDatabase, STORAGE_KEYS.SERVICES),
-    where("providerId", "!=", userId)
+    where("providerId", "!=", userId),
+    limit(lim),
+    startAt(offst)
   );
   const querySnapshot = await getDocs(q);
   const services = querySnapshot.docs.map((doc) => {
@@ -237,3 +254,98 @@ export const getBooking = async (bookingId: string) => {
     ...docRef.data(),
   } as Booking;
 };
+
+export const getFormattedAddressFromGeocode = async (
+  lat: number,
+  lng: number
+) => {
+  const result = await axios.get(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCmfGRs96TGPEAqqItmSry_yJzQ8WjeF7o`
+  );
+
+  console.log(result.data?.results[0]?.formatted_address);
+  return result.data?.results[0]?.formatted_address ?? "";
+};
+
+export const uploadFileToFirebaseStorage = async (file: {
+  fileName: string;
+  base64String: string;
+  fileType?: string;
+  fileSize?: number;
+}): Promise<string> => {
+  const blob = await fetch(file.base64String).then((res) => res.blob());
+  return new Promise((resolve, reject) => {
+    const storageRef = ref(firebaseCloudStorage, file.fileName);
+
+    const uploadTask = uploadBytesResumable(storageRef, blob, {
+      contentType: file.fileType,
+      customMetadata: {
+        fileSize: file.fileSize ? file.fileSize.toString() : "",
+      },
+    });
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        switch (snapshot.state) {
+          case "paused":
+            break;
+          case "running":
+            break;
+          case "success":
+            break;
+          case "error":
+            break;
+          case "canceled":
+            break;
+        }
+      },
+      (error) => {
+        reject(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          resolve(downloadURL);
+        });
+      }
+    );
+  });
+};
+
+// export const downloadFileFromFirebaseStorage = (fileName: string) => {
+//   const refString = schoolId
+//     ? `message_attachments/${schoolId}/${fileName}`
+//     : `message_attachments/${fileName}`;
+//   const reference = storage().ref(refString);
+//   reference
+//     .getDownloadURL()
+//     .then((url) => {
+//       Linking.openURL(url);
+//     })
+//     .catch(() => {
+//       showToast(
+//         `${truncateString(fileName)} could not be downloaded. Try again`,
+//         Toasts.Error
+//       );
+//     });
+// };
+
+// export const deleteFileFromFirebaseStorage = async (
+//   fileName: string
+// ): Promise<string> => {
+//   return new Promise<string>((resolve, reject) => {
+//     const refString = schoolId
+//       ? `message_attachments/${schoolId}/${fileName}`
+//       : `message_attachments/${fileName}`;
+//     const reference = storage().ref(refString);
+//     reference
+//       .delete()
+//       .then(() => {
+//         resolve("File Deleted!");
+//       })
+//       .catch((error) => {
+//         reject(error);
+//       });
+//   });
+// };
