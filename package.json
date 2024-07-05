@@ -62,7 +62,7 @@
     "react-native-global-props": "^1.1.5",
     "react-native-iconify": "~0.2.10",
     "react-native-maps": "1.14.0",
-    "react-native-masked-text": "^1.13.0",
+    "react-native-masked-text": "^1.12.5",
     "react-native-otp-entry": "^1.7.0",
     "react-native-pager-view": "6.3.0",
     "react-native-paystack-webview": "^4.1.4",
@@ -88,6 +88,7 @@
     "@tanstack/eslint-plugin-query": "^5.43.1",
     "@types/react": "~18.2.45",
     "react-native-awesome-alerts": "^2.0.0",
+    "react-native-dotenv": "^3.4.11",
     "typescript": "~5.3.3"
   },
   "resolutions": {

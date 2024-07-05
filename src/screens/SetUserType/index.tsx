@@ -26,6 +26,7 @@ import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
 import AdvancedActionSheet from "~components/AdvancedActionSheet";
 import {
+  getFirebaseErrorMessage,
   getUser,
   navigateAndResetStack,
   saveUserDetails,
@@ -68,14 +69,10 @@ const SetUserType = ({ navigation, route }: NativeStackScreenProps<any>) => {
               type: ACTION_TYPES.UPDATE_USER_DATA,
               payload: userDataFromDB,
             });
-            if (values.userType === UserType.USER)
-              navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
-            else if (values.userType === UserType.SERVICE_PROVIDER)
-              navigateAndResetStack(navigation, APP_PAGES.SET_SERVICE_DETAILS);
-            else return;
+            navigateAndResetStack(navigation, APP_PAGES.USER_CREATION_SUCCESS);
           })
           .catch((err) => {
-            showAlert("Oops!", err.code);
+            showAlert("Oops!", getFirebaseErrorMessage(err.code));
           });
       } catch (error) {
         showAlert("Oops!", "Something went wrong");

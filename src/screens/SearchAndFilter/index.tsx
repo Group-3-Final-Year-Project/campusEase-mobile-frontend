@@ -51,7 +51,6 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
     searchTerm: string,
     ...args: SearchFilters[]
   ) => {
-    console.log(searchTerm);
     setSearchTerm(searchTerm);
     const filteredByName = services.filter((service) => {
       const lowercaseSearchTerm = searchTerm.toLowerCase();

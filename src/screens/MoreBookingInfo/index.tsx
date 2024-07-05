@@ -18,7 +18,7 @@ import {
 import { createBooking, navigateAndResetStack, pickDocuments } from "~services";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
-import { CountryCodeText, ErrorLabel, FormControl } from "../Signup/styles";
+import { ErrorLabel, FormControl } from "../Signup/styles";
 import ResultPrompt from "~components/ResultPrompt";
 import * as yup from "yup";
 import { useFormik } from "formik";
@@ -31,6 +31,7 @@ import {
   updateBookingData,
 } from "~store/actions/bookingActions";
 import { NavigationProp } from "@react-navigation/native";
+import { CountryCodeText } from "../EnterPhone/styles";
 
 export const bookingInfoSchema = yup.object().shape({
   username: yup.string().required("Username required!"),
@@ -48,7 +49,6 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const booking: Booking = useAppSelector((state) => state.booking);
   const dispatch = useAppDispatch();
-  console.log(booking);
   const bookingInfoInitialValues = {
     username: user.username,
     email: user.email,

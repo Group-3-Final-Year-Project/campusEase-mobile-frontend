@@ -23,9 +23,20 @@ import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
-import { LocationObj, LocationParams } from "~src/@types/types";
-import { formatLatLng, getFormattedAddressFromGeocode } from "~services";
-import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import {
+  LocationObj,
+  LocationParams,
+  Service,
+  VerifiedUser,
+} from "~src/@types/types";
+import {
+  createService,
+  formatLatLng,
+  getFirebaseErrorMessage,
+  getFormattedAddressFromGeocode,
+  showAlert,
+} from "~services";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
 
 export const locationSchema = yup.object().shape({
@@ -39,8 +50,28 @@ const SetServiceLocation = ({
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [visible, setVisible] = useState(false);
-  // const {}: VerifiedUser = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const serviceInCreation: Service = useAppSelector(
+    (state) => state.serviceInCreation
+  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
+
+  const startServiceCreation = async () => {
+    if (
+      serviceInCreation.name &&
+      serviceInCreation.location.name &&
+      serviceInCreation.category.id
+    ) {
+      const service: Service = {
+        ...serviceInCreation,
+        providerId: user.id,
+        isAvailable: true,
+        createdAt: new Date().toLocaleString(),
+        updatedAt: new Date().toLocaleString(),
+      };
+      await createService(service).catch((err) => {});
+    }
+  };
 
   const formik = useFormik<{
     location: LocationParams;
@@ -76,10 +107,10 @@ const SetServiceLocation = ({
             },
           });
           resetForm();
-          navigation.navigate(APP_PAGES.USER_TAB);
+          navigation.navigate(APP_PAGES.SERVICE_CREATION_SUCCESS);
         });
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Ooops...", getFirebaseErrorMessage());
       } finally {
         setSubmitting(false);
       }

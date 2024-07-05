@@ -7,6 +7,12 @@ module.exports = function (api) {
       "react-native-iconify/plugin",
       "react-native-reanimated/plugin",
       [
+        "module:react-native-dotenv",
+        {
+          safe: true,
+        },
+      ],
+      [
         "module-resolver",
         {
           root: ["./src"],

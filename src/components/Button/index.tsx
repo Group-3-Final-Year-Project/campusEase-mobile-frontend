@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Container, ButtonText, ContainerProps } from "./styles";
-import Loading from "~components/Loading";
 import LoaderScreen from "react-native-ui-lib/loaderScreen";
 import { ThemeContext } from "styled-components/native";
 

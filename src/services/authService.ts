@@ -69,7 +69,6 @@ export const changePassword = async () => {};
 export const readLoginDataFromAsyncStorage: () => Promise<VerifiedUser | null> =
   async () => {
     const loginData = await AsyncStorage.getItem(STORAGE_KEYS.ACTIVE_USER);
-    console.log("login: ", loginData);
     return loginData && JSON.parse(loginData);
   };
 

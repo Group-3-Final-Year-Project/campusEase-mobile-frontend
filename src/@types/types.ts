@@ -159,6 +159,7 @@ export type Service = {
   description?: NullableString;
   category: ServiceCategory;
   location: LocationObj;
+  coverImage: string;
   gallery?: GalleryFile[];
   email: NullableString;
   website?: NullableString;
@@ -240,4 +241,13 @@ export type ImageForGallery = {
   base64Url?: string;
   fileType?: string;
   fileSize?: number;
+};
+
+export type Review = {
+  id: string;
+  userId: string;
+  serviceId: string;
+  providerId: string;
+  rating: number;
+  message: string;
 };

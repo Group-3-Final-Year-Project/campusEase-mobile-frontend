@@ -15,7 +15,11 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { getServiceCategories } from "~services";
+import {
+  getFirebaseErrorMessage,
+  getServiceCategories,
+  showAlert,
+} from "~services";
 import {
   ContentCard,
   Container,
@@ -69,7 +73,7 @@ const SetServiceDetails = ({
         resetForm();
         navigation.navigate(APP_PAGES.SET_SERVICE_GALLERY);
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Ooops...", getFirebaseErrorMessage());
       } finally {
         setSubmitting(false);
       }

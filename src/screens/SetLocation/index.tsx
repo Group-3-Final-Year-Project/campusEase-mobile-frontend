@@ -26,7 +26,7 @@ import { LocationObjectCoords } from "expo-location";
 import { getFormattedAddressFromGeocode } from "../../services/dataService";
 import { firestoreDatabase } from "firebaseConfig";
 import { doc, updateDoc } from "firebase/firestore";
-import { formatLatLng, showAlert } from "~services";
+import { formatLatLng, getFirebaseErrorMessage, showAlert } from "~services";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { LocationObj, LocationParams, VerifiedUser } from "~src/@types/types";
 import { Modal } from "react-native";
@@ -84,7 +84,7 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
             navigation.navigate(APP_PAGES.SET_USER_TYPE);
           })
           .catch((err) => {
-            showAlert("Oops!", err.code);
+            showAlert("Oops!", getFirebaseErrorMessage(err.code));
           });
       } catch (error) {
         showAlert("Oops!", "Something went wrong");

@@ -35,7 +35,7 @@ import {
   uploadServiceGallery,
 } from "./utils";
 import { DraggableGrid } from "react-native-draggable-grid";
-import { pickImageAsync } from "~services";
+import { getFirebaseErrorMessage, pickImageAsync, showAlert } from "~services";
 import { Iconify } from "react-native-iconify";
 import { ImageForGallery } from "~src/@types/types";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
@@ -71,13 +71,14 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
         dispatch({
           type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
           payload: {
+            coverImage: res[0]?.downloadURL,
             gallery: res,
           },
         });
         resetForm();
         navigation.navigate(APP_PAGES.SET_SERVICE_PRICING);
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Ooops...", getFirebaseErrorMessage());
       } finally {
         setSubmitting(false);
       }

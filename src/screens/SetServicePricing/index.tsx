@@ -30,6 +30,7 @@ import { uniqueId } from "lodash";
 import { ScrollView } from "react-native";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
+import { getFirebaseErrorMessage, showAlert } from "~services";
 
 export const servicePricingSchema = yup.object().shape({
   startingPrice: yup.string().required("Starting price required!"),
@@ -74,7 +75,7 @@ const SetServicePricing = ({
         resetForm();
         navigation.navigate(APP_PAGES.SET_SERVICE_LOCATION);
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Ooops...", getFirebaseErrorMessage());
       } finally {
         setSubmitting(false);
       }

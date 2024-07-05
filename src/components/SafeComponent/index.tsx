@@ -1,31 +1,40 @@
-import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Content,
-  Title,
-  ContainedText,
-  DisconnectedIllustration,
-  ErrorIllustration,
-} from "./styles";
-import Loading from "~components/Loading";
+import React, { useState, useEffect, useRef } from "react";
+import { Container, Content, Title, ContainedText } from "./styles";
 import Button from "~components/Button";
 import NetInfo, {
   NetInfoChangeHandler,
   NetInfoState,
 } from "@react-native-community/netinfo";
 import ErrorBoundary from "react-native-error-boundary";
-import LottieView from "lottie-react-native";
 import LoadingView from "~components/LoadingView";
-import { Image } from "react-native";
-import { connectionLost } from "~src/data/connectionlost";
+import LottieView from "lottie-react-native";
+
+export const SafeComponentLottieView = ({ source }: any) => {
+  const confettiRef = useRef<LottieView>(null);
+  return (
+    <LottieView
+      ref={confettiRef}
+      source={source}
+      autoPlay={true}
+      loop={true}
+      style={{
+        zIndex: 1000,
+        pointerEvents: "none",
+        width: 200,
+        height: 200,
+      }}
+      resizeMode="cover"
+    />
+  );
+};
 
 export const OfflineComponent = ({ refetch }: { refetch: () => void }) => {
   return (
     <Container>
       <Content>
-        {/* <DisconnectedIllustration /> */}
-        <Image source={{ uri: connectionLost }} />
-
+        <SafeComponentLottieView
+          source={require("~animations/disconnected.json")}
+        />
         <Title>Oops, you are offline</Title>
         <ContainedText>
           Wait a while and try again when the connection is stable
@@ -42,8 +51,7 @@ export const RequestErrorComponent = ({ refetch }: { refetch: () => void }) => {
   return (
     <Container>
       <Content>
-        {/* <ErrorIllustration /> */}
-        <Image source={{ uri: connectionLost }} />
+        <SafeComponentLottieView source={require("~animations/error.json")} />
         <Title>Oops, something went wrong</Title>
         <ContainedText>
           We are unable to process your request at this time, but we are working
@@ -61,10 +69,7 @@ export const UnknownErrorComponent = () => {
   return (
     <Container>
       <Content>
-        {/* <ErrorIllustration /> */}
-        <Image source={{ uri: connectionLost }} />
-
-        {/* <LottieView source={require("~animations/error.json")} autoPlay loop /> */}
+        <SafeComponentLottieView source={require("~animations/error.json")} />
         <Title>Oops, something went wrong</Title>
         <ContainedText>Try again</ContainedText>
       </Content>

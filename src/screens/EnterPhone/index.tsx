@@ -23,7 +23,11 @@ import { MaskService } from "react-native-masked-text";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestoreDatabase } from "firebaseConfig";
-import { formatPhoneNumber, showAlert } from "~services";
+import {
+  formatPhoneNumber,
+  getFirebaseErrorMessage,
+  showAlert,
+} from "~services";
 
 export const phoneNumberSchema = yup.object().shape({
   phoneNumber: yup
@@ -52,7 +56,7 @@ const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
             navigation.navigate(APP_PAGES.SET_LOCATION);
           })
           .catch((err) => {
-            showAlert("Oops!", err.code);
+            showAlert("Oops!", getFirebaseErrorMessage(err.code));
           });
       } catch (error) {
         showAlert("Oops!", "Something went wrong");

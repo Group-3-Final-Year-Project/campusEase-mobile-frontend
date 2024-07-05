@@ -27,6 +27,7 @@ import { categoriesData } from "~src/data/categories";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import axios from "axios";
 import {
+  deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
@@ -313,39 +314,17 @@ export const uploadFileToFirebaseStorage = async (file: {
   });
 };
 
-// export const downloadFileFromFirebaseStorage = (fileName: string) => {
-//   const refString = schoolId
-//     ? `message_attachments/${schoolId}/${fileName}`
-//     : `message_attachments/${fileName}`;
-//   const reference = storage().ref(refString);
-//   reference
-//     .getDownloadURL()
-//     .then((url) => {
-//       Linking.openURL(url);
-//     })
-//     .catch(() => {
-//       showToast(
-//         `${truncateString(fileName)} could not be downloaded. Try again`,
-//         Toasts.Error
-//       );
-//     });
-// };
+export const downloadFileFromFirebaseStorage = async (fileName: string) => {
+  const fileRef = ref(firebaseCloudStorage, fileName);
+  const URL = await getDownloadURL(fileRef).then((downloadURL) => downloadURL);
+  return URL;
+};
 
-// export const deleteFileFromFirebaseStorage = async (
-//   fileName: string
-// ): Promise<string> => {
-//   return new Promise<string>((resolve, reject) => {
-//     const refString = schoolId
-//       ? `message_attachments/${schoolId}/${fileName}`
-//       : `message_attachments/${fileName}`;
-//     const reference = storage().ref(refString);
-//     reference
-//       .delete()
-//       .then(() => {
-//         resolve("File Deleted!");
-//       })
-//       .catch((error) => {
-//         reject(error);
-//       });
-//   });
-// };
+export const deleteFileFromFirebaseStorage = async (fileName: string) => {
+  const fileRef = ref(firebaseCloudStorage, fileName);
+  await deleteObject(fileRef)
+    .then(() => {})
+    .catch(() => {});
+};
+
+export const getOverallReviewsDataAboutService = () => {};

@@ -32,6 +32,7 @@ import SetServiceGallery from "~src/screens/SetServiceGallery";
 import SetServicePricing from "~src/screens/SetServicePricing";
 import SetServiceLocation from "~src/screens/SetServiceLocation";
 import DummyScreen from "~src/screens/DummyScreen";
+import ServiceCreationSuccess from "~src/screens/ServiceCreationSuccess";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -171,6 +172,10 @@ const RootNavigator = () => {
         <Stack.Screen
           name={APP_PAGES.SET_SERVICE_LOCATION}
           component={SetServiceLocation}
+        />
+        <Stack.Screen
+          name={APP_PAGES.SERVICE_CREATION_SUCCESS}
+          component={ServiceCreationSuccess}
         />
       </Stack.Group>
     </Stack.Navigator>

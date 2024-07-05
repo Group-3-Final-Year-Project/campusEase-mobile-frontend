@@ -4,12 +4,12 @@
     "slug": "campusEase",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/images/logo1024.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#5f55fe"
+      "backgroundColor": "#181820"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -17,11 +17,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#5f55fe"
+        "backgroundColor": "#181820"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./src/assets/images/favicon48.png"
     },
     "plugins": [
       "expo-font",

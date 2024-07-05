@@ -54,7 +54,6 @@ const SelectPicker = ({ items, value, placeholderText }: ISelectPicker) => {
       mode={PickerModes.SINGLE}
       value={value}
       placeholder={placeholderText ?? "Select item"}
-      onChange={() => console.log("changed")}
       items={items}
       trailingAccessory={
         <Iconify

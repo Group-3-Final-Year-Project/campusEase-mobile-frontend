@@ -39,6 +39,8 @@ export const APP_PAGES = {
   SET_SERVICE_GALLERY: "Set Service Gallery",
   SET_SERVICE_PRICING: "Set Service Pricing",
   SET_SERVICE_LOCATION: "Set Service Location",
+  SERVICE_CREATION_SUCCESS: "Service Creation Success",
+  USER_CREATION_SUCCESS: "User Creation Success",
 };
 
 export const API_URLS = {

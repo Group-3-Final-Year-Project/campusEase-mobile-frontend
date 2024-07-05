@@ -53,15 +53,6 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
       route.params?.service.subServices &&
       selectedSubService
     ) {
-      console.log({
-        id: Math.round(Math.random() * 1000000),
-        userId: user.id,
-        serviceId: route.params?.service.id,
-        providerId: route.params?.service.providerId,
-        location: selectedAddress,
-        paymentMethodObject: selectedPaymentMethod,
-        serviceType: selectedSubService,
-      });
       dispatch({
         type: ACTION_TYPES.UPDATE_BOOKING_DATA,
         payload: {

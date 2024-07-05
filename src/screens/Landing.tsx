@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  checkIfServiceProviderHasService,
   isAlreadyLoggedIn,
   isAlreadyUser,
   navigateAndResetStack,
@@ -10,6 +11,7 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAppDispatch } from "~store/hooks/useTypedRedux";
 import { updateUserData } from "~store/actions/userActions";
+import { UserType } from "~src/@types/types";
 
 const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
   useEffect(() => {
@@ -22,14 +24,22 @@ const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
     const loggedIn = await isAlreadyLoggedIn();
     if (loggedIn) {
       const loginData = await readLoginDataFromAsyncStorage();
-      console.log("LD: ", loginData);
       if (!loginData) {
         navigateAndResetStack(navigation, APP_PAGES.SIGNIN);
         setAsLoggedOut();
         return;
       }
       dispatch(updateUserData(loginData));
-      navigation.replace(APP_PAGES.USER_TAB);
+      if (loginData.userType === UserType.SERVICE_PROVIDER) {
+        const serviceProviderHasService =
+          await checkIfServiceProviderHasService(loginData.id);
+        console.log("HasService?: ", serviceProviderHasService);
+        serviceProviderHasService
+          ? navigateAndResetStack(navigation, APP_PAGES.USER_TAB)
+          : navigateAndResetStack(navigation, APP_PAGES.SET_SERVICE_DETAILS);
+      } else {
+        navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
+      }
     } else {
       const alreadyUser = await isAlreadyUser();
       if (alreadyUser) navigation.replace(APP_PAGES.SIGNIN);
