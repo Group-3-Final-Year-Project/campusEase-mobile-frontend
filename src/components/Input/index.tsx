@@ -5,22 +5,24 @@ import {
   IconContainer,
   RightIconContainer,
 } from "./styles";
-import { TextInputProps } from "react-native";
+import { TextInputProps, ViewStyle } from "react-native";
 
 interface InputProps extends TextInputProps {
   icon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   padding?: number;
+  inputContainerStyles?: ViewStyle;
 }
 
 const Input: React.FC<InputProps> = ({
   padding,
   icon,
   rightIcon,
+  inputContainerStyles,
   ...props
 }) => {
   return (
-    <Container>
+    <Container style={inputContainerStyles}>
       {icon && <IconContainer padding={padding}>{icon}</IconContainer>}
 
       {/* <Separator /> */}

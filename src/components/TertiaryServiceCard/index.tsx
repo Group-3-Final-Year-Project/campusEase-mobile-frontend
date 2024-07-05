@@ -1,4 +1,4 @@
-import { View, TouchableOpacityProps } from "react-native";
+import { View, TouchableOpacityProps, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import {
   CardContainer,
@@ -13,6 +13,7 @@ import StarRating from "../StarRating";
 import Text from "../Text";
 import { formatCurrency } from "~services";
 import { ServiceListService } from "~src/@types/types";
+import { APP_PAGES } from "~src/shared/constants";
 
 interface ServiceCardProps extends TouchableOpacityProps {
   service: ServiceListService;
@@ -24,7 +25,13 @@ const TertiaryServiceCard = (props: ServiceCardProps) => {
   const { service } = props;
 
   return (
-    <CardContainer>
+    <CardContainer
+      style={{ width: Dimensions.get("screen").width - 30 }}
+      onPress={() =>
+        props.navigation &&
+        props.navigation.navigate(APP_PAGES.SERVICE, { serviceId: service.id })
+      }
+    >
       <CardImage
         source={{
           uri: service?.coverImage

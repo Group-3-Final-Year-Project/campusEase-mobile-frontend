@@ -14,8 +14,11 @@ export const Title = styled(Text).attrs({
 
 export const CardContainer = styled.TouchableOpacity`
   flex-direction: row;
-  min-height: 80px;
+  min-height: 100px;
   width: 100%;
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
+  border-radius: 15px;
 `;
 
 export const CardImage = styled.Image`
@@ -28,6 +31,7 @@ export const InfoContainer = styled.View`
   margin-left: 15px;
   justify-content: space-between;
   flex-grow: 1;
+  padding: 10px;
 `;
 
 export const Description = styled(Text).attrs({})`

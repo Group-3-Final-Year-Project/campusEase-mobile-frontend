@@ -65,9 +65,13 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
     initialValues: serviceGalleryInitialValues,
     validationSchema: serviceGallerySchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      const updatedGallery = values.gallery.filter((value) => value.url);
       try {
-        const updatedGallery = values.gallery.filter((value) => value.url);
         const res = await uploadServiceGallery(updatedGallery);
+        if (!res.length) {
+          formik.setFieldError("gallery", "No image selected!");
+          return;
+        }
         dispatch({
           type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
           payload: {
@@ -75,6 +79,7 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
             gallery: res,
           },
         });
+
         resetForm();
         navigation.navigate(APP_PAGES.SET_SERVICE_PRICING);
       } catch (error) {
@@ -192,7 +197,6 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
                               : p;
                           })
                           .sort(sortByUrl);
-                        console.log(newPics);
 
                         formik.setFieldValue("gallery", newPics);
                       }}
@@ -210,10 +214,12 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
                 }}
               />
             </FormControl>
-            {formik.touched?.gallery && formik.errors?.gallery ? (
-              <ErrorLabel>{formik.errors?.gallery}</ErrorLabel>
-            ) : null}
           </View>
+          {formik.touched?.gallery && formik.errors?.gallery ? (
+            <ErrorLabel style={{ zIndex: 1000 }}>
+              {formik.errors?.gallery}
+            </ErrorLabel>
+          ) : null}
         </ContentCard>
         <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
           <Button

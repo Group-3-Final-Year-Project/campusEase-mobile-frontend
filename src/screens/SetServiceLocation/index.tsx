@@ -34,10 +34,12 @@ import {
   formatLatLng,
   getFirebaseErrorMessage,
   getFormattedAddressFromGeocode,
+  navigateAndResetStack,
   showAlert,
 } from "~services";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
+import uuid from "react-native-uuid";
 
 export const locationSchema = yup.object().shape({
   location: yup.object<LocationParams>().required("Address required!"),
@@ -56,20 +58,17 @@ const SetServiceLocation = ({
   );
   const user: VerifiedUser = useAppSelector((state) => state.user);
 
-  const startServiceCreation = async () => {
+  const startServiceCreation = async (service: Service) => {
     if (
       serviceInCreation.name &&
       serviceInCreation.location.name &&
       serviceInCreation.category.id
     ) {
-      const service: Service = {
-        ...serviceInCreation,
-        providerId: user.id,
-        isAvailable: true,
-        createdAt: new Date().toLocaleString(),
-        updatedAt: new Date().toLocaleString(),
-      };
-      await createService(service).catch((err) => {});
+      await createService(service).catch((err) => {
+        showAlert("Ooops...", "Could not create your service. Try again");
+      });
+    } else {
+      showAlert("Ooops...", "Could not create your service. Try again");
     }
   };
 
@@ -92,10 +91,11 @@ const SetServiceLocation = ({
     validationSchema: locationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const formatted_address = await getFormattedAddressFromGeocode(
+        console.log("Val", values);
+        await getFormattedAddressFromGeocode(
           values.location.latitude,
           values.location.longitude
-        ).then(() => {
+        ).then(async (formatted_address) => {
           dispatch({
             type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
             payload: {
@@ -106,8 +106,32 @@ const SetServiceLocation = ({
               },
             },
           });
-          resetForm();
-          navigation.navigate(APP_PAGES.SERVICE_CREATION_SUCCESS);
+          console.log(formatted_address);
+          const service: Service = {
+            ...serviceInCreation,
+            id: uuid.v4() as string,
+            providerId: user.id,
+            location: {
+              name: "Main",
+              address: formatted_address,
+              location: values.location,
+            },
+            isAvailable: true,
+            createdAt: new Date().toLocaleString(),
+            updatedAt: new Date().toLocaleString(),
+          };
+          console.log("Service: ", service);
+          await startServiceCreation(service).then(() => {
+            resetForm();
+            dispatch({
+              type: ACTION_TYPES.CLEAR_SERVICE_IN_CREATION_DATA,
+              payload: {},
+            });
+            navigateAndResetStack(
+              navigation,
+              APP_PAGES.SERVICE_CREATION_SUCCESS
+            );
+          });
         });
       } catch (error) {
         showAlert("Ooops...", getFirebaseErrorMessage());

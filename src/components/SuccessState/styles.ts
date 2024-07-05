@@ -16,4 +16,5 @@ export const Title = styled(Description).attrs({
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
   margin-bottom: 20px;
+  color: ${(props: DefaultThemeProps) => props.theme.colors.text};
 `;

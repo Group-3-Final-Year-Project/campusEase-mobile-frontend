@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Incubator } from "react-native-ui-lib";
+import { ThemeContext } from "styled-components/native";
 import { Text } from "~components";
 import { eventEmitter } from "~services";
 import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
@@ -9,6 +10,7 @@ const CustomToast = (props: { children: any }) => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastButtons, setToastButtons] = useState([]);
   const emitterListenerRef = useRef<any>(null);
+  const themeContext = useContext(ThemeContext);
 
   useEffect(() => {
     emitterListenerRef.current = eventEmitter.addListener(
@@ -49,9 +51,19 @@ const CustomToast = (props: { children: any }) => {
           // showLoader={showLoader}
           // renderAttachment={this.renderAttachment}
           // action={action}
-          // preset={selectedPreset}
+          preset={"general"}
           swipeable={true}
           autoDismiss={3500}
+          backgroundColor={themeContext?.colors.secondary}
+          centerMessage
+          containerStyle={{
+            borderRadius: 20,
+          }}
+          messageStyle={{
+            color: themeContext?.colors.text,
+            fontFamily: themeContext?.typography.fontFamily.regular,
+          }}
+          zIndex={1000}
         >
           <Text>{toastMessage}</Text>
         </Incubator.Toast>

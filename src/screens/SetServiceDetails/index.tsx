@@ -65,6 +65,10 @@ const SetServiceDetails = ({
     initialValues: serviceDetailsInitialValues,
     validationSchema: serviceDetailsSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      if (!values.category.id) {
+        formik.setFieldError("category", "Category must be specified");
+        return;
+      }
       try {
         dispatch({
           type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
@@ -136,16 +140,16 @@ const SetServiceDetails = ({
                 value={formik.values?.description}
                 textContentType="name"
                 placeholder="Service Bio"
-                // multiline
-                // numberOfLines={7}
+                multiline
+                numberOfLines={5}
                 textAlignVertical="top"
-                // style={{ height: 7 * 50 }}
+                inputContainerStyles={{ height: 5 * 50 }}
                 icon={
                   <Iconify
                     size={18}
                     color={themeContext?.colors.secondaryText2}
                     icon="solar:notebook-outline"
-                    // style={{ marginBottom: 6 * 16 }}
+                    style={{ marginBottom: 4 * 51 }}
                   />
                 }
               />
@@ -171,7 +175,7 @@ const SetServiceDetails = ({
                   }
                 />
               </TouchableOpacity>
-              {formik.touched?.category && formik.errors?.category ? (
+              {formik.errors?.category ? (
                 <ErrorLabel>{formik.errors?.category}</ErrorLabel>
               ) : null}
             </FormControl>

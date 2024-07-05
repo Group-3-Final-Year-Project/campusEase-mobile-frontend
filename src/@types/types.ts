@@ -238,7 +238,7 @@ export type ImageForGallery = {
   disabledReSorted: boolean;
   url?: string;
   fileName?: string;
-  base64Url?: string;
+  base64URL?: string;
   fileType?: string;
   fileSize?: number;
 };

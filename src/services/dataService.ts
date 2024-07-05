@@ -107,8 +107,8 @@ export const createBooking = (booking: Booking) => {
 };
 
 export const createService = async (serviceData: Service) => {
-  await addDoc(
-    collection(firestoreDatabase, STORAGE_KEYS.SERVICES),
+  await setDoc(
+    doc(firestoreDatabase, STORAGE_KEYS.SERVICES, serviceData.id),
     serviceData
   )
     .then((result) => result)
@@ -259,12 +259,11 @@ export const getBooking = async (bookingId: string) => {
 export const getFormattedAddressFromGeocode = async (
   lat: number,
   lng: number
-) => {
+): Promise<string> => {
   const result = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCmfGRs96TGPEAqqItmSry_yJzQ8WjeF7o`
   );
 
-  console.log(result.data?.results[0]?.formatted_address);
   return result.data?.results[0]?.formatted_address ?? "";
 };
 
@@ -274,7 +273,10 @@ export const uploadFileToFirebaseStorage = async (file: {
   fileType?: string;
   fileSize?: number;
 }): Promise<string> => {
-  const blob = await fetch(file.base64String).then((res) => res.blob());
+  const blob = await fetch(file.base64String)
+    .then((res) => res.blob())
+    .catch((err) => console.log(err));
+
   return new Promise((resolve, reject) => {
     const storageRef = ref(firebaseCloudStorage, file.fileName);
 

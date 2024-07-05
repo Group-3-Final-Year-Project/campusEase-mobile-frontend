@@ -52,7 +52,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                 alignItems: "center",
               }}
             >
-              <Logo width={30} height={30} style={{ marginRight: 5 }} />
+              <Logo width={28} height={28} style={{ marginRight: 5 }} />
               <LogoLabel>ampusEase</LogoLabel>
             </View>
           );

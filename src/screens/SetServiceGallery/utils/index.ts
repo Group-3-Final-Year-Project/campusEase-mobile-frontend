@@ -55,34 +55,45 @@ export const pickImages = (images: ImagePickerAsset[]) => {
 };
 
 export const uploadServiceGallery = async (gallery: ImageForGallery[]) => {
-  const uploadPromises = gallery.map(async (file) => {
+  const successfulUploads: UploadedImage[] = [];
+
+  for (const file of gallery) {
     try {
-      const path = normalizeFilePath(file.base64Url ?? "");
+      if (!file.fileName || !file.base64URL) {
+        throw new Error("Missing required properties: fileName and base64URL");
+      }
+      const path = normalizeFilePath(file.base64URL ?? "");
       const downloadURL = await uploadFileToFirebaseStorage({
-        fileName: file.fileName ?? "",
-        base64String: path ?? "",
+        fileName: file.fileName,
+        base64String: path,
         fileType: file.fileType ?? "",
         fileSize: file.fileSize,
       });
-      return {
+      console.log("durl: ", downloadURL);
+
+      successfulUploads.push({
         fileName: file.fileName,
-        fileSize: file.fileSize,
-        fileType: file.fileType,
+        fileSize: file.fileSize ?? 0,
+        fileType: file.fileType ?? "",
         key: file.key,
         downloadURL,
-      };
+      });
     } catch (error) {
       showToast(
         `${truncate(
           file.fileName
         )} could not be uploaded. You can add again later.`
       );
-      return null;
     }
-  });
+  }
 
-  const results = await Promise.all(uploadPromises);
-
-  const successfulUploads = results.filter((result) => result !== null);
   return successfulUploads;
 };
+
+interface UploadedImage {
+  fileName: string;
+  fileSize: number;
+  fileType: string;
+  key?: string;
+  downloadURL: string;
+}

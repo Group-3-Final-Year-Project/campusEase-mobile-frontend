@@ -1,17 +1,18 @@
 import { View } from "react-native";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { UserType, VerifiedUser } from "~src/@types/types";
 import { navigateAndResetStack } from "~services";
-import { Container } from "../Onboard/styles";
 import { SuccessState } from "~components";
 import LottieView from "lottie-react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
+import { Container } from "../Signup/styles";
 
 const UserCreationSuccess = ({ navigation }: NativeStackScreenProps<any>) => {
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const confettiRef = useRef<LottieView>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   const handlePress = () => {
     if (user.userType === UserType.USER)
@@ -22,7 +23,15 @@ const UserCreationSuccess = ({ navigation }: NativeStackScreenProps<any>) => {
   };
 
   return (
-    <Container style={{ paddingHorizontal: 15 }}>
+    <Container
+      style={{
+        padding: 15,
+        paddingBottom: 30,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <View>
         <SuccessState
           title="Congratulations"
@@ -33,22 +42,28 @@ const UserCreationSuccess = ({ navigation }: NativeStackScreenProps<any>) => {
           }
           onContinue={handlePress}
         />
-        <LottieView
-          ref={confettiRef}
-          source={require("~animations/confetti.json")}
-          autoPlay={true}
-          loop={false}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1000,
-            pointerEvents: "none",
-          }}
-          resizeMode="cover"
-        />
+        {isVisible && (
+          <LottieView
+            ref={confettiRef}
+            source={require("~animations/confetti.json")}
+            autoPlay={true}
+            loop={false}
+            onAnimationFinish={() => {
+              confettiRef.current?.componentWillUnmount?.();
+              setIsVisible(false);
+            }}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              pointerEvents: "none",
+            }}
+            resizeMode="cover"
+          />
+        )}
       </View>
     </Container>
   );
