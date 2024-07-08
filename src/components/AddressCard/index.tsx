@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useContext } from "react";
 import { Description, AddressCardContainer, AddressLabel } from "./styles";
 import IconBtn from "~components/IconBtn";
@@ -39,5 +39,3 @@ const AddressCard = () => {
 };
 
 export default AddressCard;
-
-const styles = StyleSheet.create({});

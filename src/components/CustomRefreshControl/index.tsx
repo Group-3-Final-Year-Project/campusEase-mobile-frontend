@@ -1,0 +1,22 @@
+import { RefreshControl } from "react-native";
+import type { RefreshControlProps } from "react-native";
+import React, { useContext, useRef } from "react";
+import { ThemeContext } from "styled-components/native";
+
+const CustomRefreshControl = (props: RefreshControlProps) => {
+  const themeContext = useContext(ThemeContext);
+  const ref = useRef(null);
+  return (
+    <RefreshControl
+      style={{
+        backgroundColor: "transparent",
+      }}
+      tintColor={themeContext?.colors.primary}
+      ref={ref}
+      size={12}
+      {...props}
+    />
+  );
+};
+
+export default CustomRefreshControl;

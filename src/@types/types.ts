@@ -1,7 +1,7 @@
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LocationObjectCoords } from "expo-location";
-import type { Region } from "react-native-maps";
+import { AndroidNotificationPriority } from "expo-notifications";
 
 export type CustomNavigationProp = {
   navigation: NativeStackNavigationProp<ParamListBase, any>;
@@ -42,15 +42,15 @@ export enum Filters {
 }
 
 export enum BookingStatus {
-  ALL = "All",
+  PENDING = "Pending",
   IN_PROGRESS = "In Progress",
   COMPLETED = "Completed",
   CANCELLED = "Cancelled",
-  MY_SERVICE = "My Service",
 }
 
 export type VerifiedUser = {
   id: string;
+  userDeviceToken?: string;
   userType: UserType.SERVICE_PROVIDER | UserType.USER;
   username: string;
   email: string;
@@ -177,12 +177,13 @@ export type Booking = {
   providerId: string;
   userId: string;
   serviceId: string;
+  amount: number;
   createdAt: string;
   updatedAt: string;
   location: LocationObj;
   paymentMethodObject: PaymentMethodObject;
   paymentStatus: PaymentStatus;
-  serviceType?: SubService;
+  subService?: SubService;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
@@ -191,6 +192,9 @@ export type Booking = {
   notes: string;
   attachments: BookingAttachment[];
   bookingStates: BookingState[];
+  bookingStatus: BookingStatus;
+  requestCompletedConfirmationFromUser: boolean;
+  requestCompletedConfirmationFromProvider: boolean;
 };
 
 export type ServiceCategory = {
@@ -250,4 +254,15 @@ export type Review = {
   providerId: string;
   rating: number;
   message: string;
+  reviewerName: string;
+};
+
+export type FirebaseNotificationData = {
+  title?: string;
+  message?: string;
+  subtitle?: string;
+  sound?: boolean | string;
+  vibrate?: boolean | number[];
+  priority?: AndroidNotificationPriority;
+  badge?: number;
 };

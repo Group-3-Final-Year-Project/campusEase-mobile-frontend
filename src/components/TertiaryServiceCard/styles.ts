@@ -1,4 +1,3 @@
-import { TouchableOpacity } from "react-native";
 import styled, {
   DefaultTheme as DefaultThemeProps,
 } from "styled-components/native";

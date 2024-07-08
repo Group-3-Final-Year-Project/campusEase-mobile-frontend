@@ -1,4 +1,4 @@
-import { View, Animated, StyleSheet, RefreshControl } from "react-native";
+import { View, Animated } from "react-native";
 import React, {
   useContext,
   useRef,
@@ -13,7 +13,6 @@ import {
   Container,
   Description,
   HighlightedDescription,
-  ReviewCard,
   ServiceInfoContainer,
   ServiceInfoHeaderLabel,
   TagLabel,
@@ -21,9 +20,11 @@ import {
 } from "./styles";
 import {
   Button,
+  CustomRefreshControl,
   EmptyState,
   IconBtn,
   LoadingView,
+  ReviewCard,
   SafeComponent,
   ServiceProviderCard,
 } from "~components";
@@ -35,11 +36,12 @@ import Avatar from "react-native-ui-lib/avatar";
 import GridView from "react-native-ui-lib/gridView";
 import StackAggregator from "react-native-ui-lib/stackAggregator";
 import { APP_PAGES, QUERY_KEYS } from "~src/shared/constants";
-import { VerifiedUser, VerifiedUserPreview } from "~src/@types/types";
+import { Review, VerifiedUser, VerifiedUserPreview } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
 import { BookingInfoCard } from "../BookingSummary/styles";
 import {
   extractUserDataForFirebase,
+  getOverallReviewsDataAboutService,
   getService,
   getUserDataPreview,
   openChat,
@@ -52,6 +54,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
   const [serviceProvider, setServiceProvider] =
     useState<VerifiedUserPreview | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const currentUserForFirebase: VerifiedUserPreview =
     extractUserDataForFirebase(user);
@@ -121,14 +124,24 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   });
 
   useEffect(() => {
-    data && getServiceProvider(data.providerId);
+    if (data) {
+      getServiceProvider(data.providerId);
+      getReviews(data.id);
+    }
   }, [data]);
 
   const getServiceProvider = useCallback(
     async (providerId: string) => {
       setServiceProvider(await getUserDataPreview(providerId));
     },
-    [route.params?.bookingId]
+    [route.params?.serviceId]
+  );
+
+  const getReviews = useCallback(
+    async (serviceId: string) => {
+      setReviews(await getOverallReviewsDataAboutService(serviceId));
+    },
+    [route.params?.serviceId]
   );
 
   const serviceSocialItems = [
@@ -188,59 +201,6 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     },
   ];
 
-  const renderReviewCard = (review: any) => {
-    return (
-      <ReviewCard>
-        <View
-          style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 10,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Avatar
-              animate
-              useAutoColors
-              label="SO"
-              size={45}
-              backgroundColor="green"
-              labelColor="white"
-              source={{
-                uri: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
-              }}
-            />
-            <View style={{ marginLeft: 15 }}>
-              <ServiceInfoHeaderLabel style={{ paddingBottom: 5 }}>
-                Sam Smith
-              </ServiceInfoHeaderLabel>
-              <Description
-                style={{
-                  fontSize: 12,
-                  color: themeContext?.colors.secondaryText,
-                }}
-              >
-                Service provider
-              </Description>
-            </View>
-          </View>
-          <TagLabel>04 April 2024</TagLabel>
-        </View>
-        <Description style={{ lineHeight: 24 }}>
-          It is a long established fact that a read will be distracted by the
-          long readable content of a page when looking at its content or layout
-        </Description>
-      </ReviewCard>
-    );
-  };
-
   if (isLoading) return <LoadingView />;
   else if (isError || !data || data === undefined) return <EmptyState />;
 
@@ -267,7 +227,10 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           )}
           scrollEventThrottle={16}
           refreshControl={
-            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+            <CustomRefreshControl
+              refreshing={isRefetching}
+              onRefresh={refetch}
+            />
           }
           style={{ paddingBottom: bottomInset }}
         >
@@ -389,61 +352,49 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
             </ServiceInfoContainer>
           )}
           {/* Galllery goes here... */}
-          <ServiceInfoContainer>
-            <ServiceInfoHeaderLabel>Gallery</ServiceInfoHeaderLabel>
-            <GridView
-              items={[
-                {
-                  imageProps: {
-                    source: {
-                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+          {data?.gallery && (
+            <ServiceInfoContainer>
+              <ServiceInfoHeaderLabel>Gallery</ServiceInfoHeaderLabel>
+              <GridView
+                items={data.gallery?.map((item) => {
+                  return {
+                    imageProps: {
+                      source: {
+                        uri: item.downloadURL,
+                      },
                     },
-                  },
-                },
-                {
-                  imageProps: {
-                    source: {
-                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-                    },
-                  },
-                },
-                {
-                  imageProps: {
-                    source: {
-                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-                    },
-                  },
-                },
-                {
-                  imageProps: {
-                    source: {
-                      uri: "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
-                    },
-                  },
-                },
-              ]}
-              itemSpacing={2}
-              numColumns={2}
-            />
-          </ServiceInfoContainer>
+                  };
+                })}
+                itemSpacing={2}
+                numColumns={2}
+              />
+            </ServiceInfoContainer>
+          )}
           {/* Reviews goes here... */}
           <GridView />
-          <ServiceInfoContainer>
-            <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
-            <StackAggregator
-              bg-transparent
-              contentContainerStyle={{
-                backgroundColor: "transparent",
-              }}
-              buttonProps={{
-                "bg-transparent": true,
-                bottom: true,
-              }}
-            >
-              {[...new Array(8)].map((item) => renderReviewCard(item))}
-            </StackAggregator>
-          </ServiceInfoContainer>
-          {/* More for you goes here... */}
+          {!!reviews.length && (
+            <ServiceInfoContainer>
+              <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
+              <StackAggregator
+                bg-transparent
+                contentContainerStyle={{
+                  backgroundColor: "transparent",
+                }}
+                buttonProps={{
+                  "bg-transparent": true,
+                  bottom: true,
+                }}
+              >
+                {reviews.map((item) => (
+                  <ReviewCard
+                    key={item.id}
+                    review={item}
+                    navigation={navigation as NavigationProp<any>}
+                  />
+                ))}
+              </StackAggregator>
+            </ServiceInfoContainer>
+          )}
           {/* <ServiceInfoContainer>
           <ServiceInfoHeaderLabel>More for you</ServiceInfoHeaderLabel>
           <FlatList

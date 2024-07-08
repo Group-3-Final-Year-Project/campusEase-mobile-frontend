@@ -2,12 +2,16 @@ import { PaymentMethodObject } from "~src/@types/types";
 
 const paymentMethodsData: PaymentMethodObject[] = [
   {
-    id: 0,
+    id: "cash-1029272",
     name: "Cash",
   },
   {
-    id: 1,
+    id: "credit-card-8272626",
     name: "Credit card",
+  },
+  {
+    id: "mobile-money-987980990",
+    name: "Mobile money",
   },
 ];
 

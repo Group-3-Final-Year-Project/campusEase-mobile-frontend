@@ -4,13 +4,15 @@ import { STORAGE_KEYS } from "~src/shared/constants";
 import { processErrorResponse } from "./errorService";
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
+  sendPasswordResetEmail,
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { firebaseAuth } from "firebaseConfig";
 import { createUser, getUser } from "./dataService";
+import { showAlert } from "./uiService";
+import * as Notifications from "expo-notifications";
 
 let LOGGED_IN_USER: VerifiedUser | null | undefined;
 
@@ -200,4 +202,13 @@ export const signoutUser = async () => {
       await setAsLoggedOut();
     })
     .catch((error) => {});
+};
+
+export const handleUserForgotPassword = async (email: string) => {
+  await sendPasswordResetEmail(firebaseAuth, email).then((res) => {
+    showAlert(
+      "Password Reset Email sent",
+      "An email has been sent to you email to reset your password"
+    );
+  });
 };

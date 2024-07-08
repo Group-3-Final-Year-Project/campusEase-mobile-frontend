@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { Text, View, FlatList } from "react-native";
 import React from "react";
 import { getIsServiceProvider } from "~services";
 import { ListLabel } from "../../styles";
@@ -46,5 +46,3 @@ const ProviderServices = ({ navigation, services }: ProviderServicesProps) => {
 };
 
 export default ProviderServices;
-
-const styles = StyleSheet.create({});

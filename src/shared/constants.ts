@@ -41,6 +41,8 @@ export const APP_PAGES = {
   SET_SERVICE_LOCATION: "Set Service Location",
   SERVICE_CREATION_SUCCESS: "Service Creation Success",
   USER_CREATION_SUCCESS: "User Creation Success",
+  BOOKING_CREATION_SUCCESS: "Booking Creation Success",
+  PAYSTACK_PAYMENT_VIEW: "Paystack Payment View",
 };
 
 export const API_URLS = {

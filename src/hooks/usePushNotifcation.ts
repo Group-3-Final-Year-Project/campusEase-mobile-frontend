@@ -3,10 +3,10 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
+import { showAlert } from "~services";
 
 export interface PushNotificationState {
   notification?: Notifications.Notification;
-  expoPushToken?: Notifications.ExpoPushToken;
 }
 
 export const usePushNotifications = (): PushNotificationState => {
@@ -15,12 +15,10 @@ export const usePushNotifications = (): PushNotificationState => {
       shouldPlaySound: true,
       shouldShowAlert: true,
       shouldSetBadge: true,
+      priority: Notifications.AndroidNotificationPriority.MAX,
     }),
   });
 
-  const [expoPushToken, setExpoPushToken] = useState<
-    Notifications.ExpoPushToken | undefined
-  >();
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >();
@@ -29,8 +27,6 @@ export const usePushNotifications = (): PushNotificationState => {
   const responseListener = useRef<Notifications.Subscription>();
 
   const registerForPushNotificationsAsync = async () => {
-    let token;
-
     if (Device.isDevice) {
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
@@ -42,30 +38,34 @@ export const usePushNotifications = (): PushNotificationState => {
         finalStatus = status;
       }
       if (finalStatus != "granted") {
-        alert("Failed to get push token");
+        showAlert(
+          "Ooops...",
+          "Failed to get push token for notifications!\nYou will not be able to receive notifications. You can enable notifications in settings"
+        );
       }
 
-      token = await Notifications.getExpoPushTokenAsync({
-        projectId: Constants.expoConfig?.extra?.eas?.projectId,
-      });
+      // token = await Notifications.getExpoPushTokenAsync({
+      //   projectId: Constants.expoConfig?.extra?.eas?.projectId,
+      // });
 
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
           name: "default",
           importance: Notifications.AndroidImportance.MAX,
           enableVibrate: true,
+          showBadge: true,
         });
       }
-      return token;
     } else {
-      console.log("Please use a physical device!");
+      showAlert(
+        "Ooops...",
+        "Please use a physical device to get notifications"
+      );
     }
   };
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
-    });
+    registerForPushNotificationsAsync();
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
@@ -84,8 +84,5 @@ export const usePushNotifications = (): PushNotificationState => {
     };
   }, []);
 
-  return {
-    expoPushToken,
-    notification,
-  };
+  return { notification };
 };

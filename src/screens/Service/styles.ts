@@ -1,7 +1,6 @@
 import styled, {
   DefaultTheme as DefaultThemeProps,
 } from "styled-components/native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Text from "~components/Text";
 import { Animated } from "react-native";
 
@@ -9,8 +8,6 @@ export const Container = styled(Animated.View).attrs({
   edges: ["left", "right"],
 })`
   flex: 1;
-  /* padding-left: 15px;
-  padding-right: 15px; */
 `;
 
 export const ServiceInfoContainer = styled.View`
@@ -68,13 +65,4 @@ export const ServiceInfoHeaderLabel = styled(Text).attrs({})`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
   padding-bottom: 10px;
-`;
-
-export const ReviewCard = styled.TouchableOpacity`
-  border-color: ${(props: DefaultThemeProps) =>
-    props.theme.colors.secondaryBackground};
-  border-width: 0.8px;
-  border-radius: 15px;
-  display: flex;
-  padding: 15px;
 `;

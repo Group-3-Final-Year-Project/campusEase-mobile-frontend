@@ -1,4 +1,4 @@
-import { FlatList, View, RefreshControl } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ThemeContext } from "styled-components/native";
@@ -166,7 +166,7 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
         style={{ paddingBottom: bottomInset }}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
         ListEmptyComponent={() => <EmptyState />}
-        refreshControl={<RefreshControl refreshing={isRefetching} />}
+        refreshControl={<CustomRefreshControlrefreshing={isRefetching} />}
       />
     </Container>
   );

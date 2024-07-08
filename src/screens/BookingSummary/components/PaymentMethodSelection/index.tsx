@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import React, { useContext, useState } from "react";
 import { ButtonProps } from "react-native-ui-lib";
 import { BookingInfoCard, Description } from "../../styles";
@@ -84,5 +84,3 @@ const PaymentMethodSelection = ({
 };
 
 export default PaymentMethodSelection;
-
-const styles = StyleSheet.create({});

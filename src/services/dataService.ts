@@ -1,21 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
-import { LocationObjectCoords } from "expo-location";
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
-  limit,
   query,
   setDoc,
-  startAt,
   where,
 } from "firebase/firestore";
 import { firebaseCloudStorage, firestoreDatabase } from "firebaseConfig";
 import {
   Booking,
+  Review,
   Service,
   ServiceCategory,
   ServiceListService,
@@ -31,9 +28,7 @@ import {
   getDownloadURL,
   ref,
   uploadBytesResumable,
-  uploadString,
 } from "firebase/storage";
-import RNFetchBlob from "rn-fetch-blob";
 
 export const getBookmarks = async () => {
   const bookmarks = await AsyncStorage.getItem(STORAGE_KEYS.BOOKMARKS);
@@ -102,17 +97,18 @@ export const getUserDataPreview = async (
   } as VerifiedUserPreview;
 };
 
-export const createBooking = (booking: Booking) => {
-  bookingsData.push(booking);
+export const createBooking = async (booking: Booking) => {
+  await setDoc(
+    doc(firestoreDatabase, STORAGE_KEYS.BOOKINGS, booking.id),
+    booking
+  );
 };
 
 export const createService = async (serviceData: Service) => {
   await setDoc(
     doc(firestoreDatabase, STORAGE_KEYS.SERVICES, serviceData.id),
     serviceData
-  )
-    .then((result) => result)
-    .catch((error) => {});
+  );
 };
 
 export const createUser = async (user: VerifiedUser) => {
@@ -248,7 +244,7 @@ export const getMyBookingsAsServiceProvider = async (userId: string) => {
 
 export const getBooking = async (bookingId: string) => {
   const docRef = await getDoc(
-    doc(firestoreDatabase, STORAGE_KEYS.SERVICES, bookingId)
+    doc(firestoreDatabase, STORAGE_KEYS.BOOKINGS, bookingId)
   );
   return {
     id: docRef.id,
@@ -280,7 +276,7 @@ export const uploadFileToFirebaseStorage = async (file: {
   return new Promise((resolve, reject) => {
     const storageRef = ref(firebaseCloudStorage, file.fileName);
 
-    const uploadTask = uploadBytesResumable(storageRef, blob, {
+    const uploadTask = uploadBytesResumable(storageRef, blob!, {
       contentType: file.fileType,
       customMetadata: {
         fileSize: file.fileSize ? file.fileSize.toString() : "",
@@ -329,4 +325,6 @@ export const deleteFileFromFirebaseStorage = async (fileName: string) => {
     .catch(() => {});
 };
 
-export const getOverallReviewsDataAboutService = () => {};
+export const getOverallReviewsDataAboutService = async (
+  serviceId: string
+): Promise<Review[]> => {};

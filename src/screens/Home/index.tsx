@@ -1,4 +1,4 @@
-import { FlatList, View, RefreshControl } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { Container, ListLabel, LogoLabel } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -128,7 +128,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
         style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
         renderItem={undefined}
         refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+          <CustomRefreshControlrefreshing={isRefetching} onRefresh={refetch} />
         }
       >
         <>

@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import { useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { useCallback, useMemo } from "react";
+import { useMemo, useRef } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -32,24 +32,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import CustomAlert from "~src/hocs/CustomAlert";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import CustomToast from "~src/hocs/CustomToast";
-import * as Location from "expo-location";
-import * as DocumentPicker from "expo-document-picker";
-import * as ImagePicker from "expo-image-picker";
+import { usePushNotifications } from "~src/hooks/usePushNotifcation";
 
 enableScreens();
 SplashScreen.preventAutoHideAsync();
 
 function App() {
   useNavigationBar();
+  usePushNotifications();
   const queryClient = new QueryClient();
-  // const [fontsLoaded, error] = useFonts({
-  //   [Font.EuclidBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
-  //   [Font.EuclidExtraBold]: require("./src/assets/fonts/Euclid Circular B Bold.ttf"),
-  //   [Font.EuclidLight]: require("./src/assets/fonts/Euclid Circular B Light.ttf"),
-  //   [Font.EuclidMedium]: require("./src/assets/fonts/Euclid Circular B Medium.ttf"),
-  //   [Font.EuclidRegular]: require("./src/assets/fonts/Euclid Circular B Regular.ttf"),
-  //   [Font.EuclidSemiBold]: require("./src/assets/fonts/Euclid Circular B SemiBold.ttf"),
-  // });
   const [fontsLoaded, error] = useFonts({
     [Font.UrbanistLight]: Urbanist_300Light,
     [Font.UrbanistRegular]: Urbanist_400Regular,
@@ -63,16 +54,11 @@ function App() {
     if (!colorScheme) return DefaultTheme;
     return colorScheme === "dark" ? DarkTheme : LightTheme;
   }, [colorScheme]);
-
-  const getPermissions = useCallback(async () => {
-    await Location.getForegroundPermissionsAsync();
-    await ImagePicker.getCameraPermissionsAsync();
-    await ImagePicker.getMediaLibraryPermissionsAsync();
-  }, []);
+  const notificationListener = useRef(null);
+  const responseListener = useRef(null);
 
   useDidMountEffect(() => {
     if (fontsLoaded) setTimeout(SplashScreen.hideAsync, 100);
-    getPermissions();
   }, [fontsLoaded]);
 
   setCustomText({

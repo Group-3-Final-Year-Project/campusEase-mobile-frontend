@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText, LocationPicker } from "~components";
 import {
@@ -6,6 +6,7 @@ import {
   Platform,
   TouchableOpacity,
   View,
+  Modal,
 } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
@@ -22,14 +23,17 @@ import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
-import { LocationObjectCoords } from "expo-location";
-import { getFormattedAddressFromGeocode } from "../../services/dataService";
 import { firestoreDatabase } from "firebaseConfig";
 import { doc, updateDoc } from "firebase/firestore";
-import { formatLatLng, getFirebaseErrorMessage, showAlert } from "~services";
+import {
+  formatLatLng,
+  getFirebaseErrorMessage,
+  getFormattedAddressFromGeocode,
+  showAlert,
+} from "~services";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { LocationObj, LocationParams, VerifiedUser } from "~src/@types/types";
-import { Modal } from "react-native";
+import { LocationParams, VerifiedUser } from "~src/@types/types";
+import * as Location from "expo-location";
 
 export const locationSchema = yup.object().shape({
   name: yup.string().required(),
@@ -93,6 +97,19 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
       }
     },
   });
+  useEffect(() => {
+    const getLocationPermission = async () => {
+      const { granted } = await Location.requestForegroundPermissionsAsync();
+      if (!granted) {
+        showAlert(
+          "Location permission not granted!",
+          "You can go to settings to grant permission for location"
+        );
+        return;
+      }
+    };
+    getLocationPermission();
+  }, []);
 
   return (
     <Container>

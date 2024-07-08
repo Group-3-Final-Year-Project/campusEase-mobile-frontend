@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UserTabNavigator from "./UserTabNavigator";
 import Onboard from "~src/screens/Onboard";
 import Signup from "~src/screens/Signup";
-import { APP_PAGES } from "~src/shared/constants";
+import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import { ThemeContext } from "styled-components/native";
 import VerifyEmail from "~src/screens/VerifyEmail";
 import Landing from "~src/screens/Landing";
@@ -21,10 +21,15 @@ import PrivacyPolicy from "~src/screens/PrivacyPolicy";
 import SearchAndFilter from "~src/screens/SearchAndFilter";
 import EnterPhone from "~src/screens/EnterPhone";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
-import { createUser, getUser, saveUserDetails } from "~services";
+import {
+  createUser,
+  getUser,
+  getUserDeviceToken,
+  saveUserDetails,
+} from "~services";
 import ACTION_TYPES from "~store/actionTypes";
 import { onAuthStateChanged } from "firebase/auth";
-import { firebaseAuth } from "firebaseConfig";
+import { firebaseAuth, firestoreDatabase } from "firebaseConfig";
 import { VerifiedUser } from "~src/@types/types";
 import SetUserType from "~src/screens/SetUserType";
 import SetServiceDetails from "~src/screens/SetServiceDetails";
@@ -34,12 +39,33 @@ import SetServiceLocation from "~src/screens/SetServiceLocation";
 import DummyScreen from "~src/screens/DummyScreen";
 import ServiceCreationSuccess from "~src/screens/ServiceCreationSuccess";
 import UserCreationSuccess from "~src/screens/UserCreationSuccess";
+import PayView from "~src/screens/PayView";
+import BookingCreationSuccess from "~src/screens/BookingCreationSuccess";
+import * as NotificationsFunc from "expo-notifications";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
   const Stack = createNativeStackNavigator();
   const dispatch = useAppDispatch();
   const user: VerifiedUser = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id),
+      async (querySnapshot) => {
+        const result = await saveUserDetails({
+          id: querySnapshot.id,
+          ...querySnapshot.data(),
+        } as VerifiedUser);
+        dispatch({
+          type: ACTION_TYPES.UPDATE_USER_DATA,
+          payload: result,
+        });
+      }
+    );
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
@@ -66,7 +92,48 @@ const RootNavigator = () => {
         });
       }
     });
-    return unsubscribe;
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    getUserDeviceToken().then(async (res) => {
+      if (res && res !== user.userDeviceToken) {
+        const userFromDB = await getUser(user.id);
+        const userData: VerifiedUser = {
+          ...userFromDB,
+          userDeviceToken: res,
+        };
+        await createUser(userData);
+        const result = await saveUserDetails(userData);
+        dispatch({
+          type: ACTION_TYPES.UPDATE_USER_DATA,
+          payload: result,
+        });
+        console.log("Token Changed!!!");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const subscription = NotificationsFunc.addPushTokenListener(
+      async (token) => {
+        if (token.data && token.data !== user.userDeviceToken) {
+          const userFromDB = await getUser(user.id);
+          const userData: VerifiedUser = {
+            ...userFromDB,
+            userDeviceToken: token.data,
+          };
+          await createUser(userData);
+          const result = await saveUserDetails(userData);
+          dispatch({
+            type: ACTION_TYPES.UPDATE_USER_DATA,
+            payload: result,
+          });
+          console.log("Token Changed!!!");
+        }
+      }
+    );
+    return () => subscription.remove();
   }, []);
 
   return (
@@ -132,6 +199,14 @@ const RootNavigator = () => {
             <Stack.Screen
               name={APP_PAGES.SEARCH_AND_FILTER}
               component={SearchAndFilter}
+            />
+            <Stack.Screen
+              name={APP_PAGES.PAYSTACK_PAYMENT_VIEW}
+              component={PayView}
+            />
+            <Stack.Screen
+              name={APP_PAGES.BOOKING_CREATION_SUCCESS}
+              component={BookingCreationSuccess}
             />
           </Stack.Group>
         </>

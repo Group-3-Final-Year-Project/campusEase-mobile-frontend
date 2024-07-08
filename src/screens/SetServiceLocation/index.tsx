@@ -120,7 +120,6 @@ const SetServiceLocation = ({
             createdAt: new Date().toLocaleString(),
             updatedAt: new Date().toLocaleString(),
           };
-          console.log("Service: ", service);
           await startServiceCreation(service).then(() => {
             resetForm();
             dispatch({

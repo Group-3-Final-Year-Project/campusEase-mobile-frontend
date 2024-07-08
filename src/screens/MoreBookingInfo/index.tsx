@@ -15,23 +15,17 @@ import {
   BookingInfoContainer,
   BookingInfoHeaderLabel,
 } from "../BookingDetail/styles";
-import { createBooking, navigateAndResetStack, pickDocuments } from "~services";
+import { pickDocuments } from "~services";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { ErrorLabel, FormControl } from "../Signup/styles";
-import ResultPrompt from "~components/ResultPrompt";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { Booking, VerifiedUser } from "~src/@types/types";
+import { Booking, BookingStatus, VerifiedUser } from "~src/@types/types";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
-import moment from "moment";
-import DateTimePicker from "react-native-ui-lib/dateTimePicker";
-import {
-  clearBookingData,
-  updateBookingData,
-} from "~store/actions/bookingActions";
-import { NavigationProp } from "@react-navigation/native";
 import { CountryCodeText } from "../EnterPhone/styles";
+import ACTION_TYPES from "~store/actionTypes";
+import uuid from "react-native-uuid";
 
 export const bookingInfoSchema = yup.object().shape({
   username: yup.string().required("Username required!"),
@@ -63,20 +57,24 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
     validationSchema: bookingInfoSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        dispatch(
-          updateBookingData({
+        dispatch({
+          type: ACTION_TYPES.UPDATE_BOOKING_DATA,
+          payload: {
+            id: uuid.v4() as string,
             customerEmail: values.email,
             customerName: values.username,
             customerPhone: values.phoneNumber,
             notes: values.noteToProvider,
-            scheduledDate: moment(values.scheduledDate).toLocaleString(),
-            scheduledTime: moment(values.scheduledTime).toLocaleString(),
+            bookingStatus: BookingStatus.PENDING,
+            scheduledDate: new Date(values.scheduledDate).toLocaleString(),
+            scheduledTime: new Date(values.scheduledTime).toLocaleString(),
             createdAt: new Date().toLocaleString(),
-          })
-        );
-        createBooking(booking);
-        setIsVisible(true);
+            requestCompletedConfirmationFromUser: false,
+            requestCompletedConfirmationFromProvider: false,
+          },
+        });
         resetForm();
+        navigation.navigate(APP_PAGES.PAYSTACK_PAYMENT_VIEW);
       } catch (error) {
         throw Error(error as any);
       } finally {
@@ -226,12 +224,6 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
           Confirm booking
         </Button>
       </BottomCard>
-      <ResultPrompt
-        navigation={navigation as NavigationProp<any>}
-        bookingId={booking.id}
-        visible={isVisible}
-        setIsVisible={setIsVisible}
-      />
     </Container>
   );
 };

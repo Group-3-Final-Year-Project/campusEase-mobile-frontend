@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import React, { useContext } from "react";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "styled-components/native";
@@ -48,5 +48,3 @@ const SearchFilterBtn = () => {
 };
 
 export default SearchFilterBtn;
-
-const styles = StyleSheet.create({});

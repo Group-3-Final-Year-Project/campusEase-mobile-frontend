@@ -7,13 +7,18 @@ import { Iconify } from "react-native-iconify";
 import { Container, HeaderCard, HeaderItemLabel } from "./styles";
 import BookingCard from "./components/BookingCard";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { EmptyState, IconBtn, LoadingView, SafeComponent } from "~components";
+import {
+  CustomRefreshControl,
+  EmptyState,
+  IconBtn,
+  LoadingView,
+  SafeComponent,
+} from "~components";
 import { getIsServiceProvider } from "~services";
 import { BookingStatus } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~src/shared/constants";
 import bookingsData from "~src/data/bookingsData";
-import { RefreshControl } from "react-native";
 
 const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -98,7 +103,10 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
             ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
             ListEmptyComponent={() => <EmptyState />}
             refreshControl={
-              <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+              <CustomRefreshControl
+                refreshing={isRefetching}
+                onRefresh={refetch}
+              />
             }
           />
         )}

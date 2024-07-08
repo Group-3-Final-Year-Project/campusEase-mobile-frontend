@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Container } from "./styles";
 import MapView, { Marker } from "react-native-maps";
@@ -101,5 +101,3 @@ const LocationPicker = (props: LocationPickerProps) => {
 };
 
 export default LocationPicker;
-
-const styles = StyleSheet.create({});

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import React, { useContext } from "react";
 import EmptyIcon from "~assets/images/empty.svg";
 import { ThemeContext } from "styled-components/native";
@@ -30,5 +30,3 @@ const EmptyState = (props: EmptyProps) => {
 };
 
 export default EmptyState;
-
-const styles = StyleSheet.create({});

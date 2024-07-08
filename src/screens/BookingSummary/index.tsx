@@ -47,26 +47,36 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
     useState<PaymentMethodObject | null>(null);
 
   const onContinue = () => {
-    if (
-      selectedPaymentMethod &&
-      selectedAddress &&
-      route.params?.service.subServices &&
-      selectedSubService
-    ) {
-      dispatch({
-        type: ACTION_TYPES.UPDATE_BOOKING_DATA,
-        payload: {
-          id: Math.round(Math.random() * 1000000),
-          userId: user.id,
-          serviceId: route.params?.service.id,
-          providerId: route.params?.service.providerId,
-          location: selectedAddress,
-          paymentMethodObject: selectedPaymentMethod,
-          serviceType: selectedSubService,
-        },
-      });
-      navigation.navigate(APP_PAGES.OTHER_BOOKING_INFO);
+    if (selectedPaymentMethod && selectedAddress) {
+      if (selectedSubService) {
+        dispatch({
+          type: ACTION_TYPES.UPDATE_BOOKING_DATA,
+          payload: {
+            userId: user.id,
+            serviceId: route.params?.service.id,
+            providerId: route.params?.service.providerId,
+            location: selectedAddress,
+            paymentMethodObject: selectedPaymentMethod,
+            subService: selectedSubService,
+            amount: selectedSubService.price,
+          },
+        });
+      } else {
+        dispatch({
+          type: ACTION_TYPES.UPDATE_BOOKING_DATA,
+          payload: {
+            userId: user.id,
+            serviceId: route.params?.service.id,
+            providerId: route.params?.service.providerId,
+            location: selectedAddress,
+            paymentMethodObject: selectedPaymentMethod,
+            subService: selectedSubService,
+            amount: route.params?.service.price,
+          },
+        });
+      }
     }
+    navigation.navigate(APP_PAGES.OTHER_BOOKING_INFO);
   };
 
   if (!route.params?.service && !route.params?.serviceProvider)
@@ -113,7 +123,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
         </BookingInfoContainer>
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Payment Summary</BookingInfoHeaderLabel>
-          <PaymentSummary />
+          <PaymentSummary amount={selectedSubService?.price ?? 0} />
         </BookingInfoContainer>
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Payment Method</BookingInfoHeaderLabel>

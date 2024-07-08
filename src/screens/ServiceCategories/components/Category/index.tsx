@@ -1,9 +1,13 @@
-import { Text, View, FlatList, RefreshControl } from "react-native";
+import { View, FlatList } from "react-native";
 import React, { useCallback } from "react";
 import { Container } from "./styles";
-import { SecondaryServiceCard, LoadingView, EmptyState } from "~components";
+import {
+  SecondaryServiceCard,
+  LoadingView,
+  EmptyState,
+  CustomRefreshControl,
+} from "~components";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import servicesData from "~src/data/servicesData";
 import { useQuery } from "@tanstack/react-query";
@@ -52,7 +56,7 @@ const Category = (props: ICategory) => {
         style={{ paddingBottom: bottomInset }}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
         ListEmptyComponent={() => <EmptyState />}
-        refreshControl={<RefreshControl refreshing={isRefetching} />}
+        refreshControl={<CustomRefreshControl refreshing={isRefetching} />}
       />
     </Container>
   );

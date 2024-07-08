@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useContext } from "react";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "styled-components/native";
@@ -21,5 +21,3 @@ const LoadingView = () => {
 };
 
 export default LoadingView;
-
-const styles = StyleSheet.create({});

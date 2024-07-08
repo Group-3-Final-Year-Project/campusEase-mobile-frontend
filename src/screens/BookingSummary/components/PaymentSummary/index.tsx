@@ -1,14 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { BookingInfoCard, Description } from "../../styles";
 import { formatCurrency } from "~services";
 
-const PaymentSummary = () => {
+const PaymentSummary = ({ amount }: { amount: number }) => {
   const data = [
     {
       id: 1,
       name: "Service fee",
-      value: 50,
+      value: amount,
     },
     {
       id: 2,
@@ -18,7 +18,7 @@ const PaymentSummary = () => {
     {
       id: 3,
       name: "Total",
-      value: 50.5,
+      value: Number(amount) + 0.5,
     },
   ];
 
@@ -57,5 +57,3 @@ const PaymentSummary = () => {
 };
 
 export default PaymentSummary;
-
-const styles = StyleSheet.create({});

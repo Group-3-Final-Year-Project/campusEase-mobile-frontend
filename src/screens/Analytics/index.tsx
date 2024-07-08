@@ -1,4 +1,4 @@
-import { View, ScrollView, StyleSheet, Dimensions } from "react-native";
+import { View, ScrollView, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";

@@ -1,13 +1,12 @@
-import Color from "color";
 import React, { useContext } from "react";
-import { ActionSheet } from "react-native-ui-lib";
+import ActionSheet from "react-native-ui-lib/actionSheet";
 import { ThemeContext } from "styled-components/native";
 import { ActionSheetTitle, Description } from "./styles";
 import { Platform, TouchableOpacity } from "react-native";
 
 type AdvancedActionSheetProps = React.ForwardRefExoticComponent<
   ActionSheetProps & React.RefAttributes<any>
-> & {};
+>;
 
 const AdvancedActionSheet = (props: AdvancedActionSheetProps) => {
   const themeContext = useContext(ThemeContext);
@@ -16,7 +15,7 @@ const AdvancedActionSheet = (props: AdvancedActionSheetProps) => {
       visible={false}
       message="Select item"
       title="Items"
-      useNativeIOS={Platform.OS === "ios" ? true : false}
+      useNativeIOS={Platform.OS === "ios"}
       options={[]}
       containerStyle={{
         backgroundColor: themeContext?.colors.background,

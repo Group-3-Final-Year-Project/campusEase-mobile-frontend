@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, RefreshControl } from "react-native";
+import { ScrollView } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
@@ -9,18 +9,33 @@ import {
 } from "./styles";
 import {
   Button,
+  CustomRefreshControl,
   EmptyState,
   LoadingView,
   ServiceProviderCard,
   TertiaryServiceCard,
 } from "~components";
 import BookingStatus from "./components/BookingStatus";
-import { Service, VerifiedUserPreview, VerifiedUser } from "~src/@types/types";
+import {
+  Service,
+  VerifiedUserPreview,
+  VerifiedUser,
+  Booking,
+} from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEYS } from "~src/shared/constants";
-import { getBooking, getService, getUserDataPreview } from "~services";
+import { QUERY_KEYS, STORAGE_KEYS } from "~src/shared/constants";
+import {
+  getBooking,
+  getService,
+  getUserDataPreview,
+  showAlert,
+} from "~services";
+import BookingBtns from "./components/BookingBtns";
+import PaymentSummary from "../BookingSummary/components/PaymentSummary";
+import { doc, onSnapshot, query, Unsubscribe } from "firebase/firestore";
+import { firestoreDatabase } from "firebaseConfig";
 
 const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -30,13 +45,23 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
     useState<VerifiedUserPreview | null>(null);
   const [service, setService] = useState<Service | null>(null);
 
-  const fetchData = useCallback(
-    async (bookingId: string) => {
-      const booking = await getBooking(bookingId);
-      return booking;
-    },
-    [route.params, navigation]
-  );
+  const fetchData = (bookingId: string): Promise<Booking> => {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = onSnapshot(
+        doc(firestoreDatabase, STORAGE_KEYS.BOOKINGS, bookingId),
+        (querySnapshot) => {
+          const booking = {
+            id: querySnapshot.id,
+            ...querySnapshot.data(),
+          } as Booking;
+          resolve(booking);
+        },
+        (error) => reject(error)
+      );
+
+      return () => unsubscribe();
+    });
+  };
 
   const getServiceProviderData = useCallback(
     async (providerId: string) => {
@@ -77,24 +102,12 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
   return (
     <Container>
       <ScrollView
-        refreshControl={<RefreshControl refreshing={isRefetching} />}
+        refreshControl={<CustomRefreshControl refreshing={isRefetching} />}
         style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
       >
         {service && <TertiaryServiceCard service={service} />}
         <BookingInfoContainer style={{ flexDirection: "row" }}>
-          <Button
-            variant="outline"
-            buttonTextWeight="regular"
-            style={{ borderRadius: 7, flexGrow: 1, marginRight: 7 }}
-          >
-            Write a review
-          </Button>
-          <Button
-            buttonTextWeight="regular"
-            style={{ borderRadius: 7, flexGrow: 1 }}
-          >
-            Book again
-          </Button>
+          <BookingBtns booking={data} isMyService={isMyService} />
         </BookingInfoContainer>
         {serviceProvider && (
           <BookingInfoContainer>
@@ -110,6 +123,7 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
         </BookingInfoContainer>
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Payment Summary</BookingInfoHeaderLabel>
+          <PaymentSummary amount={data.amount} />
         </BookingInfoContainer>
       </ScrollView>
     </Container>
@@ -117,8 +131,3 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
 };
 
 export default BookingDetail;
-
-export const styles = StyleSheet.create({
-  acceptStyle: {},
-  declineStyle: {},
-});

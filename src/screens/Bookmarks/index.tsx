@@ -1,10 +1,13 @@
-import { FlatList, RefreshControl, View } from "react-native";
-import React, { useCallback, useContext } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { FlatList, View } from "react-native";
+import React, { useContext } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
-import { EmptyState, LoadingView, SecondaryServiceCard } from "~components";
-import { Iconify } from "react-native-iconify";
+import {
+  CustomRefreshControl,
+  EmptyState,
+  LoadingView,
+  SecondaryServiceCard,
+} from "~components";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { Container } from "./styles";
 import { NavigationProp } from "@react-navigation/native";
@@ -13,7 +16,6 @@ import { QUERY_KEYS } from "~src/shared/constants";
 import { getBookmarks } from "~services";
 
 const Bookmarks = ({ navigation }: BottomTabScreenProps<any>) => {
-  const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
 
@@ -47,7 +49,7 @@ const Bookmarks = ({ navigation }: BottomTabScreenProps<any>) => {
         style={{ paddingBottom: bottomInset }}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
         ListEmptyComponent={() => <EmptyState />}
-        refreshControl={<RefreshControl refreshing={isRefetching} />}
+        refreshControl={<CustomRefreshControl refreshing={isRefetching} />}
       />
     </Container>
   );

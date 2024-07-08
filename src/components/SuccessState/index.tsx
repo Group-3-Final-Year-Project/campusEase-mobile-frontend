@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import React, { useContext } from "react";
 import { ThemeContext } from "styled-components/native";
 import { Description, Title } from "./styles";
@@ -64,5 +64,3 @@ const SuccessState = ({
 };
 
 export default SuccessState;
-
-const styles = StyleSheet.create({});

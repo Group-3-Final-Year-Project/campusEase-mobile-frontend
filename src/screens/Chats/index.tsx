@@ -27,7 +27,7 @@ import { firestoreDatabase } from "firebaseConfig";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUserPreview, VerifiedUser } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
-import { RefreshControl } from "react-native";
+import {} from "react-native";
 
 const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -169,7 +169,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
           showsHorizontalScrollIndicator={false}
           ListEmptyComponent={() => <EmptyState />}
           refreshControl={
-            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+            <CustomRefreshControlrefreshing={isRefetching} onRefresh={refetch} />
           }
         />
       </Container>
