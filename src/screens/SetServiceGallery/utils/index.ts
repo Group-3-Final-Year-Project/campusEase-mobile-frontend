@@ -62,10 +62,10 @@ export const uploadServiceGallery = async (gallery: ImageForGallery[]) => {
       if (!file.fileName || !file.base64URL) {
         throw new Error("Missing required properties: fileName and base64URL");
       }
-      const path = normalizeFilePath(file.base64URL ?? "");
+      // const path = normalizeFilePath(file.base64URL ?? "");
       const downloadURL = await uploadFileToFirebaseStorage({
         fileName: file.fileName,
-        base64String: path,
+        base64String: file.url ?? "",
         fileType: file.fileType ?? "",
         fileSize: file.fileSize,
       });
@@ -78,6 +78,9 @@ export const uploadServiceGallery = async (gallery: ImageForGallery[]) => {
         key: file.key,
         downloadURL,
       });
+      showToast(
+        `${truncate(file.fileName, { length: 18 })} uploaded successfully`
+      );
     } catch (error) {
       showToast(
         `${truncate(

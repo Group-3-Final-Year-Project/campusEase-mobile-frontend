@@ -14,7 +14,8 @@ import {
   SecondaryServiceCard,
   LoadingView,
   EmptyState,
-  SafeComponent,
+  CustomRefreshControl,
+  Text,
 } from "~components";
 import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
@@ -33,7 +34,6 @@ import {
   getServices,
 } from "~services";
 import Logo from "~assets/images/logo.svg";
-// import Del from "~assets/images/delivery.svg";
 
 const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -78,9 +78,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                 marginLeft: 10,
               }}
               source={{
-                uri: user?.profilePicture
-                  ? user?.profilePicture
-                  : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+                uri: user?.profilePicture ? user?.profilePicture : undefined,
               }}
             />
           </View>
@@ -128,7 +126,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
         style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
         renderItem={undefined}
         refreshControl={
-          <CustomRefreshControlrefreshing={isRefetching} onRefresh={refetch} />
+          <CustomRefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
       >
         <>

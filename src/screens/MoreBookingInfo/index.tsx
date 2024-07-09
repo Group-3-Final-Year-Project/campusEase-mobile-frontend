@@ -7,6 +7,8 @@ import {
   AddAttachmentBtn,
   Container,
   DateContainer,
+  DateContainerWrapper,
+  DateIconContainer,
   Description,
 } from "./styles";
 import { Button, Input } from "~components";
@@ -21,18 +23,21 @@ import { APP_PAGES } from "~src/shared/constants";
 import { ErrorLabel, FormControl } from "../Signup/styles";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { Booking, BookingStatus, VerifiedUser } from "~src/@types/types";
+import { BookingStatus, VerifiedUser } from "~src/@types/types";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import { CountryCodeText } from "../EnterPhone/styles";
 import ACTION_TYPES from "~store/actionTypes";
 import uuid from "react-native-uuid";
+import moment from "moment";
+import BookingAttachments from "./components/BookingAttachments";
+import { DocumentPickerAsset } from "expo-document-picker";
 
 export const bookingInfoSchema = yup.object().shape({
   username: yup.string().required("Username required!"),
   email: yup.string().email("Email not valid!").required("Email required!"),
   phoneNumber: yup.string().required("Phone number required!"),
-  scheduledTime: yup.date().notRequired(),
-  scheduledDate: yup.date().notRequired(),
+  scheduledTime: yup.string().notRequired(),
+  scheduledDate: yup.string().notRequired(),
   noteToProvider: yup.string().notRequired(),
 });
 
@@ -40,15 +45,16 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [attachments, setAttachments] = useState<DocumentPickerAsset[]>([]);
   const user: VerifiedUser = useAppSelector((state) => state.user);
-  const booking: Booking = useAppSelector((state) => state.booking);
+  // const booking: Booking = useAppSelector((state) => state.booking);
   const dispatch = useAppDispatch();
   const bookingInfoInitialValues = {
     username: user.username,
     email: user.email,
     phoneNumber: user.phoneNumber,
-    scheduledTime: new Date(),
-    scheduledDate: new Date(),
+    scheduledTime: moment(new Date()).format("h:mm:ss a"),
+    scheduledDate: moment(new Date()).format("dddd, MMMM Do YYYY"),
     noteToProvider: "",
   };
 
@@ -87,12 +93,11 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
     <Container>
       <ScrollView
         style={{
-          // paddingTop: insets.top,
           paddingBottom: bottomInset,
           paddingHorizontal: 15,
         }}
       >
-        <BookingInfoContainer>
+        <BookingInfoContainer style={{ marginTop: 0 }}>
           <BookingInfoHeaderLabel>Customer Information</BookingInfoHeaderLabel>
           <FormControl>
             <Input
@@ -103,6 +108,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
               placeholder="Username"
               icon={
                 <Iconify
+                  size={18}
                   color={themeContext?.colors.secondaryText2}
                   icon="solar:user-rounded-outline"
                 />
@@ -121,6 +127,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
               placeholder="Email"
               icon={
                 <Iconify
+                  size={18}
                   color={themeContext?.colors.secondaryText2}
                   icon="solar:letter-outline"
                 />
@@ -148,32 +155,52 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Other Information</BookingInfoHeaderLabel>
           <FormControl>
-            <DateContainer
-              placeholder={"Placeholder"}
-              mode={"date"}
-              onChange={(date: string | number | Date) =>
-                formik.setFieldValue("scheduledDate", new Date(date))
-              }
-              onBlur={formik.handleBlur("scheduledDate")}
-              value={formik.values?.scheduledDate}
-            />
+            <DateContainerWrapper>
+              <DateIconContainer>
+                <Iconify
+                  size={18}
+                  color={themeContext?.colors.secondaryText2}
+                  icon="solar:calendar-outline"
+                />
+              </DateIconContainer>
+              <DateContainer
+                placeholder={"Select scheduled date for service"}
+                mode={"date"}
+                minimumDate={new Date()}
+                maximumDate={new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)}
+                onChange={(date: string | number | Date) =>
+                  formik.setFieldValue(
+                    "scheduledDate",
+                    moment(new Date(date)).format("dddd, MMMM Do YYYY")
+                  )
+                }
+                onBlur={formik.handleBlur("scheduledDate")}
+                value={formik.values?.scheduledDate}
+              />
+            </DateContainerWrapper>
           </FormControl>
           <FormControl>
-            <DateContainer
-              leadingAccessory={
+            <DateContainerWrapper>
+              <DateIconContainer>
                 <Iconify
+                  size={18}
                   color={themeContext?.colors.secondaryText2}
                   icon="solar:clock-circle-outline"
                 />
-              }
-              placeholder={"Placeholder"}
-              mode={"time"}
-              onChange={(date: string | number | Date) =>
-                formik.setFieldValue("scheduledTime", date)
-              }
-              onBlur={formik.handleBlur("scheduledTime")}
-              value={formik.values?.scheduledTime}
-            />
+              </DateIconContainer>
+              <DateContainer
+                placeholder={"Select scheduled time for service"}
+                mode={"time"}
+                onChange={(date: string | number | Date) =>
+                  formik.setFieldValue(
+                    "scheduledTime",
+                    moment(new Date(date)).format("h:mm:ss a")
+                  )
+                }
+                onBlur={formik.handleBlur("scheduledTime")}
+                value={formik.values?.scheduledTime}
+              />
+            </DateContainerWrapper>
           </FormControl>
           <FormControl>
             <Input
@@ -181,15 +208,19 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
               onBlur={formik.handleBlur("noteToProvider")}
               value={formik.values?.noteToProvider}
               textContentType="name"
-              placeholder="Note to service provider"
+              placeholder={
+                "Note to service provider\ne.g I want you to please call me when you are ready."
+              }
               multiline
-              numberOfLines={7}
+              numberOfLines={5}
               textAlignVertical="top"
+              inputContainerStyles={{ height: 5 * 50 }}
               icon={
                 <Iconify
+                  size={18}
                   color={themeContext?.colors.secondaryText2}
                   icon="solar:notebook-outline"
-                  style={{ marginBottom: 6 * 16 }}
+                  style={{ marginBottom: 4 * 51 }}
                 />
               }
             />
@@ -200,18 +231,10 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
             Attachments for service provider
           </BookingInfoHeaderLabel>
           <FormControl>
-            <AddAttachmentBtn onPress={() => pickDocuments()}>
-              <Iconify
-                color={themeContext?.colors.secondaryText2}
-                icon="solar:add-square-outline"
-                style={{ marginRight: 7 }}
-              />
-              <Description
-                style={{ color: themeContext?.colors.secondaryText2 }}
-              >
-                Add attachments
-              </Description>
-            </AddAttachmentBtn>
+            <BookingAttachments
+              attachments={attachments}
+              setAttachments={setAttachments}
+            />
           </FormControl>
         </BookingInfoContainer>
       </ScrollView>

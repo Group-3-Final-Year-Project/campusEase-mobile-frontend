@@ -59,16 +59,25 @@ const SetServiceLocation = ({
   const user: VerifiedUser = useAppSelector((state) => state.user);
 
   const startServiceCreation = async (service: Service) => {
-    if (
-      serviceInCreation.name &&
-      serviceInCreation.location.name &&
-      serviceInCreation.category.id
-    ) {
-      await createService(service).catch((err) => {
-        showAlert("Ooops...", "Could not create your service. Try again");
-      });
+    if (serviceInCreation.name && serviceInCreation.id) {
+      console.log("Name:", serviceInCreation.name);
+      console.log("Cat:", serviceInCreation.category.id);
+      console.log("Loc:", serviceInCreation.location.name);
+      await createService(service)
+        .then(() => {
+          console.log("Trueeeee");
+          return { isSuccess: true };
+        })
+        .catch((err) => {
+          showAlert("Ooops...", "Could not create your service. Try again");
+          return { isSuccess: false };
+        });
     } else {
-      showAlert("Ooops...", "Could not create your service. Try again");
+      showAlert(
+        "Ooops...",
+        "Could not create your service. Details provided are incomplete"
+      );
+      return { isSuccess: false };
     }
   };
 
@@ -90,8 +99,8 @@ const SetServiceLocation = ({
     },
     validationSchema: locationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log("V: ", values);
       try {
-        console.log("Val", values);
         await getFormattedAddressFromGeocode(
           values.location.latitude,
           values.location.longitude
@@ -106,10 +115,8 @@ const SetServiceLocation = ({
               },
             },
           });
-          console.log(formatted_address);
           const service: Service = {
             ...serviceInCreation,
-            id: uuid.v4() as string,
             providerId: user.id,
             location: {
               name: "Main",
@@ -120,16 +127,18 @@ const SetServiceLocation = ({
             createdAt: new Date().toLocaleString(),
             updatedAt: new Date().toLocaleString(),
           };
-          await startServiceCreation(service).then(() => {
-            resetForm();
-            dispatch({
-              type: ACTION_TYPES.CLEAR_SERVICE_IN_CREATION_DATA,
-              payload: {},
-            });
-            navigateAndResetStack(
-              navigation,
-              APP_PAGES.SERVICE_CREATION_SUCCESS
-            );
+          await startServiceCreation(service).then((res) => {
+            if (res?.isSuccess) {
+              resetForm();
+              dispatch({
+                type: ACTION_TYPES.CLEAR_SERVICE_IN_CREATION_DATA,
+                payload: {},
+              });
+              navigateAndResetStack(
+                navigation,
+                APP_PAGES.SERVICE_CREATION_SUCCESS
+              );
+            }
           });
         });
       } catch (error) {

@@ -190,7 +190,7 @@ export type Booking = {
   scheduledDate: string;
   scheduledTime: string;
   notes: string;
-  attachments: BookingAttachment[];
+  attachments: GalleryFile[];
   bookingStates: BookingState[];
   bookingStatus: BookingStatus;
   requestCompletedConfirmationFromUser: boolean;

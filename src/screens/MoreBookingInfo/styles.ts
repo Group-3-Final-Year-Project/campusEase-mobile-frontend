@@ -40,6 +40,17 @@ export const AddAttachmentBtn = styled.TouchableOpacity`
   border-style: dashed;
 `;
 
+export const DateContainerWrapper = styled.View`
+  border-radius: 10px;
+  background-color: ${(props: DefaultThemeProps) =>
+    props.theme.colors.secondaryBackground};
+  flex-direction: row;
+  overflow: hidden;
+  width: 100%;
+  /* flex-grow: 1; */
+  height: 50px;
+`;
+
 export const DateContainer = styled(DateTimePicker).attrs(
   (props: DefaultThemeProps) => ({
     placeholderTextColor: Color(props.theme.colors.secondaryText)
@@ -48,15 +59,16 @@ export const DateContainer = styled(DateTimePicker).attrs(
       .string(),
   })
 )`
-  border-radius: 16px;
-  border-color: ${(props: DefaultThemeProps) =>
-    props.theme.colors.secondaryBackground};
-  flex-direction: row;
-  overflow: hidden;
   flex-grow: 1;
-  border-width: 1px;
-  padding: ${(props: DefaultThemeProps) =>
-    props.padding ? props.padding : 15}px;
-  flex: 1;
+  height: 50px;
+  width: 100%;
+  padding: 12px 10px;
   ${fontStyle}
+`;
+
+export const DateIconContainer = styled.View`
+  padding-left: 10px;
+  align-items: center;
+  justify-content: center;
+  vertical-align: top;
 `;

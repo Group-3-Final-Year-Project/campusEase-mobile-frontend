@@ -1,7 +1,6 @@
-import "react-native-gesture-handler";
 import { useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -54,8 +53,6 @@ function App() {
     if (!colorScheme) return DefaultTheme;
     return colorScheme === "dark" ? DarkTheme : LightTheme;
   }, [colorScheme]);
-  const notificationListener = useRef(null);
-  const responseListener = useRef(null);
 
   useDidMountEffect(() => {
     if (fontsLoaded) setTimeout(SplashScreen.hideAsync, 100);

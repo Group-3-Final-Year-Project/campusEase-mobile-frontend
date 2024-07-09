@@ -269,14 +269,12 @@ export const uploadFileToFirebaseStorage = async (file: {
   fileType?: string;
   fileSize?: number;
 }): Promise<string> => {
-  const blob = await fetch(file.base64String)
-    .then((res) => res.blob())
-    .catch((err) => console.log(err));
-
+  const res = await fetch(file.base64String);
+  const blob = await res.blob();
   return new Promise((resolve, reject) => {
     const storageRef = ref(firebaseCloudStorage, file.fileName);
 
-    const uploadTask = uploadBytesResumable(storageRef, blob!, {
+    const uploadTask = uploadBytesResumable(storageRef, blob, {
       contentType: file.fileType,
       customMetadata: {
         fileSize: file.fileSize ? file.fileSize.toString() : "",
@@ -305,6 +303,7 @@ export const uploadFileToFirebaseStorage = async (file: {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("Download URL: " + downloadURL);
           resolve(downloadURL);
         });
       }

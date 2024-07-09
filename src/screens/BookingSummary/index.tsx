@@ -86,7 +86,6 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
     <Container>
       <ScrollView
         style={{
-          paddingTop: insets.top,
           paddingBottom: bottomInset,
           paddingHorizontal: 15,
           // marginBottom: 200,

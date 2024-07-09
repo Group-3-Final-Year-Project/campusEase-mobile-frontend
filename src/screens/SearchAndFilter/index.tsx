@@ -5,6 +5,7 @@ import { ThemeContext } from "styled-components/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import {
+  CustomRefreshControl,
   EmptyState,
   IconBtn,
   LoadingView,
@@ -166,7 +167,7 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
         style={{ paddingBottom: bottomInset }}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
         ListEmptyComponent={() => <EmptyState />}
-        refreshControl={<CustomRefreshControlrefreshing={isRefetching} />}
+        refreshControl={<CustomRefreshControl refreshing={isRefetching} />}
       />
     </Container>
   );

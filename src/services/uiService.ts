@@ -6,10 +6,10 @@ import * as Linking from "expo-linking";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { Alert, Platform } from "react-native";
-import { StringError } from "~src/@types/types";
 import { eventEmitter } from "./eventEmitter";
 import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
 import { getMyServices } from "./dataService";
+import * as DocumentPicker from "expo-document-picker";
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -47,7 +47,31 @@ export const showToast = (message: string) => {
   });
 };
 
-export const pickDocuments = () => {};
+export const pickDocuments = async () => {
+  const res = await DocumentPicker.getDocumentAsync({
+    multiple: true,
+    type: [
+      "image/*",
+      "audio/*",
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "vnd.ms-excel",
+      "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "text/csv",
+      "text/plain",
+      "application/zip",
+      "application/vnd.ms-powerpoint",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ],
+  }).then((res) => {
+    if (res.canceled) return [];
+    return res.assets;
+  });
+
+  return res;
+};
 
 export function pickRandomAvatarColor(id?: number): string {
   const colors = [

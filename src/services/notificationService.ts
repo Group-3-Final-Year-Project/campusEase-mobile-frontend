@@ -46,20 +46,17 @@ export const getUserDeviceToken = async () => {
 
 export const fetchNotifications = async () => {};
 
-// export const sendBookingRequestNotifications = async (
-//   userDeviceToken: string,
-//   providerDeviceToken: string
-// ) => {
-//   const notificationForUser: Notifications.Notification = {
-//     date: new Date().getTime(),
-//       request: {
-//           trigger: null,
-//           content: {
-
-//           }
-//     },
-//   };
-// };
+export const sendBookingRequestNotifications = async (
+  userDeviceToken: string,
+  providerDeviceToken: string
+) => {
+  const notificationForUser: Notifications.Notification = {
+    date: new Date().getTime(),
+    request: {
+      content: {},
+    },
+  };
+};
 
 export const schedulePushNotification = async (
   requestInput: Notifications.NotificationRequestInput

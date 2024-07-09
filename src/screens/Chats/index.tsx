@@ -10,7 +10,13 @@ import {
   ChatCardLabel,
   Description,
 } from "./styles";
-import { EmptyState, IconBtn, LoadingView, SafeComponent } from "~components";
+import {
+  CustomRefreshControl,
+  EmptyState,
+  IconBtn,
+  LoadingView,
+  SafeComponent,
+} from "~components";
 import { Iconify } from "react-native-iconify";
 import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -147,33 +153,28 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   else if (isError || !data || data === undefined) return <EmptyState />;
 
   return (
-    <SafeComponent
-      refetch={refetch}
-      request={{ data, loading: isLoading, error }}
+    <Container
+      style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
     >
-      <Container
-        style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
-      >
-        <StatusBar style={themeContext?.dark ? "light" : "dark"} />
-        <FlatList
-          data={chatList}
-          renderItem={renderChatCard}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{
-                height: 0.8,
-                backgroundColor: themeContext?.colors.secondaryBackground,
-              }}
-            />
-          )}
-          showsHorizontalScrollIndicator={false}
-          ListEmptyComponent={() => <EmptyState />}
-          refreshControl={
-            <CustomRefreshControlrefreshing={isRefetching} onRefresh={refetch} />
-          }
-        />
-      </Container>
-    </SafeComponent>
+      <StatusBar style={themeContext?.dark ? "light" : "dark"} />
+      <FlatList
+        data={chatList}
+        renderItem={renderChatCard}
+        ItemSeparatorComponent={() => (
+          <View
+            style={{
+              height: 0.8,
+              backgroundColor: themeContext?.colors.secondaryBackground,
+            }}
+          />
+        )}
+        showsHorizontalScrollIndicator={false}
+        ListEmptyComponent={() => <EmptyState />}
+        refreshControl={
+          <CustomRefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
+      />
+    </Container>
   );
 };
 

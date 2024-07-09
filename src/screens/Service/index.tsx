@@ -1,4 +1,4 @@
-import { View, Animated } from "react-native";
+import { View, Animated, StyleSheet } from "react-native";
 import React, {
   useContext,
   useRef,
@@ -84,7 +84,15 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
               color={themeContext?.colors.text}
             />
           </IconBtn>
-          <IconBtn>
+          {
+            isMyService ? <IconBtn>
+            <Iconify
+              icon="solar:pen-new-square-outline"
+              size={18}
+              strokeWidth={18}
+              color={themeContext?.colors.text}
+            />
+          </IconBtn> : <IconBtn>
             <Iconify
               icon="solar:bookmark-bold"
               size={18}
@@ -92,6 +100,8 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
               color={themeContext?.colors.text}
             />
           </IconBtn>
+          }
+          
         </View>
       ),
       // @ts-ignore
@@ -200,6 +210,8 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
       action: () => null,
     },
   ];
+
+  const isMyService = user.id === data?.providerId;
 
   if (isLoading) return <LoadingView />;
   else if (isError || !data || data === undefined) return <EmptyState />;
@@ -372,7 +384,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           )}
           {/* Reviews goes here... */}
           <GridView />
-          {!!reviews.length && (
+          {!!reviews?.length && (
             <ServiceInfoContainer>
               <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
               <StackAggregator
@@ -410,27 +422,29 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           />
         </ServiceInfoContainer> */}
         </Animated.ScrollView>
-        <BottomCard>
-          <View>
-            <Description style={{ marginBottom: 10 }}>
-              Starting Price
-            </Description>
-            <HighlightedDescription>
-              {formatCurrency(data?.startingPrice ?? 0)}
-            </HighlightedDescription>
-          </View>
-          <Button
-            style={{ width: 240, height: 60, padding: 12 }}
-            onPress={() =>
-              navigation.navigate(APP_PAGES.BOOKING_SUMMARY, {
-                service: data,
-                serviceProvider,
-              })
-            }
-          >
-            Book now
-          </Button>
-        </BottomCard>
+        {!isMyService && (
+          <BottomCard>
+            <View>
+              <Description style={{ marginBottom: 10 }}>
+                Starting Price
+              </Description>
+              <HighlightedDescription>
+                {formatCurrency(data?.startingPrice ?? 0)}
+              </HighlightedDescription>
+            </View>
+            <Button
+              style={{ width: 240, height: 60, padding: 12 }}
+              onPress={() =>
+                navigation.navigate(APP_PAGES.BOOKING_SUMMARY, {
+                  service: data,
+                  serviceProvider,
+                })
+              }
+            >
+              Book now
+            </Button>
+          </BottomCard>
+        )}
       </Container>
     </SafeComponent>
   );

@@ -50,91 +50,91 @@ const RootNavigator = () => {
   const dispatch = useAppDispatch();
   const user: VerifiedUser = useAppSelector((state) => state.user);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id),
-      async (querySnapshot) => {
-        const result = await saveUserDetails({
-          id: querySnapshot.id,
-          ...querySnapshot.data(),
-        } as VerifiedUser);
-        dispatch({
-          type: ACTION_TYPES.UPDATE_USER_DATA,
-          payload: result,
-        });
-      }
-    );
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(
+  //     doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id),
+  //     async (querySnapshot) => {
+  //       const result = await saveUserDetails({
+  //         id: querySnapshot.id,
+  //         ...querySnapshot.data(),
+  //       } as VerifiedUser);
+  //       dispatch({
+  //         type: ACTION_TYPES.UPDATE_USER_DATA,
+  //         payload: result,
+  //       });
+  //     }
+  //   );
+  //   return () => unsubscribe();
+  // }, []);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
-      if (user) {
-        const userFromDB = await getUser(user.uid);
-        const userData: VerifiedUser = {
-          id: user.uid,
-          email: user.email ?? userFromDB.email ?? "",
-          userType: userFromDB.userType,
-          username: user.displayName ?? userFromDB.username ?? "",
-          phoneNumber: user.phoneNumber ?? userFromDB.phoneNumber ?? "",
-          locations: userFromDB.locations,
-          profilePicture: user.photoURL ?? userFromDB.profilePicture,
-          isEmailVerified: user.emailVerified,
-          isPhoneVerified: userFromDB.isPhoneVerified,
-          isActive: userFromDB.isActive,
-          isLoggedIn: userFromDB.isActive,
-        };
-        await createUser(userData);
-        const result = await saveUserDetails(userData);
-        dispatch({
-          type: ACTION_TYPES.UPDATE_USER_DATA,
-          payload: result,
-        });
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+  //     if (user) {
+  //       const userFromDB = await getUser(user.uid);
+  //       const userData: VerifiedUser = {
+  //         id: user.uid,
+  //         email: user.email ?? userFromDB.email ?? "",
+  //         userType: userFromDB.userType,
+  //         username: user.displayName ?? userFromDB.username ?? "",
+  //         phoneNumber: user.phoneNumber ?? userFromDB.phoneNumber ?? "",
+  //         locations: userFromDB.locations,
+  //         profilePicture: user.photoURL ?? userFromDB.profilePicture,
+  //         isEmailVerified: user.emailVerified,
+  //         isPhoneVerified: userFromDB.isPhoneVerified,
+  //         isActive: userFromDB.isActive,
+  //         isLoggedIn: userFromDB.isActive,
+  //       };
+  //       await createUser(userData);
+  //       const result = await saveUserDetails(userData);
+  //       dispatch({
+  //         type: ACTION_TYPES.UPDATE_USER_DATA,
+  //         payload: result,
+  //       });
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
-  useEffect(() => {
-    getUserDeviceToken().then(async (res) => {
-      if (res && res !== user.userDeviceToken) {
-        const userFromDB = await getUser(user.id);
-        const userData: VerifiedUser = {
-          ...userFromDB,
-          userDeviceToken: res,
-        };
-        await createUser(userData);
-        const result = await saveUserDetails(userData);
-        dispatch({
-          type: ACTION_TYPES.UPDATE_USER_DATA,
-          payload: result,
-        });
-        console.log("Token Changed!!!");
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   getUserDeviceToken().then(async (res) => {
+  //     if (res && res !== user.userDeviceToken) {
+  //       const userFromDB = await getUser(user.id);
+  //       const userData: VerifiedUser = {
+  //         ...userFromDB,
+  //         userDeviceToken: res,
+  //       };
+  //       await createUser(userData);
+  //       const result = await saveUserDetails(userData);
+  //       dispatch({
+  //         type: ACTION_TYPES.UPDATE_USER_DATA,
+  //         payload: result,
+  //       });
+  //       console.log("Token Changed!!!");
+  //     }
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    const subscription = NotificationsFunc.addPushTokenListener(
-      async (token) => {
-        if (token.data && token.data !== user.userDeviceToken) {
-          const userFromDB = await getUser(user.id);
-          const userData: VerifiedUser = {
-            ...userFromDB,
-            userDeviceToken: token.data,
-          };
-          await createUser(userData);
-          const result = await saveUserDetails(userData);
-          dispatch({
-            type: ACTION_TYPES.UPDATE_USER_DATA,
-            payload: result,
-          });
-          console.log("Token Changed!!!");
-        }
-      }
-    );
-    return () => subscription.remove();
-  }, []);
+  // useEffect(() => {
+  //   const subscription = NotificationsFunc.addPushTokenListener(
+  //     async (token) => {
+  //       if (token.data && token.data !== user.userDeviceToken) {
+  //         const userFromDB = await getUser(user.id);
+  //         const userData: VerifiedUser = {
+  //           ...userFromDB,
+  //           userDeviceToken: token.data,
+  //         };
+  //         await createUser(userData);
+  //         const result = await saveUserDetails(userData);
+  //         dispatch({
+  //           type: ACTION_TYPES.UPDATE_USER_DATA,
+  //           payload: result,
+  //         });
+  //         console.log("Token Changed!!!");
+  //       }
+  //     }
+  //   );
+  //   return () => subscription.remove();
+  // }, []);
 
   return (
     <Stack.Navigator

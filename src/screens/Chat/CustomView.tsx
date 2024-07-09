@@ -1,7 +1,13 @@
 import * as Linking from "expo-linking";
 import PropTypes from "prop-types";
 import React from "react";
-import { Platform, TouchableOpacity, View, Text } from "react-native";
+import {
+  Platform,
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+} from "react-native";
 import MapView from "react-native-maps";
 
 export default class CustomView extends React.Component<{

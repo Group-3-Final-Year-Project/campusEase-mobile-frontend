@@ -5,15 +5,13 @@ import { ThemeContext } from "styled-components/native";
 
 const CustomRefreshControl = (props: RefreshControlProps) => {
   const themeContext = useContext(ThemeContext);
-  const ref = useRef(null);
   return (
     <RefreshControl
       style={{
         backgroundColor: "transparent",
       }}
       tintColor={themeContext?.colors.primary}
-      ref={ref}
-      size={12}
+      // size={12}
       {...props}
     />
   );

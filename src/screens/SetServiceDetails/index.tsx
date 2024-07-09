@@ -31,6 +31,7 @@ import AdvancedActionSheet from "~components/AdvancedActionSheet";
 import { Service, ServiceCategory } from "~src/@types/types";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
+import uuid from "react-native-uuid";
 
 export const serviceDetailsSchema = yup.object().shape({
   name: yup.string().min(3, "Name not valid!").required("Name required!"),
@@ -72,7 +73,10 @@ const SetServiceDetails = ({
       try {
         dispatch({
           type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
-          payload: values,
+          payload: {
+            id: uuid.v4() as string,
+            ...values,
+          },
         });
         resetForm();
         navigation.navigate(APP_PAGES.SET_SERVICE_GALLERY);
