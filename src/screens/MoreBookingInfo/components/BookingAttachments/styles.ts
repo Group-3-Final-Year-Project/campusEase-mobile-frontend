@@ -18,19 +18,23 @@ export const AttachmentContainer = styled.View`
   background-color: ${(props: DefaultThemeProps) =>
     props.theme.colors.secondaryBackground};
   border-radius: 15px;
+  margin: 3.5px 0;
+  padding-right: 10px;
+  align-items: center;
 `;
 
 export const AttachmentTypeContainer = styled.View`
   height: 100%;
-  width: 100px;
+  width: 70px;
   border-radius: 10px;
 `;
 
 export const InfoContainer = styled.View`
-  margin-left: 15px;
+  margin-left: 10px;
   justify-content: space-between;
   flex-grow: 1;
   padding: 10px;
+  height: 100%;
 `;
 
 export const Description = styled(Text).attrs({})`

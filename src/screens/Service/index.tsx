@@ -45,6 +45,7 @@ import {
   getService,
   getUserDataPreview,
   openChat,
+  setBookmarks,
 } from "~services";
 import { NavigationProp } from "@react-navigation/native";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
@@ -84,24 +85,25 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
               color={themeContext?.colors.text}
             />
           </IconBtn>
-          {
-            isMyService ? <IconBtn>
-            <Iconify
-              icon="solar:pen-new-square-outline"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          </IconBtn> : <IconBtn>
-            <Iconify
-              icon="solar:bookmark-bold"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          </IconBtn>
-          }
-          
+          {isMyService ? (
+            <IconBtn>
+              <Iconify
+                icon="solar:pen-new-square-outline"
+                size={18}
+                strokeWidth={18}
+                color={themeContext?.colors.text}
+              />
+            </IconBtn>
+          ) : (
+            <IconBtn onPress={() => setBookmarks(data ? [data] : [])}>
+              <Iconify
+                icon="solar:bookmark-bold"
+                size={18}
+                strokeWidth={18}
+                color={themeContext?.colors.text}
+              />
+            </IconBtn>
+          )}
         </View>
       ),
       // @ts-ignore
@@ -422,7 +424,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           />
         </ServiceInfoContainer> */}
         </Animated.ScrollView>
-        {!isMyService && (
+        {isMyService && (
           <BottomCard>
             <View>
               <Description style={{ marginBottom: 10 }}>

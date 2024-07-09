@@ -11,7 +11,10 @@ const CustomAlert = (props: { children: any }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [alertButtons, setAlertButtons] = useState([]);
+  const [alertButtons, setAlertButtons] = useState<
+    { label: string; onPress: () => void }[]
+  >([]);
+
   const emitterListenerRef = useRef<any>(null);
   const themeContext = useContext(ThemeContext);
 
@@ -58,7 +61,11 @@ const CustomAlert = (props: { children: any }) => {
           confirmText="Ok"
           confirmButtonColor={themeContext?.colors.primary}
           onCancelPressed={hideAlert}
-          onConfirmPressed={hideAlert}
+          onConfirmPressed={() =>
+            alertButtons.length
+              ? [alertButtons[0].onPress(), hideAlert()]
+              : hideAlert()
+          }
           onDismiss={hideAlert}
           cancelButtonColor={themeContext?.colors.secondary}
           contentContainerStyle={{

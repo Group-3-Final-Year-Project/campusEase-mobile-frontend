@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Text from "~components/Text";
 import DateTimePicker from "react-native-ui-lib/dateTimePicker";
 import Color from "color";
+import { DateTimePickerProps } from "react-native-ui-lib";
 
 const fontStyle = css`
   font-family: ${(props) => props.theme.typography.fontFamily.semiBold};
@@ -51,14 +52,14 @@ export const DateContainerWrapper = styled.View`
   height: 50px;
 `;
 
-export const DateContainer = styled(DateTimePicker).attrs(
-  (props: DefaultThemeProps) => ({
-    placeholderTextColor: Color(props.theme.colors.secondaryText)
-      .fade(0.5)
-      .rgb()
-      .string(),
-  })
-)`
+export const DateContainer: React.ForwardRefExoticComponent<
+  DateTimePickerProps & React.RefAttributes<any>
+> = styled(DateTimePicker).attrs((props: DefaultThemeProps) => ({
+  placeholderTextColor: Color(props.theme.colors.secondaryText)
+    .fade(0.5)
+    .rgb()
+    .string(),
+}))`
   flex-grow: 1;
   height: 50px;
   width: 100%;

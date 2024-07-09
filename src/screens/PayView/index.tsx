@@ -10,6 +10,7 @@ import { createBooking, navigateAndResetStack, showAlert } from "~services";
 import ACTION_TYPES from "~store/actionTypes";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
+import { View } from "react-native";
 
 const PayView = ({ navigation }: NativeStackScreenProps<any>) => {
   const ref = useRef(null);
@@ -32,7 +33,7 @@ const PayView = ({ navigation }: NativeStackScreenProps<any>) => {
           type: ACTION_TYPES.CLEAR_BOOKING_DATA,
           payload: {},
         });
-        navigateAndResetStack(navigation, APP_PAGES.SERVICE_CREATION_SUCCESS);
+        navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
       })
       .catch(() => {
         showAlert("Ooops!", "Could not create your request. Try again");
@@ -56,29 +57,38 @@ const PayView = ({ navigation }: NativeStackScreenProps<any>) => {
       ref.current = null;
     };
 
-    () => unsubScribe();
+    return () => unsubScribe();
   }, [booking.id]);
   return (
     <Container>
-      <Paystack
-        paystackKey={process.env.EXPO_PUBLIC_PAYSTACK_KEY!}
-        amount={booking.amount}
-        billingEmail={booking.customerEmail}
-        billingName={booking.customerName}
-        currency={"GHS"}
-        firstName={booking.customerName}
-        phone={booking.customerPhone}
-        refNumber={booking.id}
-        activityIndicatorColor={themeContext?.colors.primary}
-        onCancel={(e) => {}}
-        onSuccess={(response) => handleOnSuccess()}
-        autoStart={start}
-        ref={ref}
-        channels={["mobile_money", "card", "bank"]}
-      />
-      <Button loading={loading} onPress={() => setStart(true)}>
-        Pay
-      </Button>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <Paystack
+          paystackKey={process.env.EXPO_PUBLIC_PAYSTACK_KEY!}
+          amount={booking.amount}
+          billingEmail={booking.customerEmail}
+          billingName={booking.customerName}
+          currency={"GHS"}
+          firstName={booking.customerName}
+          phone={booking.customerPhone}
+          refNumber={booking.id}
+          activityIndicatorColor={themeContext?.colors.primary}
+          onCancel={(e) => {}}
+          onSuccess={(response) => handleOnSuccess()}
+          autoStart={start}
+          ref={ref}
+          channels={["mobile_money", "card", "bank"]}
+        />
+        <Button loading={loading} onPress={() => setStart(true)}>
+          Pay
+        </Button>
+      </View>
     </Container>
   );
 };

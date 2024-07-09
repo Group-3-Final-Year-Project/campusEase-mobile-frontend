@@ -33,13 +33,20 @@ const BookingAttachments = ({
   setAttachments,
 }: BookingAttachmentsProps) => {
   const themeContext = useContext(ThemeContext);
-  const [limitReached, setLimitReached] = useState<boolean>(
-    attachments.length === 3
-  );
+  const [numberOfAttachments, setNumberOfAttachments] = useState(0);
 
   const handlePickDocs = async () => {
     const res = await pickDocuments();
-    setAttachments(res);
+    setNumberOfAttachments(numberOfAttachments + res.length);
+    setAttachments([...attachments, ...res]);
+  };
+
+  const handleRemoveFromAttachments = (uri: string) => {
+    const updatedAttachments = attachments.filter(
+      (attachments) => attachments.uri !== uri
+    );
+    setNumberOfAttachments(updatedAttachments.length);
+    setAttachments(updatedAttachments);
   };
 
   const renderAttachment = ({ item }: { item: DocumentPickerAsset }) => (
@@ -54,11 +61,11 @@ const BookingAttachments = ({
         <Description>{item.size}B</Description>
       </InfoContainer>
       <TouchableOpacity
-        // onPress={() => handleDeleteFromSubServiceForms(form.id)}
+        onPress={() => handleRemoveFromAttachments(item.uri)}
         style={{ borderRadius: 100 }}
       >
         <Iconify
-          size={18}
+          size={22}
           color={themeContext?.colors.secondary}
           icon="solar:close-circle-bold"
         />
@@ -69,9 +76,9 @@ const BookingAttachments = ({
   return (
     <FlatList
       data={attachments}
-      ListHeaderComponent={
+      ListFooterComponent={
         <>
-          {!limitReached && (
+          {numberOfAttachments < 3 && (
             <AddAttachmentBtn onPress={() => handlePickDocs()}>
               <Iconify
                 color={themeContext?.colors.secondaryText2}
@@ -95,48 +102,116 @@ const BookingAttachments = ({
 export default BookingAttachments;
 
 export const pickAttachmentTypeIcon = (fileType: string) => {
-  switch (fileType) {
+  function getUniversalMimeType(mimeType: string) {
+    if (!mimeType) {
+      return mimeType;
+    }
+
+    const category = mimeType.split("/")[0]; // Get the category (e.g., "image", "audio", "video")
+
+    switch (category) {
+      case "image":
+        return mimeType.includes("png") ? "image/*" : mimeType;
+      case "audio":
+        return mimeType.includes("mpeg") ? "audio/*" : mimeType;
+      case "video":
+        return mimeType.includes("mp4") ? "video/*" : mimeType;
+      case "text":
+        return "text/*"; // Allow any text format
+      default:
+        return mimeType;
+    }
+  }
+
+  const fType = getUniversalMimeType(fileType);
+
+  switch (fType) {
     case "image/*":
       return (
-        <View style={{ flex: 1, backgroundColor: "purple" }}>
+        <View
+          style={{
+            borderRadius: 10,
+            flex: 1,
+            justifyContent: "center",
+            backgroundColor: "#A020F020",
+            alignItems: "center",
+          }}
+        >
           <Iconify
             icon={"solar:gallery-round-bold"}
             size={20}
-            color={"purple"}
+            color={"#A020F0"}
           />
         </View>
       );
     case "text/*":
       return (
-        <View style={{ flex: 1, backgroundColor: "purple" }}>
+        <View
+          style={{
+            borderRadius: 10,
+            flex: 1,
+            justifyContent: "center",
+            backgroundColor: "#0011ee20",
+            alignItems: "center",
+          }}
+        >
           <Iconify
             icon={"solar:document-text-bold"}
             size={20}
-            color={"purple"}
+            color={"#0011ee"}
           />
         </View>
       );
     case "audio/*":
       return (
-        <View style={{ flex: 1, backgroundColor: "purple" }}>
+        <View
+          style={{
+            borderRadius: 10,
+            flex: 1,
+            justifyContent: "center",
+            backgroundColor: "#FFD70020",
+            alignItems: "center",
+          }}
+        >
           <Iconify
             icon={"solar:turntable-music-note-bold"}
             size={20}
-            color={"purple"}
+            color={"#FFD700"}
           />
         </View>
       );
     case "video/*":
       return (
-        <View style={{ flex: 1, backgroundColor: "purple" }}>
-          <Iconify icon={"solar:videocamera-bold"} size={20} color={"purple"} />
+        <View
+          style={{
+            borderRadius: 10,
+            flex: 1,
+            justifyContent: "center",
+            backgroundColor: "#00808020",
+            alignItems: "center",
+          }}
+        >
+          <Iconify
+            icon={"solar:videocamera-bold"}
+            size={20}
+            color={"#008080"}
+          />
         </View>
       );
     default:
       return (
-        <View style={{ flex: 1, backgroundColor: "purple" }}>
-          <Iconify icon={"solar:file-bold"} size={20} color={"purple"} />
+        <View
+          style={{
+            borderRadius: 10,
+            flex: 1,
+            justifyContent: "center",
+            backgroundColor: "#11ff1120",
+            alignItems: "center",
+          }}
+        >
+          <Iconify icon={"solar:file-bold"} size={20} color={"#11ff11"} />
         </View>
       );
   }
 };
+20;

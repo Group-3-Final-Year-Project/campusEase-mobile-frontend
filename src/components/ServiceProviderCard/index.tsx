@@ -56,7 +56,7 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
               color: themeContext?.colors.secondaryText,
             }}
           >
-            {provider.userType}
+            {provider?.userType}
           </Description>
         </View>
       </View>

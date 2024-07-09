@@ -9,6 +9,7 @@ import Text from "~components/Text";
 import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
 import { ServiceListService } from "~src/@types/types";
+import { setBookmarks } from "~services";
 
 interface ServiceCardProps extends CardProps {
   service: ServiceListService;
@@ -71,7 +72,7 @@ const ServiceCard = (props: ServiceCardProps) => {
             {service?.rating ?? 0.0}
           </Text>
         </IconBtn>
-        <IconBtn>
+        <IconBtn onPress={() => setBookmarks([service])}>
           <Iconify
             icon="solar:bookmark-bold"
             size={12}

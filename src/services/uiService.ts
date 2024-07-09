@@ -35,10 +35,15 @@ export const useDidMountEffect = (
   }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export const showAlert = (title: string, message: string) => {
+export const showAlert = (
+  title: string,
+  message: string,
+  buttons?: { label: string; onPress: () => void }[]
+) => {
   eventEmitter.emit(SUBSCRIBABLE_EVENTS.SHOW_ALERT, {
     title: title,
     message: message,
+    buttons: buttons,
   });
 };
 export const showToast = (message: string) => {

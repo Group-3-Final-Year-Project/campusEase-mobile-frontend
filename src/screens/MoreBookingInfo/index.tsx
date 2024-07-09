@@ -4,12 +4,10 @@ import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
 import { Iconify } from "react-native-iconify";
 import {
-  AddAttachmentBtn,
   Container,
   DateContainer,
   DateContainerWrapper,
   DateIconContainer,
-  Description,
 } from "./styles";
 import { Button, Input } from "~components";
 import { BottomCard } from "../Service/styles";
@@ -17,27 +15,31 @@ import {
   BookingInfoContainer,
   BookingInfoHeaderLabel,
 } from "../BookingDetail/styles";
-import { pickDocuments } from "~services";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { ErrorLabel, FormControl } from "../Signup/styles";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { BookingStatus, VerifiedUser } from "~src/@types/types";
+import { BookingStatus, GalleryFile, VerifiedUser } from "~src/@types/types";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import { CountryCodeText } from "../EnterPhone/styles";
 import ACTION_TYPES from "~store/actionTypes";
-import uuid from "react-native-uuid";
 import moment from "moment";
 import BookingAttachments from "./components/BookingAttachments";
 import { DocumentPickerAsset } from "expo-document-picker";
+import {
+  getFirebaseErrorMessage,
+  showAlert,
+  uploadFileToFirebaseStorage,
+} from "~services";
+import uuid from "react-native-uuid";
 
 export const bookingInfoSchema = yup.object().shape({
   username: yup.string().required("Username required!"),
   email: yup.string().email("Email not valid!").required("Email required!"),
   phoneNumber: yup.string().required("Phone number required!"),
-  scheduledTime: yup.string().notRequired(),
-  scheduledDate: yup.string().notRequired(),
+  scheduledTime: yup.date().notRequired(),
+  scheduledDate: yup.date().notRequired(),
   noteToProvider: yup.string().notRequired(),
 });
 
@@ -48,13 +50,34 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
   const [attachments, setAttachments] = useState<DocumentPickerAsset[]>([]);
   const user: VerifiedUser = useAppSelector((state) => state.user);
   // const booking: Booking = useAppSelector((state) => state.booking);
+
+  const uploadAttachments = async (filesToUpload: DocumentPickerAsset[]) => {
+    const files: GalleryFile[] = [];
+    for (const file of attachments) {
+      const getDownloadURL = await uploadFileToFirebaseStorage({
+        base64String: file.uri,
+        fileName: file.name,
+        fileSize: file.size ?? 0,
+        fileType: file.mimeType ?? "",
+      });
+      files.push({
+        downloadURL: getDownloadURL,
+        fileName: file.name,
+        fileSize: file.size ?? 0,
+        fileType: file.mimeType ?? "",
+        key: uuid.v4() as string,
+      });
+    }
+    return files;
+  };
+
   const dispatch = useAppDispatch();
   const bookingInfoInitialValues = {
     username: user.username,
     email: user.email,
     phoneNumber: user.phoneNumber,
-    scheduledTime: moment(new Date()).format("h:mm:ss a"),
-    scheduledDate: moment(new Date()).format("dddd, MMMM Do YYYY"),
+    scheduledTime: new Date(),
+    scheduledDate: new Date(),
     noteToProvider: "",
   };
 
@@ -63,26 +86,34 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
     validationSchema: bookingInfoSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        dispatch({
-          type: ACTION_TYPES.UPDATE_BOOKING_DATA,
-          payload: {
-            id: uuid.v4() as string,
-            customerEmail: values.email,
-            customerName: values.username,
-            customerPhone: values.phoneNumber,
-            notes: values.noteToProvider,
-            bookingStatus: BookingStatus.PENDING,
-            scheduledDate: new Date(values.scheduledDate).toLocaleString(),
-            scheduledTime: new Date(values.scheduledTime).toLocaleString(),
-            createdAt: new Date().toLocaleString(),
-            requestCompletedConfirmationFromUser: false,
-            requestCompletedConfirmationFromProvider: false,
-          },
-        });
-        resetForm();
-        navigation.navigate(APP_PAGES.PAYSTACK_PAYMENT_VIEW);
+        await uploadAttachments(attachments)
+          .then((uploadedFiles) => {
+            dispatch({
+              type: ACTION_TYPES.UPDATE_BOOKING_DATA,
+              payload: {
+                customerEmail: values.email,
+                customerName: values.username,
+                customerPhone: values.phoneNumber,
+                notes: values.noteToProvider,
+                bookingStatus: BookingStatus.PENDING,
+                scheduledDate: moment(values.scheduledDate).format(
+                  "dddd, MMMM Do YYYY"
+                ),
+                scheduledTime: moment(values.scheduledTime).format("h:mm:ss a"),
+                createdAt: new Date().toLocaleString(),
+                requestCompletedConfirmationFromUser: false,
+                requestCompletedConfirmationFromProvider: false,
+                attachments: uploadedFiles,
+              },
+            });
+            resetForm();
+            navigation.navigate(APP_PAGES.PAYSTACK_PAYMENT_VIEW);
+          })
+          .catch(() =>
+            showAlert("Ooops...", "Could not upload attachments. Try again")
+          );
       } catch (error) {
-        throw Error(error as any);
+        showAlert("Ooops...", getFirebaseErrorMessage());
       } finally {
         setSubmitting(false);
       }
@@ -164,15 +195,15 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
                 />
               </DateIconContainer>
               <DateContainer
+                dateTimeFormatter={(value) =>
+                  moment(value).format("dddd, MMMM Do YYYY")
+                }
                 placeholder={"Select scheduled date for service"}
                 mode={"date"}
                 minimumDate={new Date()}
                 maximumDate={new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)}
                 onChange={(date: string | number | Date) =>
-                  formik.setFieldValue(
-                    "scheduledDate",
-                    moment(new Date(date)).format("dddd, MMMM Do YYYY")
-                  )
+                  formik.setFieldValue("scheduledDate", new Date(date))
                 }
                 onBlur={formik.handleBlur("scheduledDate")}
                 value={formik.values?.scheduledDate}
@@ -189,13 +220,11 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
                 />
               </DateIconContainer>
               <DateContainer
+                dateTimeFormatter={(value) => moment(value).format("h:mm:ss a")}
                 placeholder={"Select scheduled time for service"}
                 mode={"time"}
                 onChange={(date: string | number | Date) =>
-                  formik.setFieldValue(
-                    "scheduledTime",
-                    moment(new Date(date)).format("h:mm:ss a")
-                  )
+                  formik.setFieldValue("scheduledTime", new Date(date))
                 }
                 onBlur={formik.handleBlur("scheduledTime")}
                 value={formik.values?.scheduledTime}

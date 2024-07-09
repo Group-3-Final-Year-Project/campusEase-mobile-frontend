@@ -20,7 +20,12 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES } from "~src/shared/constants";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
-import { navigateAndResetStack, pickImageAsync, signoutUser } from "~services";
+import {
+  navigateAndResetStack,
+  pickImageAsync,
+  showAlert,
+  signoutUser,
+} from "~services";
 
 const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -151,12 +156,19 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.secondary}
         />
       ),
-      action: async () => {
-        await signoutUser();
-        navigateAndResetStack(
-          navigation as NavigationProp<any>,
-          APP_PAGES.LANDING
-        );
+      action: () => {
+        showAlert("Leaving already?", "Are you sure you want to log out?", [
+          {
+            label: "Log out",
+            onPress: async () => {
+              await signoutUser();
+              navigateAndResetStack(
+                navigation as NavigationProp<any>,
+                APP_PAGES.LANDING
+              );
+            },
+          },
+        ]);
       },
       showRightIcon: false,
     },

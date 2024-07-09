@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  or,
   query,
   setDoc,
   where,
@@ -34,12 +35,19 @@ export const getBookmarks = async () => {
   const bookmarks = await AsyncStorage.getItem(STORAGE_KEYS.BOOKMARKS);
   return bookmarks ? (JSON.parse(bookmarks) as ServiceListService[]) : [];
 };
-
 export const setBookmarks = async (services: ServiceListService[]) => {
   const bookmarks = await getBookmarks();
-  bookmarks.push(...services);
-  AsyncStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(bookmarks));
+  const bookmarksSet = new Set(bookmarks);
+
+  const servicesToAdd = services.filter(
+    (service) => !bookmarksSet.has(service)
+  );
+
+  bookmarks.push(...servicesToAdd);
+
+  await AsyncStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(bookmarks));
 };
+
 export const extractUserDataForFirebase = (userData: VerifiedUser) => {
   const currentUserForFirebase: VerifiedUserPreview = {
     id: userData.id,
@@ -231,6 +239,21 @@ export const getMyBookingsAsServiceProvider = async (userId: string) => {
   const q = query(
     collection(firestoreDatabase, STORAGE_KEYS.BOOKINGS),
     where("userId", "!=", userId)
+  );
+  const querySnapshot = await getDocs(q);
+  const bookings = querySnapshot.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data(),
+    } as Booking;
+  });
+  return bookings;
+};
+
+export const getBookingsAsUserOrProvider = async (userId: string) => {
+  const q = query(
+    collection(firestoreDatabase, STORAGE_KEYS.BOOKINGS),
+    or(where("userId", "==", userId), where("providerId", "==", userId))
   );
   const querySnapshot = await getDocs(q);
   const bookings = querySnapshot.docs.map((doc) => {

@@ -32,6 +32,7 @@ import PaymentMethodSelection from "./components/PaymentMethodSelection";
 import paymentMethodsData from "~src/data/paymentMethodsData";
 import { updateBookingData } from "~store/actions/bookingActions";
 import ACTION_TYPES from "~store/actionTypes";
+import uuid from "react-native-uuid";
 
 const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -52,6 +53,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
         dispatch({
           type: ACTION_TYPES.UPDATE_BOOKING_DATA,
           payload: {
+            id: uuid.v4() as string,
             userId: user.id,
             serviceId: route.params?.service.id,
             providerId: route.params?.service.providerId,
