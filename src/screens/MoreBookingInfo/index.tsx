@@ -273,7 +273,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
           loading={formik.isSubmitting}
           onPress={formik.submitForm}
         >
-          Confirm booking
+          Continue
         </Button>
       </BottomCard>
     </Container>

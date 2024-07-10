@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   or,
   query,
   setDoc,
@@ -13,6 +14,7 @@ import {
 import { firebaseCloudStorage, firestoreDatabase } from "firebaseConfig";
 import {
   Booking,
+  BookingStatus,
   Review,
   Service,
   ServiceCategory,
@@ -130,8 +132,8 @@ export const getServices = async (
 ): Promise<Service[]> => {
   const q = query(
     collection(firestoreDatabase, STORAGE_KEYS.SERVICES),
-    where("providerId", "!=", userId)
-    // limit(lim),
+    where("providerId", "!=", userId),
+    limit(lim)
     // startAt(offst)
   );
   const querySnapshot = await getDocs(q);
@@ -263,6 +265,15 @@ export const getBookingsAsUserOrProvider = async (userId: string) => {
     } as Booking;
   });
   return bookings;
+};
+
+export const getMyCurrentBookingList = async (userId: string) => {
+  const bookings = await getBookingsAsUserOrProvider(userId);
+  return bookings.filter(
+    (booking) =>
+      booking.bookingStatus === BookingStatus.PENDING ||
+      booking.bookingStatus === BookingStatus.IN_PROGRESS
+  );
 };
 
 export const getBooking = async (bookingId: string) => {

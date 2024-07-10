@@ -1,9 +1,10 @@
 import { FlatList, ListRenderItem, View } from "react-native";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   Container,
   HeaderCard,
   ProfileImage,
+  ProfileImageContainer,
   ProfileImageView,
   ProfileItemCard,
   ProfileItemLabel,
@@ -12,7 +13,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
-import { IconBtn } from "~components";
+import { IconBtn, Text } from "~components";
 import { Iconify } from "react-native-iconify";
 import Switch from "react-native-ui-lib/switch";
 import { NavigationProp, useFocusEffect } from "@react-navigation/native";
@@ -23,6 +24,7 @@ import { VerifiedUser } from "~src/@types/types";
 import {
   navigateAndResetStack,
   pickImageAsync,
+  pickRandomAvatarColor,
   showAlert,
   signoutUser,
 } from "~services";
@@ -32,12 +34,15 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const user: VerifiedUser = useAppSelector((state) => state.user);
+  const [userPic, setUserPic] = useState<string>(
+    user?.profilePicture ? user?.profilePicture : ""
+  );
 
   useFocusEffect(
     useCallback(() => {
       navigation.setOptions({
         headerRight: () => (
-          <IconBtn>
+          <IconBtn onPress={showLogoutAlert}>
             <Iconify
               icon="solar:logout-3-outline"
               size={18}
@@ -52,6 +57,21 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
       });
     }, [])
   );
+
+  const showLogoutAlert = () => {
+    showAlert("Leaving already?", "Are you sure you want to log out?", [
+      {
+        label: "Log out",
+        onPress: async () => {
+          await signoutUser();
+          navigateAndResetStack(
+            navigation as NavigationProp<any>,
+            APP_PAGES.LANDING
+          );
+        },
+      },
+    ]);
+  };
 
   const profileItems = [
     {
@@ -68,6 +88,19 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
       showRightIcon: true,
     },
     {
+      name: "Analytics",
+      icon: (
+        <Iconify
+          icon="solar:graph-up-outline"
+          size={18}
+          strokeWidth={18}
+          color={themeContext?.colors.text}
+        />
+      ),
+      action: () => navigation.navigate(APP_PAGES.ANALYTICS),
+      showRightIcon: true,
+    },
+    {
       name: "Change Password",
       icon: (
         <Iconify
@@ -78,7 +111,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
         />
       ),
       action: () => null,
-      showRightIcon: true,
+      showRightIcon: false,
     },
     {
       name: "My Bookmarks",
@@ -156,20 +189,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.secondary}
         />
       ),
-      action: () => {
-        showAlert("Leaving already?", "Are you sure you want to log out?", [
-          {
-            label: "Log out",
-            onPress: async () => {
-              await signoutUser();
-              navigateAndResetStack(
-                navigation as NavigationProp<any>,
-                APP_PAGES.LANDING
-              );
-            },
-          },
-        ]);
-      },
+      action: () => showLogoutAlert(),
       showRightIcon: false,
     },
   ];
@@ -178,13 +198,21 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
     return (
       <HeaderCard>
         <ProfileImageView>
-          <ProfileImage
-            source={{
-              uri: user?.profilePicture
-                ? user?.profilePicture
-                : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
-            }}
-          />
+          {userPic ? (
+            <ProfileImage
+              source={{
+                uri: userPic,
+              }}
+            />
+          ) : (
+            <ProfileImageContainer
+              style={{ backgroundColor: pickRandomAvatarColor() }}
+            >
+              <Text style={{ fontSize: 30, lineHeight: 42 }}>
+                {user.username.substring(0, 2).toUpperCase()}
+              </Text>
+            </ProfileImageContainer>
+          )}
           <IconBtn
             style={{
               position: "absolute",
@@ -192,7 +220,11 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
               right: 0,
               backgroundColor: themeContext?.colors.primary,
             }}
-            // onPress={pickImageAsync}
+            onPress={() =>
+              pickImageAsync().then(
+                (images) => images && images.length && setUserPic(images[0].uri)
+              )
+            }
           >
             <Iconify
               icon="solar:camera-outline"
@@ -250,6 +282,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   return (
     <Container>
       <FlatList
+        keyExtractor={(item, index) => index.toString()}
         ListHeaderComponent={<ProfileHeader />}
         // @ts-ignore
         data={profileItems}

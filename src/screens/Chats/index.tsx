@@ -159,6 +159,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
       <StatusBar style={themeContext?.dark ? "light" : "dark"} />
       <FlatList
         data={chatList}
+        keyExtractor={(item) => item.id}
         renderItem={renderChatCard}
         ItemSeparatorComponent={() => (
           <View

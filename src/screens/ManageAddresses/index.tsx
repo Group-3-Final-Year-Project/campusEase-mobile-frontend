@@ -15,6 +15,7 @@ const ManageAddresses = () => {
   return (
     <Container>
       <FlatList
+        keyExtractor={(item, index) => index.toString()}
         data={user.locations ?? []}
         renderItem={({ item }) => <AddressCard address={item} />}
         ItemSeparatorComponent={() => <View style={{ marginVertical: 7 }} />}

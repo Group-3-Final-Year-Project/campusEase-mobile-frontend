@@ -34,7 +34,7 @@ export const APP_PAGES = {
   OTHER_BOOKING_INFO: "Other Booking Info",
   SERVICE_CATEGORIES: "Service Categories",
   PRIVACY_POLICY: "Privacy Policy",
-  SEARCH_AND_FILTER: "Search and Filter",
+  SEARCH_AND_FILTER: "Search services",
   SET_SERVICE_DETAILS: "Set Service Details",
   SET_SERVICE_GALLERY: "Set Service Gallery",
   SET_SERVICE_PRICING: "Set Service Pricing",
@@ -42,7 +42,9 @@ export const APP_PAGES = {
   SERVICE_CREATION_SUCCESS: "Service Creation Success",
   USER_CREATION_SUCCESS: "User Creation Success",
   BOOKING_CREATION_SUCCESS: "Booking Creation Success",
-  PAYSTACK_PAYMENT_VIEW: "Paystack Payment View",
+  PAYSTACK_PAYMENT_VIEW: "Checkout summary",
+  PROMOS: "Promos",
+  FORGOT_PASSWORD: "Forgot Password?",
 };
 
 export const API_URLS = {

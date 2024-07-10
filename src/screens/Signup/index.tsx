@@ -41,8 +41,14 @@ export const signupSchema = yup.object().shape({
   email: yup.string().email("Email not valid!").required("Email required!"),
   password: yup
     .string()
-    .min(8, "Password should be 8 characters long!")
-    .required("Password required!"),
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[a-zA-Z]/, "Password must contain at least one letter")
+    .matches(/\d/, "Password must contain at least one number")
+    .required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Confirm Password is required"),
   acceptedTerms: yup
     .boolean()
     .oneOf([true], "Agree to terms and conditions to continue")
@@ -60,6 +66,7 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     acceptedTerms: false,
   };
 
@@ -190,6 +197,44 @@ const SignUp = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 />
                 {formik.touched?.password && formik.errors?.password ? (
                   <ErrorLabel>{formik.errors?.password}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("confirmPassword")}
+                  onBlur={formik.handleBlur("confirmPassword")}
+                  value={formik.values?.confirmPassword}
+                  textContentType={"newPassword"}
+                  secureTextEntry={!showPassword}
+                  placeholder="Confirm password"
+                  icon={
+                    <Iconify
+                      size={18}
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:shield-keyhole-outline"
+                    />
+                  }
+                  rightIcon={
+                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <Iconify
+                          size={18}
+                          color={themeContext?.colors.secondaryText2}
+                          icon="solar:eye-closed-outline"
+                        />
+                      ) : (
+                        <Iconify
+                          size={18}
+                          color={themeContext?.colors.secondaryText2}
+                          icon="solar:eye-outline"
+                        />
+                      )}
+                    </Pressable>
+                  }
+                />
+                {formik.touched?.confirmPassword &&
+                formik.errors?.confirmPassword ? (
+                  <ErrorLabel>{formik.errors?.confirmPassword}</ErrorLabel>
                 ) : null}
               </FormControl>
               <FormControl>

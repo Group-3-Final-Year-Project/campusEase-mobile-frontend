@@ -36,13 +36,13 @@ const TertiaryServiceCard = (props: ServiceCardProps) => {
         source={{
           uri: service?.coverImage
             ? service.coverImage
-            : "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+            : "https://cdn.textstudio.com/output/sample/normal/6/9/6/5/service-logo-103-5696.png",
         }}
       />
       <InfoContainer>
         <ServiceTitle>{service.name}</ServiceTitle>
         <View style={{ flexDirection: "row" }}>
-          <StarRating value={Math.floor(service.rating ?? 0)} size={12} />
+          <StarRating value={Math.floor(service.rating ?? 1)} size={12} />
           <Text>({service.rating ?? 0.0})</Text>
         </View>
         <Description>{formatCurrency(service.startingPrice ?? 0)}</Description>

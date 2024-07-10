@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacityProps, View } from "react-native";
 import React, { useContext } from "react";
 import { BookingCardContainer, BookingStatusTag, BookingTitle } from "./styles";
 import { NavigationProp } from "@react-navigation/native";
@@ -11,7 +11,7 @@ import { APP_PAGES } from "~src/shared/constants";
 import { VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 
-interface IBookingCard {
+interface IBookingCard extends TouchableOpacityProps {
   booking: any;
   navigation: NavigationProp<any>;
 }

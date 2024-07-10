@@ -151,7 +151,7 @@ export async function getLocationAsync(
 }
 
 export async function pickImageAsync(
-  onSend: (images: ImagePicker.ImagePickerAsset[]) => void,
+  onSend?: (images: ImagePicker.ImagePickerAsset[]) => void,
   props?: ImagePicker.ImagePickerOptions
 ) {
   if (await ImagePicker.requestMediaLibraryPermissionsAsync()) {
@@ -162,7 +162,7 @@ export async function pickImageAsync(
     });
 
     if (!result.canceled) {
-      onSend(result.assets);
+      onSend && onSend(result.assets);
       return result.assets;
     }
   }

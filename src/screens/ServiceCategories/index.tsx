@@ -24,7 +24,7 @@ const ServiceCategories = () => {
     Object.values(categoriesData),
     (acc, category) => ({
       ...acc,
-      [category["id"]]: () => <Category category={category} />,
+      [parseInt(category["id"])]: () => <Category category={category} />,
     }),
     {}
   );
@@ -50,7 +50,9 @@ const ServiceCategories = () => {
     setIndex(index);
     setFilterValue({
       filter: Filters.SERVICE_CATEGORY,
-      value: Object.values(categoriesData).filter((cat) => cat.id === index)[0],
+      value: Object.values(categoriesData).filter(
+        (cat) => cat.id === index.toString()
+      )[0],
     });
   };
 
@@ -68,8 +70,10 @@ const ServiceCategories = () => {
         onPress={() => jumpTo(item.key)}
         style={{
           backgroundColor: isActive
-            ? themeContext?.colors.primary
+            ? themeContext?.colors.secondary
             : themeContext?.colors.background,
+          height: 35,
+          minWidth: 60,
         }}
       >
         <CategoryLabel>{item.title}</CategoryLabel>
@@ -96,6 +100,7 @@ const ServiceCategories = () => {
       >
         <FlatList
           horizontal
+          keyExtractor={(item) => item.key}
           data={_props.navigationState.routes}
           renderItem={({ item }) => renderItem(item, _props.jumpTo)}
           ItemSeparatorComponent={() => (

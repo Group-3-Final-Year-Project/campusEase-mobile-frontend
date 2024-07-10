@@ -75,6 +75,7 @@ const BookingAttachments = ({
 
   return (
     <FlatList
+      keyExtractor={(item, index) => index.toString()}
       data={attachments}
       ListFooterComponent={
         <>

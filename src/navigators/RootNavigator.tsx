@@ -40,9 +40,13 @@ import DummyScreen from "~src/screens/DummyScreen";
 import ServiceCreationSuccess from "~src/screens/ServiceCreationSuccess";
 import UserCreationSuccess from "~src/screens/UserCreationSuccess";
 import PayView from "~src/screens/PayView";
+import Notifications from "~src/screens/Notifications";
 import BookingCreationSuccess from "~src/screens/BookingCreationSuccess";
 import * as NotificationsFunc from "expo-notifications";
 import { doc, onSnapshot } from "firebase/firestore";
+import Promos from "~src/screens/Promos";
+import ForgotPassword from "~src/screens/ForgotPassword";
+import Analytics from "~src/screens/Analytics";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -208,6 +212,12 @@ const RootNavigator = () => {
               name={APP_PAGES.BOOKING_CREATION_SUCCESS}
               component={BookingCreationSuccess}
             />
+            <Stack.Screen
+              name={APP_PAGES.NOTIFICATIONS}
+              component={Notifications}
+            />
+            <Stack.Screen name={APP_PAGES.PROMOS} component={Promos} />
+            <Stack.Screen name={APP_PAGES.ANALYTICS} component={Analytics} />
           </Stack.Group>
         </>
       ) : (
@@ -226,6 +236,10 @@ const RootNavigator = () => {
           }}
           name={APP_PAGES.ONBOARD}
           component={Onboard}
+        />
+        <Stack.Screen
+          name={APP_PAGES.FORGOT_PASSWORD}
+          component={ForgotPassword}
         />
         <Stack.Screen name={APP_PAGES.SIGNUP} component={Signup} />
         <Stack.Screen name={APP_PAGES.SIGNIN} component={Login} />

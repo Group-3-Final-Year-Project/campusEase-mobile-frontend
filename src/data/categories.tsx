@@ -73,19 +73,25 @@ export const categoriesData = {
     description:
       "Get help with tasks like grocery shopping, picking up dry cleaning, or waiting in line.",
   },
+  OTHERS: {
+    id: "13",
+    name: "Others",
+    description: "",
+  },
 };
 
 export const categoriesIcons = {
   "1": <Iconify icon={"flat-color-icons:print"} size={30} />,
-  "2": <Iconify icon={"flat-color-icons:print"} size={30} />,
+  "2": <Iconify icon={"noto:pot-of-food"} size={30} />,
   "3": <Iconify icon={"unjs:jimp-compact"} size={30} />,
-  "4": <Iconify icon={"flat-color-icons:print"} size={30} />,
+  "4": <Iconify icon={"fxemoji:oldpersonalcomputer"} size={30} />,
   "5": <Iconify icon={"flat-color-icons:shipped"} size={30} />,
-  "6": <Iconify icon={"flat-color-icons:print"} size={30} />,
+  "6": <Iconify icon={"openmoji:washing-machine"} size={30} />,
   "7": <Iconify icon={"flat-color-icons:graduation-cap"} size={30} />,
   "8": <Iconify icon={"flat-color-icons:assistant"} size={30} />,
-  "9": <Iconify icon={"flat-color-icons:print"} size={30} />,
-  "10": <Iconify icon={"flat-color-icons:print"} size={30} />,
-  "11": <Iconify icon={"flat-color-icons:print"} size={30} />,
-  "12": <Iconify icon={"flat-color-icons:print"} size={30} />,
+  "9": <Iconify icon={"devicon:vscode"} size={30} />,
+  "10": <Iconify icon={"token-branded:fitfi"} size={30} />,
+  "11": <Iconify icon={"fluent-emoji:barber-pole"} size={30} />,
+  "12": <Iconify icon={"fluent-emoji:man-running"} size={30} />,
+  "13": <Iconify icon={"flat-color-icons:services"} size={30} />,
 };

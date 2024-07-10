@@ -41,6 +41,7 @@ const Category = (props: ICategory) => {
   return (
     <Container>
       <FlatList
+        keyExtractor={(item) => item.id}
         data={data}
         renderItem={({ item, index }) => (
           <SecondaryServiceCard

@@ -25,6 +25,7 @@ const ProviderServices = ({ navigation, services }: ProviderServicesProps) => {
         <View style={{ marginTop: 20 }}>
           <ListLabel style={{ marginBottom: 10 }}>My services</ListLabel>
           <FlatList
+            keyExtractor={(item) => item.id}
             data={services}
             renderItem={({ item }) => (
               <TertiaryServiceCard
