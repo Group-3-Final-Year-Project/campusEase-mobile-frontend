@@ -41,5 +41,5 @@ export const Description = styled(Text)`
 export const HighlightedDescription = styled(Description)`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 `;
