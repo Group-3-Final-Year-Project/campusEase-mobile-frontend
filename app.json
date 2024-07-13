@@ -11,14 +11,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#181820"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#181820"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.solo0722.campusEase"
     },
     "web": {
       "favicon": "./src/assets/images/favicon48.png"
@@ -45,6 +53,11 @@
           "defaultChannel": "default"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "51ca9092-9aad-4259-96b6-3e60cfdf1ee4"
+      }
+    }
   }
 }
