@@ -81,7 +81,8 @@
     "typescript-styled-plugin": "^0.18.3",
     "uninstall": "^0.0.0",
     "uuid": "^10.0.0",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "expo-updates": "~0.25.19"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

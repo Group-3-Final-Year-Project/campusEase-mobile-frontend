@@ -19,7 +19,8 @@
         "EXPO_PUBLIC_MESSAGING_SENDER_ID": "624013282174",
         "EXPO_PUBLIC_APP_ID": "1:624013282174:web:c2738f3446db7eb5d8c12f",
         "EXPO_PUBLIC_PAYSTACK_KEY": "pk_test_52385f97ac4b106e562d98bef224c7286d2c3246"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
       "autoIncrement": true,
@@ -36,7 +37,8 @@
         "EXPO_PUBLIC_MESSAGING_SENDER_ID": "624013282174",
         "EXPO_PUBLIC_APP_ID": "1:624013282174:web:c2738f3446db7eb5d8c12f",
         "EXPO_PUBLIC_PAYSTACK_KEY": "pk_test_52385f97ac4b106e562d98bef224c7286d2c3246"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
@@ -52,7 +54,8 @@
         "EXPO_PUBLIC_MESSAGING_SENDER_ID": "624013282174",
         "EXPO_PUBLIC_APP_ID": "1:624013282174:web:c2738f3446db7eb5d8c12f",
         "EXPO_PUBLIC_PAYSTACK_KEY": "pk_test_52385f97ac4b106e562d98bef224c7286d2c3246"
-      }
+      },
+      "channel": "production"
     }
   },
   "submit": {

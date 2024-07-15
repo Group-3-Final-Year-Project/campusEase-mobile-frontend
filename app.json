@@ -19,7 +19,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#181820"
+        "foregroundImage": "./src/assets/images/logo192.png",
+        "backgroundColor": "#ffffff"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -27,7 +28,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.solo0722.campusEase",
-      "versionCode": 5
+      "versionCode": 6
     },
     "web": {
       "favicon": "./src/assets/images/favicon48.png"
@@ -59,6 +60,12 @@
       "eas": {
         "projectId": "51ca9092-9aad-4259-96b6-3e60cfdf1ee4"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/51ca9092-9aad-4259-96b6-3e60cfdf1ee4"
     }
   }
 }
