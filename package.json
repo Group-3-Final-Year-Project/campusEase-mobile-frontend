@@ -29,7 +29,6 @@
     "@types/styled-components-react-native": "^5.2.5",
     "axios": "^1.6.8",
     "babel-plugin-module-resolver": "^5.0.2",
-    "babel-plugin-styled-components": "^2.1.4",
     "color": "^4.2.3",
     "events": "^3.3.0",
     "expo": "^51.0.18",
@@ -90,6 +89,7 @@
     "@tanstack/eslint-plugin-query": "^5.43.1",
     "@types/react": "~18.2.45",
     "@types/uuid": "^10.0.0",
+    "babel-plugin-styled-components": "^2.1.4",
     "react-native-awesome-alerts": "^2.0.0",
     "react-native-dotenv": "^3.4.11",
     "typescript": "~5.3.3"
