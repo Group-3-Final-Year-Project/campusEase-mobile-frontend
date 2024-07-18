@@ -30,4 +30,5 @@ export const CardInfoContainer = styled.View`
   width: 100%;
   height: 25%;
   flex-grow: 1;
+  justify-content: center;
 `;

@@ -66,7 +66,14 @@ export const getIsServiceProvider = async () => {
   return await isServiceProvider();
 };
 
-export const changePassword = async () => {};
+export const changePassword = async (email: string) => {
+  await sendPasswordResetEmail(firebaseAuth, email).then(() => {
+    showAlert(
+      "Password reset email sent",
+      "An email has been sent to your email. You can use that email to reset your password"
+    );
+  });
+};
 
 export const readLoginDataFromAsyncStorage: () => Promise<VerifiedUser | null> =
   async () => {

@@ -26,7 +26,6 @@ const Categories = ({ categories, navigation }: CategoriesProps) => {
       value: {
         id: item.id,
         name: item.name,
-        image: item?.image,
         description: item?.description,
       },
     });

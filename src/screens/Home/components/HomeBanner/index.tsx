@@ -25,7 +25,7 @@ const HomeBanner = ({ navigation }: { navigation: NavigationProp<any> }) => {
     },
     {
       name: "Hair Salon",
-      url: "https://dynamic.brandcrowd.com/template/preview/design/bcebca37-707e-4499-824c-ca2f2fe8affe?v=4&designTemplateVersion=1&size=design-preview-standalone-1x",
+      url: "https://cleancutshs.com/wp-content/uploads/2021/10/Artboard-9.jpg",
     },
     {
       name: "Others",

@@ -7,14 +7,14 @@ import { ThemeContext } from "styled-components/native";
 import { NavigationProp } from "@react-navigation/native";
 import { TertiaryServiceCard } from "~components";
 import { Container, ListLabel } from "./styles";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import type { Region } from "react-native-maps";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import servicesData from "~src/data/servicesData";
 import SearchFilterBtn from "~components/SearchFilterBtn";
 import { VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { getServices } from "~services";
+import { extractServiceForServiceList, getServices } from "~services";
 import { useQuery } from "@tanstack/react-query";
 
 const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
@@ -52,11 +52,30 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
       }}
     >
       <MapView
-        provider={PROVIDER_GOOGLE}
+        // provider={PROVIDER_GOOGLE}
         initialRegion={initialRegion ?? undefined}
         style={{ flex: 1 }}
+        showsCompass
+        showsMyLocationButton
         // ref={mapRef}
-      ></MapView>
+      >
+        {data &&
+          data.map((service) => (
+            <Marker
+              key={service.id}
+              image={{
+                uri: "https://cdn-icons-png.flaticon.com/128/1995/1995450.png",
+              }}
+              coordinate={{
+                latitude: service.location.location.latitude,
+                longitude: service.location.location.longitude,
+              }}
+              title={service.name}
+              description={service.description ?? ""}
+              pinColor={themeContext?.colors.secondary}
+            />
+          ))}
+      </MapView>
       <View
         style={{
           paddingTop: insets.top + 20,

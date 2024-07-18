@@ -64,6 +64,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
           values.email,
           values.password
         );
+        console.log("Res: ", result);
         if (result.user) {
           dispatch({
             type: ACTION_TYPES.UPDATE_USER_DATA,
@@ -177,7 +178,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate(APP_PAGES.FORGOT_PASSWORD)}
               >
-                <InputLabel style={{ color: themeContext?.colors.secondary }}>
+                <InputLabel style={{ color: themeContext?.colors.primary }}>
                   Forgot password?
                 </InputLabel>
               </TouchableOpacity>

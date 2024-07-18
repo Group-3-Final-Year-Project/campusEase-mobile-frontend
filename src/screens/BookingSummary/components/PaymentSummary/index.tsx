@@ -25,7 +25,7 @@ const PaymentSummary = ({ amount }: { amount: number }) => {
   return (
     <View>
       {data.map((item) => (
-        <TouchableOpacity
+        <View
           style={{ display: "flex", borderRadius: 15, paddingVertical: 15 }}
           key={item.id}
         >
@@ -50,7 +50,7 @@ const PaymentSummary = ({ amount }: { amount: number }) => {
             </View>
             <Description>{formatCurrency(item.value ?? 0)}</Description>
           </View>
-        </TouchableOpacity>
+        </View>
       ))}
     </View>
   );

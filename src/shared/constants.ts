@@ -45,6 +45,8 @@ export const APP_PAGES = {
   PAYSTACK_PAYMENT_VIEW: "Checkout summary",
   PROMOS: "Promos",
   FORGOT_PASSWORD: "Forgot Password?",
+  TERMS_AND_CONDITIONS: "Terms and Conditions",
+  CHECKOUT: "Checkout",
 };
 
 export const API_URLS = {

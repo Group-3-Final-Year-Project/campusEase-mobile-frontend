@@ -36,11 +36,12 @@ const AddressCard = ({ address }: AddressCardProps) => {
               color: themeContext?.colors.secondaryText,
             }}
           >
-            {address.address ??
-              formatLatLng(
-                address.location.latitude,
-                address.location.longitude
-              )}
+            {address.address
+              ? address.address
+              : formatLatLng(
+                  address.location.latitude,
+                  address.location.longitude
+                )}
           </Description>
         </View>
       </View>

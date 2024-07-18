@@ -22,6 +22,7 @@ import { APP_PAGES } from "~src/shared/constants";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
 import {
+  changePassword,
   navigateAndResetStack,
   pickImageAsync,
   pickRandomAvatarColor,
@@ -110,7 +111,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      action: () => null,
+      action: () => changePassword(user.email),
       showRightIcon: false,
     },
     {
@@ -139,20 +140,20 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
       action: () => navigation.navigate(APP_PAGES.MANAGE_ADDRESSES),
       showRightIcon: true,
     },
-    {
-      name: "Dark Mode",
-      icon: (
-        <Iconify
-          icon="solar:eye-outline"
-          size={18}
-          strokeWidth={18}
-          color={themeContext?.colors.text}
-        />
-      ),
-      action: () => null,
-      showRightIcon: true,
-      rightIcon: <Switch />,
-    },
+    // {
+    //   name: "Dark Mode",
+    //   icon: (
+    //     <Iconify
+    //       icon="solar:eye-outline"
+    //       size={18}
+    //       strokeWidth={18}
+    //       color={themeContext?.colors.text}
+    //     />
+    //   ),
+    //   action: () => null,
+    //   showRightIcon: true,
+    //   rightIcon: <Switch />,
+    // },
     {
       name: "Privacy Policy",
       icon: (
@@ -176,7 +177,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      action: () => null,
+      action: () => navigation.navigate(APP_PAGES.TERMS_AND_CONDITIONS),
       showRightIcon: true,
     },
     {
@@ -198,21 +199,13 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
     return (
       <HeaderCard>
         <ProfileImageView>
-          {userPic ? (
-            <ProfileImage
-              source={{
-                uri: userPic,
-              }}
-            />
-          ) : (
-            <ProfileImageContainer
-              style={{ backgroundColor: pickRandomAvatarColor() }}
-            >
-              <Text style={{ fontSize: 30, lineHeight: 42 }}>
-                {user.username.substring(0, 2).toUpperCase()}
-              </Text>
-            </ProfileImageContainer>
-          )}
+          <ProfileImage
+            source={{
+              uri: userPic
+                ? userPic
+                : "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+            }}
+          />
           <IconBtn
             style={{
               position: "absolute",

@@ -28,7 +28,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.solo0722.campusEase",
-      "versionCode": 6
+      "versionCode": 7
     },
     "web": {
       "favicon": "./src/assets/images/favicon48.png"

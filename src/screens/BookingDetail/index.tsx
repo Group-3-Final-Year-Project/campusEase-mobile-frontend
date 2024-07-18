@@ -103,7 +103,7 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
     <Container>
       <ScrollView
         refreshControl={<CustomRefreshControl refreshing={isRefetching} />}
-        style={{ paddingTop: insets.top, paddingBottom: bottomInset }}
+        style={{ paddingBottom: bottomInset }}
       >
         {service && <TertiaryServiceCard service={service} />}
         <BookingInfoContainer style={{ flexDirection: "row" }}>

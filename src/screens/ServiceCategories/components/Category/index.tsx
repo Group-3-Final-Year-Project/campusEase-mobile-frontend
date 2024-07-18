@@ -9,10 +9,11 @@ import {
 } from "~components";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useCustomBottomInset } from "~hooks";
-import servicesData from "~src/data/servicesData";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~src/shared/constants";
 import { ServiceCategory } from "~src/@types/types";
+import { extractServiceForServiceList, getServices } from "~services";
+import { useAppSelector } from "~store/hooks/useTypedRedux";
 
 interface ICategory {
   category: ServiceCategory;
@@ -21,10 +22,12 @@ interface ICategory {
 const Category = (props: ICategory) => {
   const navigation = useNavigation();
   const bottomInset = useCustomBottomInset();
+  const user = useAppSelector((state) => state.user);
 
-  const fetchData = useCallback(() => {
-    return servicesData.filter(
-      (service) => service.category.id === props.category.id
+  const fetchData = useCallback(async () => {
+    const services = await getServices(user.id);
+    return extractServiceForServiceList(
+      services.filter((service) => service.category.id === props.category.id)
     );
   }, [props.category]);
 

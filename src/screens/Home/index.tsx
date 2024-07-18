@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { Dimensions, FlatList, View } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Container, ListLabel, LogoLabel } from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -110,7 +110,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
     const providerServices = await getMyServices(user.id);
     const services = await getServices(user.id);
     return {
-      serviceCategories,
+      serviceCategories: serviceCategories.slice(0, 9),
       providerServices: extractServiceForServiceList(providerServices),
       popularServices: extractServiceForServiceList(services),
       nearYouServices: extractServiceForServiceList(services),
@@ -138,7 +138,10 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
   return (
     <Container>
       <VirtualisedContainer
-        style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
+        style={{
+          paddingTop: insets.top - 20,
+          paddingBottom: bottomInset,
+        }}
         renderItem={undefined}
         refreshControl={
           <CustomRefreshControl refreshing={isRefetching} onRefresh={refetch} />
@@ -181,7 +184,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                         booking={item}
                         navigation={navigation as NavigationProp<any>}
                         style={{
-                          width: "100%",
+                          width: 500,
                         }}
                       />
                     )}

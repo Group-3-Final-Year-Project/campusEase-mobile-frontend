@@ -8,21 +8,25 @@ import { formatCurrency } from "~services";
 import { Button } from "~components";
 import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
-import { VerifiedUser } from "~src/@types/types";
+import { Booking, VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 
 interface IBookingCard extends TouchableOpacityProps {
-  booking: any;
+  booking: Booking;
   navigation: NavigationProp<any>;
 }
 
-const BookingCard = (props: IBookingCard) => {
+const BookingCard = ({ booking, navigation }: IBookingCard) => {
   const themeContext = useContext(ThemeContext);
   const user: VerifiedUser = useAppSelector((state) => state.user);
 
   return (
     <BookingCardContainer
-      onPress={() => props.navigation.navigate(APP_PAGES.BOOKING_DETAILS)}
+      onPress={() =>
+        navigation.navigate(APP_PAGES.BOOKING_DETAILS, {
+          bookingId: booking.id,
+        })
+      }
     >
       <BookingStatusTag>COMPLETED</BookingStatusTag>
       <View
@@ -36,8 +40,8 @@ const BookingCard = (props: IBookingCard) => {
         }}
       >
         <View>
-          <BookingTitle>Jeron Plumbing</BookingTitle>
-          <Description>Mon, Oct 02, 2023 at 10:00 AM</Description>
+          <BookingTitle>{booking.customerName}</BookingTitle>
+          <Description>{booking.createdAt}</Description>
         </View>
         <Iconify
           icon="solar:alt-arrow-right-outline"
@@ -47,15 +51,7 @@ const BookingCard = (props: IBookingCard) => {
         />
       </View>
       <View style={{ flexDirection: "row", paddingVertical: 15 }}>
-        <Iconify
-          icon="solar:check-circle-outline"
-          size={24}
-          strokeWidth={16}
-          color={themeContext?.colors.primary}
-        />
-        <Description style={{ marginLeft: 15, paddingVertical: 5 }}>
-          Amount Paid {formatCurrency(190)}
-        </Description>
+        <Description>{formatCurrency(190)}</Description>
       </View>
       <View
         style={{
@@ -65,10 +61,20 @@ const BookingCard = (props: IBookingCard) => {
           paddingTop: 15,
         }}
       >
-        <Button buttonTextSize="small" buttonTextWeight="regular">
+        <Button
+          buttonTextSize="small"
+          buttonTextWeight="regular"
+          style={{ flexGrow: 1, marginRight: 10 }}
+          variant="outline"
+        >
           Print e-receipt
         </Button>
-        <Button buttonTextSize="small" buttonTextWeight="regular">
+
+        <Button
+          buttonTextSize="small"
+          buttonTextWeight="regular"
+          style={{ flexGrow: 1 }}
+        >
           Book again
         </Button>
       </View>

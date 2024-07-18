@@ -39,11 +39,13 @@ export const getBookmarks = async () => {
 };
 export const setBookmarks = async (services: ServiceListService[]) => {
   const bookmarks = await getBookmarks();
-  const bookmarksSet = new Set(bookmarks);
+  const bookmarksMap = new Map(
+    bookmarks.map((service) => [service.id, service])
+  ); // Create a Map for efficient lookup by ID
 
   const servicesToAdd = services.filter(
-    (service) => !bookmarksSet.has(service)
-  );
+    (service) => !bookmarksMap.has(service.id)
+  ); // Use Map's 'has' for faster existence check
 
   bookmarks.push(...servicesToAdd);
 
@@ -219,7 +221,10 @@ export const openChat = async (
   } else {
     console.log("Chat already exists.");
   }
-  navigation.navigate(APP_PAGES.CHAT, { chatId });
+  navigation.navigate(APP_PAGES.CHAT, {
+    chatId,
+    chatPerson: userToChatWith.username,
+  });
 };
 
 export const getMyBookingsAsUser = async (userId: string) => {

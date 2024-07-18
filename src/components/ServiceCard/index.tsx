@@ -36,7 +36,7 @@ const ServiceCard = (props: ServiceCardProps) => {
       }
       {...props}
     >
-      <ImageBackground
+      <CardImage
         // style={{
         //   width: "100%",
         //   height: "75%",
@@ -44,6 +44,8 @@ const ServiceCard = (props: ServiceCardProps) => {
         // }}
         imageStyle={{
           borderRadius: 10,
+          width: "100%",
+          height: "100%",
           flex: 1,
           objectFit: "cover",
         }}
@@ -84,11 +86,7 @@ const ServiceCard = (props: ServiceCardProps) => {
         </IconBtn>
       </View>
       <CardInfoContainer>
-        <ServiceTitle>{service.name}</ServiceTitle>
-        <View style={{ flexDirection: "row" }}>
-          <StarRating value={Math.floor(service.rating ?? 1)} size={12} />
-          <Text>({service.rating ?? 0.0})</Text>
-        </View>
+        <ServiceTitle style={{ marginBottom: 5 }}>{service.name}</ServiceTitle>
         <Description>{formatCurrency(service.startingPrice ?? 0)}</Description>
       </CardInfoContainer>
     </CardContainer>

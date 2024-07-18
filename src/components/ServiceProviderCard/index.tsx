@@ -43,7 +43,7 @@ const ServiceProviderCard = (props: IServiceProviderCard) => {
           source={{
             uri:
               provider?.profilePicture ??
-              "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+              "https://cdn-icons-png.flaticon.com/512/149/149071.png",
           }}
         />
         <View style={{ marginLeft: 15 }}>

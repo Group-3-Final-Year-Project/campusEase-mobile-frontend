@@ -24,10 +24,11 @@ const ServiceCategories = () => {
     Object.values(categoriesData),
     (acc, category) => ({
       ...acc,
-      [parseInt(category["id"])]: () => <Category category={category} />,
+      [category["id"]]: () => <Category category={category} />,
     }),
     {}
   );
+
   const getCategoryRoutes = Object.values(categoriesData).map((category) => {
     return {
       key: category.id.toString(),
@@ -35,15 +36,13 @@ const ServiceCategories = () => {
     };
   });
 
-  // useEffect(() =>
-  //   Alert.alert("hello", JSON.stringify(filters[Filters.SERVICE_CATEGORY]))
-  // );
   const renderScene = SceneMap(renderCategoryScene);
 
   //use service category filter to set the index
   const [index, setIndex] = React.useState(
-    filters[Filters.SERVICE_CATEGORY]?.id
+    Number(filters[Filters.SERVICE_CATEGORY]?.id)
   );
+
   const [routes] = React.useState(getCategoryRoutes);
 
   const onIndexChange = (index: number) => {

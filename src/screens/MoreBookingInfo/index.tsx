@@ -33,6 +33,7 @@ import {
   uploadFileToFirebaseStorage,
 } from "~services";
 import uuid from "react-native-uuid";
+import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 
 export const bookingInfoSchema = yup.object().shape({
   username: yup.string().required("Username required!"),
@@ -107,7 +108,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
               },
             });
             resetForm();
-            navigation.navigate(APP_PAGES.PAYSTACK_PAYMENT_VIEW);
+            navigation.navigate(APP_PAGES.CHECKOUT);
           })
           .catch(() =>
             showAlert("Ooops...", "Could not upload attachments. Try again")
@@ -122,11 +123,12 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
 
   return (
     <Container>
-      <ScrollView
+      <VirtualisedContainer
         style={{
           paddingBottom: bottomInset,
           paddingHorizontal: 15,
         }}
+        renderItem={undefined}
       >
         <BookingInfoContainer style={{ marginTop: 0 }}>
           <BookingInfoHeaderLabel>Customer Information</BookingInfoHeaderLabel>
@@ -266,7 +268,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
             />
           </FormControl>
         </BookingInfoContainer>
-      </ScrollView>
+      </VirtualisedContainer>
       <BottomCard>
         <Button
           style={{ width: "100%", height: 60, padding: 12 }}

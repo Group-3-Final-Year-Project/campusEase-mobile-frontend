@@ -37,6 +37,7 @@ import ACTION_TYPES from "~store/actionTypes";
 import { VerifiedUser } from "~src/@types/types";
 import moment from "moment";
 import { Description } from "../Home/styles";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
@@ -48,6 +49,14 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
     _id: user.id,
     name: user.username,
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.setOptions({
+        headerTitle: route.params?.chatPerson || "Chat",
+      });
+    }, [])
+  );
 
   useEffect(() => {
     const fetchMessages = async (chatId: string) => {

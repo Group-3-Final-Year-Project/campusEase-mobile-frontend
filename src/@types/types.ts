@@ -201,7 +201,6 @@ export type ServiceCategory = {
   id: string;
   name: string;
   description?: NullableString;
-  image?: string;
 };
 
 export type ServiceListService = {

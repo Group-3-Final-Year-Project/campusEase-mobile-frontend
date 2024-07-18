@@ -33,6 +33,7 @@ const BookingBtns = ({
             style={{
               flexGrow: 1,
               backgroundColor: themeContext?.colors.secondary,
+              borderColor: themeContext?.colors.secondary,
             }}
           >
             Cancel
@@ -125,8 +126,8 @@ const BookingBtns = ({
               flexGrow: 1,
               marginRight: 7,
               backgroundColor: themeContext?.colors.green,
+              borderColor: themeContext?.colors.green,
             }}
-            disabled
           >
             Accept
           </Button>
@@ -134,6 +135,7 @@ const BookingBtns = ({
             style={{
               flexGrow: 1,
               backgroundColor: themeContext?.colors.secondary,
+              borderColor: themeContext?.colors.secondary,
             }}
           >
             Decline

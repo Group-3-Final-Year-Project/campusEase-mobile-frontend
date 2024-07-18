@@ -47,6 +47,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 import Promos from "~src/screens/Promos";
 import ForgotPassword from "~src/screens/ForgotPassword";
 import Analytics from "~src/screens/Analytics";
+import TermsAndConditions from "~src/screens/TermsAndConditions";
+import Checkout from "~src/screens/Checkout";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -201,6 +203,10 @@ const RootNavigator = () => {
               component={PrivacyPolicy}
             />
             <Stack.Screen
+              name={APP_PAGES.TERMS_AND_CONDITIONS}
+              component={TermsAndConditions}
+            />
+            <Stack.Screen
               name={APP_PAGES.SEARCH_AND_FILTER}
               component={SearchAndFilter}
             />
@@ -208,6 +214,7 @@ const RootNavigator = () => {
               name={APP_PAGES.PAYSTACK_PAYMENT_VIEW}
               component={PayView}
             />
+            <Stack.Screen name={APP_PAGES.CHECKOUT} component={Checkout} />
             <Stack.Screen
               name={APP_PAGES.BOOKING_CREATION_SUCCESS}
               component={BookingCreationSuccess}

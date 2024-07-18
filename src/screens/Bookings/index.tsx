@@ -25,7 +25,7 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [activeStatusBtn, setActiveStatusBtn] = useState("all");
+  const [activeStatusBtn, setActiveStatusBtn] = useState("All");
   const [isProvider, setIsProvider] = React.useState(false);
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
@@ -47,7 +47,7 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
   ];
 
   const renderStatusBtn = ({ item }: { item: { name: StatusType } }) => {
-    const isActive = item.name === activeStatusBtn;
+    const isActive = item.name == activeStatusBtn;
     return (
       <IconBtn
         onPress={() => {

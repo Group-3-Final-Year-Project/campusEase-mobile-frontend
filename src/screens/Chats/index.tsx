@@ -33,7 +33,6 @@ import { firestoreDatabase } from "firebaseConfig";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUserPreview, VerifiedUser } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
-import {} from "react-native";
 
 const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -49,25 +48,25 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const [loading, setLoading] = useState<boolean>(false);
   const user: VerifiedUser = useAppSelector((state) => state.user);
 
-  useFocusEffect(
-    useCallback(() => {
-      navigation.setOptions({
-        headerRight: () => (
-          <IconBtn>
-            <Iconify
-              icon="solar:minimalistic-magnifer-outline"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          </IconBtn>
-        ),
-        headerRightContainerStyle: {
-          marginRight: 15,
-        },
-      });
-    }, [])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     navigation.setOptions({
+  //       headerRight: () => (
+  //         <IconBtn>
+  //           <Iconify
+  //             icon="solar:minimalistic-magnifer-outline"
+  //             size={18}
+  //             strokeWidth={18}
+  //             color={themeContext?.colors.text}
+  //           />
+  //         </IconBtn>
+  //       ),
+  //       headerRightContainerStyle: {
+  //         marginRight: 15,
+  //       },
+  //     });
+  //   }, [])
+  // );
 
   const renderChatCard = ({
     item,
@@ -78,9 +77,11 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
       messages?: DocumentData[] | undefined;
     };
   }) => {
-    const user = item.users.filter((user) => user.id !== user.id)[0];
+    const userToChatWith = item.users.filter((u) => u.id !== user.id)[0];
     return (
-      <ChatCardContainer onPress={() => handleChatPress(item.id)}>
+      <ChatCardContainer
+        onPress={() => handleChatPress(item.id, userToChatWith?.username)}
+      >
         <Avatar
           animate
           useAutoColors
@@ -89,14 +90,15 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
           backgroundColor="green"
           labelColor="white"
           source={{
-            uri: user
-              ? user?.profilePicture
-              : "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-olly-733872.jpg&fm=jpg",
+            uri:
+              user && user.profilePicture
+                ? user?.profilePicture
+                : "https://cdn-icons-png.flaticon.com/512/149/149071.png",
           }}
         />
         <View style={{ flexGrow: 1, paddingHorizontal: 10 }}>
           <ChatCardLabel>{user?.username}</ChatCardLabel>
-          <Description>Hey there! I am the service ...</Description>
+          <Description>{user?.email || "Continue your chat..."}</Description>
         </View>
         <View>
           <Description style={{ color: themeContext?.colors.secondaryText2 }}>
@@ -140,8 +142,8 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     }
   };
 
-  const handleChatPress = (chatId: string) => {
-    navigation.navigate(APP_PAGES.CHAT, { chatId });
+  const handleChatPress = (chatId: string, name: string) => {
+    navigation.navigate(APP_PAGES.CHAT, { chatId, chatPerson: name });
   };
 
   const { data, isLoading, error, isError, refetch, isRefetching } = useQuery({
@@ -158,7 +160,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     >
       <StatusBar style={themeContext?.dark ? "light" : "dark"} />
       <FlatList
-        data={chatList}
+        data={data}
         keyExtractor={(item) => item.id}
         renderItem={renderChatCard}
         ItemSeparatorComponent={() => (
