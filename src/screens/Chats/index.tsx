@@ -33,6 +33,7 @@ import { firestoreDatabase } from "firebaseConfig";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUserPreview, VerifiedUser } from "~src/@types/types";
 import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
 
 const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -91,18 +92,20 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
           labelColor="white"
           source={{
             uri:
-              user && user.profilePicture
-                ? user?.profilePicture
+              userToChatWith && userToChatWith.profilePicture
+                ? userToChatWith?.profilePicture
                 : "https://cdn-icons-png.flaticon.com/512/149/149071.png",
           }}
         />
         <View style={{ flexGrow: 1, paddingHorizontal: 10 }}>
-          <ChatCardLabel>{user?.username}</ChatCardLabel>
-          <Description>{user?.email || "Continue your chat..."}</Description>
+          <ChatCardLabel>{userToChatWith?.username}</ChatCardLabel>
+          <Description>
+            {userToChatWith?.email || "Continue your chat..."}
+          </Description>
         </View>
         <View>
           <Description style={{ color: themeContext?.colors.secondaryText2 }}>
-            12:37 am
+            {moment(new Date()).format("hh:mm a")}
           </Description>
         </View>
       </ChatCardContainer>
@@ -155,9 +158,7 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
   else if (isError || !data || data === undefined) return <EmptyState />;
 
   return (
-    <Container
-      style={{ paddingTop: insets.top - 20, paddingBottom: bottomInset }}
-    >
+    <Container style={{ paddingBottom: bottomInset }}>
       <StatusBar style={themeContext?.dark ? "light" : "dark"} />
       <FlatList
         data={data}
