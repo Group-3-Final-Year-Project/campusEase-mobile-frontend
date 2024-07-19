@@ -25,7 +25,6 @@ import {
   changePassword,
   navigateAndResetStack,
   pickImageAsync,
-  pickRandomAvatarColor,
   showAlert,
   signoutUser,
 } from "~services";
@@ -35,9 +34,6 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const user: VerifiedUser = useAppSelector((state) => state.user);
-  const [userPic, setUserPic] = useState<string>(
-    user?.profilePicture ? user?.profilePicture : ""
-  );
 
   useFocusEffect(
     useCallback(() => {
@@ -85,7 +81,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           color={themeContext?.colors.text}
         />
       ),
-      action: () => null,
+      action: () => navigation.navigate(APP_PAGES.EDIT_PROFILE),
       showRightIcon: true,
     },
     {
@@ -201,33 +197,14 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
         <ProfileImageView>
           <ProfileImage
             source={{
-              uri: userPic
-                ? userPic
+              uri: user?.profilePicture
+                ? user?.profilePicture
                 : "https://cdn-icons-png.flaticon.com/512/149/149071.png",
             }}
           />
-          <IconBtn
-            style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              backgroundColor: themeContext?.colors.primary,
-            }}
-            onPress={() =>
-              pickImageAsync().then(
-                (images) => images && images.length && setUserPic(images[0].uri)
-              )
-            }
-          >
-            <Iconify
-              icon="solar:camera-outline"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          </IconBtn>
         </ProfileImageView>
         <Title>{user.username}</Title>
+        <Title style={{ marginTop: -25 }}>{user.email}</Title>
       </HeaderCard>
     );
   };

@@ -49,6 +49,7 @@ import ForgotPassword from "~src/screens/ForgotPassword";
 import Analytics from "~src/screens/Analytics";
 import TermsAndConditions from "~src/screens/TermsAndConditions";
 import Checkout from "~src/screens/Checkout";
+import EditProfile from "~src/screens/EditProfile";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -225,6 +226,10 @@ const RootNavigator = () => {
             />
             <Stack.Screen name={APP_PAGES.PROMOS} component={Promos} />
             <Stack.Screen name={APP_PAGES.ANALYTICS} component={Analytics} />
+            <Stack.Screen
+              name={APP_PAGES.EDIT_PROFILE}
+              component={EditProfile}
+            />
           </Stack.Group>
         </>
       ) : (
