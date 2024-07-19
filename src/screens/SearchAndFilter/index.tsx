@@ -25,7 +25,10 @@ import { useQuery } from "@tanstack/react-query";
 import { NavigationProp } from "@react-navigation/native";
 import { getServices } from "~services";
 
-const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
+const SearchAndFilter = ({
+  navigation,
+  route,
+}: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
@@ -125,6 +128,7 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
         <Searchbar
           value={searchTerm}
           onChangeText={(e) => searchAndFilterServices(data, e)}
+          autoFocus={route.params?.buttonClicked === "search" ? true : false}
           placeholder="Search..."
           icon={
             <Iconify
@@ -152,6 +156,7 @@ const SearchAndFilter = ({ navigation }: NativeStackScreenProps<any>) => {
         </IconBtn>
       </View>
       <FlatList
+        keyExtractor={(item) => item.id}
         data={visibleList}
         renderItem={({ item, index }) => (
           <SecondaryServiceCard

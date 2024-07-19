@@ -1,6 +1,6 @@
-import { Dimensions, View } from "react-native";
+import { Dimensions, ImageBackground, View } from "react-native";
 import React, { useContext } from "react";
-import { Title } from "./styles";
+import { CardContainer, CardImage, CardInfoContainer, Title } from "./styles";
 import { Card, CardProps } from "react-native-ui-lib";
 import { ThemeContext } from "styled-components/native";
 import IconBtn from "~components/IconBtn";
@@ -9,7 +9,12 @@ import Text from "~components/Text";
 import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
 import { ServiceListService } from "~src/@types/types";
-import { setBookmarks } from "~services";
+import { formatCurrency, setBookmarks } from "~services";
+import {
+  Description,
+  ServiceTitle,
+} from "~components/SecondaryServiceCard/styles";
+import StarRating from "~components/StarRating";
 
 interface ServiceCardProps extends CardProps {
   service: ServiceListService;
@@ -21,17 +26,9 @@ const ServiceCard = (props: ServiceCardProps) => {
   const { service, navigation } = props;
 
   return (
-    <Card
-      //   center
-      animated
-      enableShadow={false}
-      containerStyle={{
-        backgroundColor: theme?.colors.secondaryBackground,
-        borderRadius: 15,
+    <CardContainer
+      style={{
         width: Dimensions.get("screen").width / 1.5,
-        height: 240,
-        padding: 10,
-        position: "relative",
       }}
       onPress={() =>
         navigation &&
@@ -39,16 +36,21 @@ const ServiceCard = (props: ServiceCardProps) => {
       }
       {...props}
     >
-      <Card.Image
-        style={{
-          width: "100%",
-          height: "75%",
-          borderRadius: 15,
+      <ImageBackground
+        // style={{
+        //   width: "100%",
+        //   height: "75%",
+        //   borderRadius: 15,
+        // }}
+        imageStyle={{
+          borderRadius: 10,
+          flex: 1,
+          objectFit: "cover",
         }}
         source={{
           uri: service?.coverImage
             ? service.coverImage
-            : "https://www.apartments.com/rental-manager/sites/default/files/image/2023-02/home%20repair.jpg",
+            : "https://cdn.textstudio.com/output/sample/normal/6/9/6/5/service-logo-103-5696.png",
         }}
       />
       <View
@@ -81,10 +83,15 @@ const ServiceCard = (props: ServiceCardProps) => {
           />
         </IconBtn>
       </View>
-      <Card.Section
-        content={[{ text: "Hello", children: <Title>{service.name}</Title> }]}
-      />
-    </Card>
+      <CardInfoContainer>
+        <ServiceTitle>{service.name}</ServiceTitle>
+        <View style={{ flexDirection: "row" }}>
+          <StarRating value={Math.floor(service.rating ?? 1)} size={12} />
+          <Text>({service.rating ?? 0.0})</Text>
+        </View>
+        <Description>{formatCurrency(service.startingPrice ?? 0)}</Description>
+      </CardInfoContainer>
+    </CardContainer>
   );
 };
 

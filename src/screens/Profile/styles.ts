@@ -33,6 +33,16 @@ export const ProfileImageView = styled.View`
   margin: 30px 0 15px 0;
 `;
 
+export const ProfileImageContainer = styled.View`
+  border-radius: 20px;
+  object-fit: cover;
+  width: 120px;
+  height: 120px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const ProfileImage = styled.Image.attrs({})`
   border-radius: 20px;
   object-fit: cover;

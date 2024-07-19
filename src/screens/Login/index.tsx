@@ -2,7 +2,13 @@ import React, { useState, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
-import { KeyboardAvoidingView, Platform, Pressable, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ThemeContext } from "styled-components/native";
 
 import { StatusBar } from "expo-status-bar";
@@ -26,6 +32,7 @@ import {
   ErrorLabel,
   FormControl,
   HighlightedDescription,
+  InputLabel,
 } from "../Signup/styles";
 import ACTION_TYPES from "~store/actionTypes";
 import { UserType } from "~src/@types/types";
@@ -165,6 +172,15 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
               {formik.touched?.password && formik.errors?.password ? (
                 <ErrorLabel>{formik.errors?.password}</ErrorLabel>
               ) : null}
+            </FormControl>
+            <FormControl>
+              <TouchableOpacity
+                onPress={() => navigation.navigate(APP_PAGES.FORGOT_PASSWORD)}
+              >
+                <InputLabel style={{ color: themeContext?.colors.secondary }}>
+                  Forgot password?
+                </InputLabel>
+              </TouchableOpacity>
             </FormControl>
           </View>
         </ContentCard>

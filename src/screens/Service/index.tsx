@@ -424,7 +424,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
           />
         </ServiceInfoContainer> */}
         </Animated.ScrollView>
-        {isMyService && (
+        {!isMyService && (
           <BottomCard>
             <View>
               <Description style={{ marginBottom: 10 }}>

@@ -21,18 +21,6 @@ import Bookings from "~src/screens/Bookings";
 
 const UserTabNavigator = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
-  const [isServiceProvider, setIsServiceProvider] =
-    React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    const getIsProvider = async () => {
-      const userType = await getUserType();
-      const isServiceProvider = async () =>
-        userType === UserType.SERVICE_PROVIDER;
-      setIsServiceProvider(await isServiceProvider());
-    };
-    getIsProvider();
-  }, []);
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
@@ -52,58 +40,6 @@ const UserTabNavigator = () => {
 
   const theme = useContext(ThemeContext);
   useNavigationBar(false, theme?.colors.background);
-
-  const ServiceProviderTabItems = [
-    {
-      name: APP_PAGES.ANALYTICS,
-      label: APP_PAGES.ANALYTICS,
-      component: Analytics,
-      activeIconName: (
-        <Iconify
-          icon="solar:graph-up-bold"
-          size={20}
-          color={theme?.colors.primary}
-          strokeWidth={10}
-        />
-      ),
-      inactiveIconName: (
-        <Iconify
-          icon="solar:graph-up-outline"
-          size={20}
-          color={theme?.colors.secondaryText}
-          strokeWidth={10}
-        />
-      ),
-    },
-  ];
-
-  const UserTabItems = [
-    {
-      name: APP_PAGES.EXPLORE,
-      label: APP_PAGES.EXPLORE,
-      component: Explore,
-      activeIconName: (
-        <Iconify
-          icon="solar:map-point-bold"
-          size={20}
-          color={theme?.colors.primary}
-          strokeWidth={10}
-        />
-      ),
-      inactiveIconName: (
-        <Iconify
-          icon="solar:map-point-outline"
-          size={20}
-          color={theme?.colors.secondaryText}
-          strokeWidth={10}
-        />
-      ),
-    },
-  ];
-
-  const dynamicTabs = isServiceProvider
-    ? ServiceProviderTabItems
-    : UserTabItems;
 
   const tabs = [
     {
@@ -127,7 +63,27 @@ const UserTabNavigator = () => {
         />
       ),
     },
-    ...dynamicTabs,
+    {
+      name: APP_PAGES.EXPLORE,
+      label: APP_PAGES.EXPLORE,
+      component: Explore,
+      activeIconName: (
+        <Iconify
+          icon="solar:map-point-bold"
+          size={20}
+          color={theme?.colors.primary}
+          strokeWidth={10}
+        />
+      ),
+      inactiveIconName: (
+        <Iconify
+          icon="solar:map-point-outline"
+          size={20}
+          color={theme?.colors.secondaryText}
+          strokeWidth={10}
+        />
+      ),
+    },
     {
       name: APP_PAGES.BOOKINGS,
       label: APP_PAGES.BOOKINGS,

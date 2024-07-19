@@ -48,14 +48,43 @@ export const fetchNotifications = async () => {};
 
 export const sendBookingRequestNotifications = async (
   userDeviceToken: string,
-  providerDeviceToken: string
+  userId: string,
+  providerDeviceToken: string,
+  providerId: string
 ) => {
-  const notificationForUser: Notifications.Notification = {
-    date: new Date().getTime(),
-    request: {
-      content: {},
+  const notificationForUser: Notifications.NotificationRequestInput = {
+    content: {
+      title: "Booking Confirmation",
+      body: "Your booking for [service name] with [provider name] has been confirmed!",
+      sound: "defaultCritical",
+      subtitle: null,
+      attachments: [],
+      data: {},
     },
+    trigger: {
+      seconds: 0,
+    },
+    identifier: userId,
   };
+
+  const notificationForServiceProvider: Notifications.NotificationRequestInput =
+    {
+      content: {
+        title: "New Booking Request",
+        body: "Someone just requested for your service!",
+        sound: "defaultCritical",
+        subtitle: null,
+        attachments: [],
+        data: {},
+      },
+      identifier: providerId,
+
+      trigger: {
+        seconds: 0,
+      },
+    };
+
+  await schedulePushNotification(notificationForUser);
 };
 
 export const schedulePushNotification = async (

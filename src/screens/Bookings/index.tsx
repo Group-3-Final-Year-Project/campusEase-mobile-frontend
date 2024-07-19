@@ -56,9 +56,10 @@ const Bookings = ({ navigation }: NativeStackScreenProps<any>) => {
         }}
         style={{
           backgroundColor: isActive
-            ? themeContext?.colors.primary
+            ? themeContext?.colors.secondary
             : themeContext?.colors.background,
-          height: 40,
+          height: 35,
+          minWidth: 60,
         }}
       >
         <HeaderItemLabel>{item.name}</HeaderItemLabel>

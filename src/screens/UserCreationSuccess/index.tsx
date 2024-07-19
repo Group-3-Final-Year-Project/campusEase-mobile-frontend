@@ -36,7 +36,7 @@ const UserCreationSuccess = ({ navigation }: NativeStackScreenProps<any>) => {
         <SuccessState
           title="Congratulations"
           description={
-            user.userType === UserType.USER
+            user.userType === UserType.SERVICE_PROVIDER
               ? `Your account has been created successfully!\nNow, let's set up your service as well.`
               : `Your account has been created successfully!`
           }

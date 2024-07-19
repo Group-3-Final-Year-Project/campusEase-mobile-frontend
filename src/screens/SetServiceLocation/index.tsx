@@ -59,6 +59,7 @@ const SetServiceLocation = ({
   const user: VerifiedUser = useAppSelector((state) => state.user);
 
   const startServiceCreation = async (service: Service) => {
+    let isSuccess = false;
     if (serviceInCreation.name && serviceInCreation.id) {
       console.log("Name:", serviceInCreation.name);
       console.log("Cat:", serviceInCreation.category.id);
@@ -66,19 +67,20 @@ const SetServiceLocation = ({
       await createService(service)
         .then(() => {
           console.log("Trueeeee");
-          return { isSuccess: true };
+          isSuccess = true;
         })
         .catch((err) => {
           showAlert("Ooops...", "Could not create your service. Try again");
-          return { isSuccess: false };
+          isSuccess = false;
         });
     } else {
       showAlert(
         "Ooops...",
         "Could not create your service. Details provided are incomplete"
       );
-      return { isSuccess: false };
+      isSuccess = false;
     }
+    return { isSuccess };
   };
 
   const formik = useFormik<{
@@ -128,6 +130,7 @@ const SetServiceLocation = ({
             updatedAt: new Date().toLocaleString(),
           };
           await startServiceCreation(service).then((res) => {
+            console.log(res);
             if (res?.isSuccess) {
               resetForm();
               dispatch({

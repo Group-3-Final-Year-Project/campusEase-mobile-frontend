@@ -1,5 +1,11 @@
 import React, { useContext } from "react";
-import { BottomCard, Container, TopCard, Description } from "./styles";
+import {
+  BottomCard,
+  Container,
+  TopCard,
+  Description,
+  HighlightedDescription,
+} from "./styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, IconBtn } from "~components";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
@@ -10,6 +16,8 @@ import { StatusBar } from "expo-status-bar";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Iconify } from "react-native-iconify";
 import LottieView from "lottie-react-native";
+import HeroImage from "~assets/images/hero.svg";
+import { Dimensions } from "react-native";
 
 const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -54,13 +62,20 @@ const Onboard = ({ navigation }: NativeStackScreenProps<any>) => {
       >
         <StatusBar style={themeContext?.dark ? "light" : "dark"} />
         <TopCard style={{ paddingTop: insets.top }}>
-          {/* <SvgFromUri uri={require("~assets/images/delivery.svg")} /> */}
-          <LottieView
-            source={require("../../assets/animations/error.json")}
-            autoPlay
-            loop
-          />
-          {/* <SvgComponent width={180} height={100} /> */}
+          <HeroImage width={500} height={450} />
+          <HighlightedDescription
+            style={{
+              fontSize: 40,
+              lineHeight: 40,
+              marginTop: -20,
+            }}
+          >
+            CampusEase
+          </HighlightedDescription>
+          <Description>
+            CampusEase connects you with all the services you need, from laundry
+            and food to tutoring and tech support. Enjoy!
+          </Description>
         </TopCard>
         <BottomCard>
           <View>

@@ -33,6 +33,7 @@ const Bookmarks = ({ navigation }: BottomTabScreenProps<any>) => {
   return (
     <Container>
       <FlatList
+        keyExtractor={(item) => item.id}
         data={data}
         renderItem={({ item, index }) => (
           <SecondaryServiceCard

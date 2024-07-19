@@ -4,8 +4,7 @@ import { EffectCallback, DependencyList, useRef, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as Linking from "expo-linking";
 import * as Location from "expo-location";
-import * as Permissions from "expo-permissions";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 import { eventEmitter } from "./eventEmitter";
 import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
 import { getMyServices } from "./dataService";
@@ -115,30 +114,6 @@ export const formatCurrency = (value: number) => {
   return formatter.format(Number(value));
 };
 
-export default async function getPermissionAsync(
-  permission: Permissions.PermissionType
-) {
-  const { status } = await Permissions.askAsync(permission);
-  if (status !== "granted") {
-    const permissionName = permission.toLowerCase().replace("_", " ");
-    Alert.alert(
-      "Cannot be done 😞",
-      `If you would like to use this feature, you'll need to enable the ${permissionName} permission in your phone settings.`,
-      [
-        {
-          text: "Let's go!",
-          onPress: () => Linking.openURL("app-settings:"),
-        },
-        { text: "Nevermind", onPress: () => {}, style: "cancel" },
-      ],
-      { cancelable: true }
-    );
-
-    return false;
-  }
-  return true;
-}
-
 export async function getLocationAsync(
   onSend: (locations: { location: Location.LocationObjectCoords }[]) => void
 ) {
@@ -151,7 +126,7 @@ export async function getLocationAsync(
 }
 
 export async function pickImageAsync(
-  onSend: (images: ImagePicker.ImagePickerAsset[]) => void,
+  onSend?: (images: ImagePicker.ImagePickerAsset[]) => void,
   props?: ImagePicker.ImagePickerOptions
 ) {
   if (await ImagePicker.requestMediaLibraryPermissionsAsync()) {
@@ -162,7 +137,7 @@ export async function pickImageAsync(
     });
 
     if (!result.canceled) {
-      onSend(result.assets);
+      onSend && onSend(result.assets);
       return result.assets;
     }
   }

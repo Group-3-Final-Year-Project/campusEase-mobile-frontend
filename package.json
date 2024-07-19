@@ -29,10 +29,9 @@
     "@types/styled-components-react-native": "^5.2.5",
     "axios": "^1.6.8",
     "babel-plugin-module-resolver": "^5.0.2",
-    "babel-plugin-styled-components": "^2.1.4",
     "color": "^4.2.3",
     "events": "^3.3.0",
-    "expo": "^51.0.18",
+    "expo": "~51.0.20",
     "expo-blur": "~13.0.2",
     "expo-constants": "^16.0.2",
     "expo-device": "^6.0.2",
@@ -44,7 +43,6 @@
     "expo-location": "~17.0.1",
     "expo-navigation-bar": "~3.0.7",
     "expo-notifications": "^0.28.9",
-    "expo-permissions": "^14.4.0",
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "firebase": "^10.12.2",
@@ -83,13 +81,15 @@
     "typescript-styled-plugin": "^0.18.3",
     "uninstall": "^0.0.0",
     "uuid": "^10.0.0",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "expo-updates": "~0.25.19"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@tanstack/eslint-plugin-query": "^5.43.1",
     "@types/react": "~18.2.45",
     "@types/uuid": "^10.0.0",
+    "babel-plugin-styled-components": "^2.1.4",
     "react-native-awesome-alerts": "^2.0.0",
     "react-native-dotenv": "^3.4.11",
     "typescript": "~5.3.3"
