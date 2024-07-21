@@ -23,12 +23,7 @@ import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
-import {
-  LocationObj,
-  LocationParams,
-  Service,
-  VerifiedUser,
-} from "~src/@types/types";
+import { LocationParams, Service, VerifiedUser } from "~src/@types/types";
 import {
   createService,
   formatLatLng,
@@ -61,12 +56,8 @@ const SetServiceLocation = ({
   const startServiceCreation = async (service: Service) => {
     let isSuccess = false;
     if (serviceInCreation.name && serviceInCreation.id) {
-      console.log("Name:", serviceInCreation.name);
-      console.log("Cat:", serviceInCreation.category.id);
-      console.log("Loc:", serviceInCreation.location.name);
       await createService(service)
         .then(() => {
-          console.log("Trueeeee");
           isSuccess = true;
         })
         .catch((err) => {
@@ -87,7 +78,7 @@ const SetServiceLocation = ({
     location: LocationParams;
   }>({
     initialValues: {
-      location: {
+      location: serviceInCreation.location.location || {
         latitude: 0,
         longitude: 0,
         accuracy: null,
@@ -101,30 +92,27 @@ const SetServiceLocation = ({
     },
     validationSchema: locationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      console.log("V: ", values);
       try {
         await getFormattedAddressFromGeocode(
           values.location.latitude,
           values.location.longitude
         ).then(async (formatted_address) => {
+          const loc = {
+            id: uuid.v4() as string,
+            name: "Main",
+            address: formatted_address,
+            location: values.location,
+          };
           dispatch({
             type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
             payload: {
-              location: {
-                name: "Main",
-                address: formatted_address,
-                location: values.location,
-              },
+              location: loc,
             },
           });
           const service: Service = {
             ...serviceInCreation,
             providerId: user.id,
-            location: {
-              name: "Main",
-              address: formatted_address,
-              location: values.location,
-            },
+            location: loc,
             isAvailable: true,
             createdAt: new Date().toLocaleString(),
             updatedAt: new Date().toLocaleString(),

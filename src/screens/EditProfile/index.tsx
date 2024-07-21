@@ -5,13 +5,24 @@ import { Button, IconBtn, Input } from "~components";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "styled-components/native";
 import { VerifiedUser } from "~src/@types/types";
-import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { getFirebaseErrorMessage, pickImageAsync, showAlert } from "~services";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
+import {
+  formatPhoneNumber,
+  getFirebaseErrorMessage,
+  getUser,
+  pickImageAsync,
+  saveUserDetails,
+  showAlert,
+  showToast,
+  updateUser,
+} from "~services";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { ScrollView, View } from "react-native";
 import { ErrorLabel, FormControl } from "../Signup/styles";
 import { CountryCodeContainer, CountryCodeText } from "../EnterPhone/styles";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import ACTION_TYPES from "~store/actionTypes";
 
 export const profileSchema = yup.object().shape({
   email: yup.string().email("Email not valid!").required("Email required!"),
@@ -26,8 +37,9 @@ export const profileSchema = yup.object().shape({
     .required("Phone number required!"),
 });
 
-const EditProfile = () => {
+const EditProfile = ({ navigation }: NativeStackScreenProps<any>) => {
   const user: VerifiedUser = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const themeContext = useContext(ThemeContext);
   const [userPic, setUserPic] = useState<string>(
@@ -45,10 +57,29 @@ const EditProfile = () => {
     validationSchema: profileSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        console.log(values);
+        await updateUser(user.id, {
+          username: values.name,
+          email: values.email,
+          phoneNumber: formatPhoneNumber(values.phoneNumber),
+          profilePicture:
+            userPic || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+        })
+          .then(async () => {
+            const userDataFromDB = await getUser(user.id);
+            await saveUserDetails(userDataFromDB);
+            dispatch({
+              type: ACTION_TYPES.UPDATE_USER_DATA,
+              payload: userDataFromDB,
+            });
+            resetForm();
+            showToast("Profile updated successfully");
+            navigation.goBack();
+          })
+          .catch((error) => {
+            showAlert("Oops!", getFirebaseErrorMessage(error.code));
+          });
       } catch (error) {
         showAlert("Oops, authentication failed!", getFirebaseErrorMessage());
-        throw Error(error as any);
       } finally {
         setSubmitting(false);
       }

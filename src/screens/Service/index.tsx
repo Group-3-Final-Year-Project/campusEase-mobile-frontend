@@ -48,7 +48,8 @@ import {
   setBookmarks,
 } from "~services";
 import { NavigationProp } from "@react-navigation/native";
-import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
+import ACTION_TYPES from "~store/actionTypes";
 
 const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
@@ -59,6 +60,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const currentUserForFirebase: VerifiedUserPreview =
     extractUserDataForFirebase(user);
+  const dispatch = useAppDispatch();
 
   const yOffset = useRef(new Animated.Value(0)).current;
   const headerOpacity = yOffset.interpolate({
@@ -75,37 +77,34 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
         // @ts-ignore
         opacity: headerOpacity,
       },
-      headerRight: () => (
-        <View style={{ flexDirection: "row" }}>
-          <IconBtn style={{ marginRight: 7 }}>
-            <Iconify
-              icon="solar:share-bold"
-              size={18}
-              strokeWidth={18}
-              color={themeContext?.colors.text}
-            />
-          </IconBtn>
-          {isMyService ? (
-            <IconBtn>
-              <Iconify
-                icon="solar:pen-new-square-outline"
-                size={18}
-                strokeWidth={18}
-                color={themeContext?.colors.text}
-              />
-            </IconBtn>
-          ) : (
-            <IconBtn onPress={() => setBookmarks(data ? [data] : [])}>
-              <Iconify
-                icon="solar:bookmark-bold"
-                size={18}
-                strokeWidth={18}
-                color={themeContext?.colors.text}
-              />
-            </IconBtn>
-          )}
-        </View>
-      ),
+      headerRight: () => {
+        if (isError || !data || data === undefined) {
+          return null;
+        }
+        return (
+          <View style={{ flexDirection: "row" }}>
+            {isMyService ? (
+              <IconBtn onPress={handleEditService}>
+                <Iconify
+                  icon="solar:pen-new-square-outline"
+                  size={18}
+                  strokeWidth={18}
+                  color={themeContext?.colors.text}
+                />
+              </IconBtn>
+            ) : (
+              <IconBtn onPress={() => setBookmarks(data ? [data] : [])}>
+                <Iconify
+                  icon="solar:bookmark-bold"
+                  size={18}
+                  strokeWidth={18}
+                  color={themeContext?.colors.text}
+                />
+              </IconBtn>
+            )}
+          </View>
+        );
+      },
       // @ts-ignore
       headerRightContainerStyle: {
         marginRight: 15,
@@ -129,6 +128,14 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     },
     [route.params, navigation]
   );
+
+  const handleEditService = () => {
+    dispatch({
+      type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
+      payload: data,
+    });
+    navigation.navigate(APP_PAGES.SET_SERVICE_DETAILS);
+  };
 
   const { data, isLoading, isError, isRefetching, error, refetch } = useQuery({
     queryKey: [QUERY_KEYS.SERVICE],

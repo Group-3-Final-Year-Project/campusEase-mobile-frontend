@@ -15,7 +15,6 @@ import {
   LoadingView,
   EmptyState,
   CustomRefreshControl,
-  Text,
 } from "~components";
 import HomeBanner from "./components/HomeBanner";
 import Categories from "./components/Categories";
@@ -117,7 +116,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
     };
   }, []);
 
-  const { data, isLoading, isError, error, isRefetching, refetch } = useQuery({
+  const { data, isLoading, isError, isRefetching, refetch } = useQuery({
     queryKey: [QUERY_KEYS.HOME_SCREEN_DATA],
     queryFn: () => fetchData(),
   });
@@ -168,8 +167,6 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                   navigation={navigation as NavigationProp<any>}
                 />
               )}
-              {/* Upcoming bookings should also be here... */}
-              {/* Earnings summary should be displayed here for service providers... */}
               {!!recentBookings?.length && (
                 <View style={{ marginTop: 20 }}>
                   <ListLabel style={{ marginBottom: 10 }}>
@@ -183,9 +180,7 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
                         key={item.id}
                         booking={item}
                         navigation={navigation as NavigationProp<any>}
-                        style={{
-                          width: 500,
-                        }}
+                        style={{ width: Dimensions.get("screen").width - 30 }}
                       />
                     )}
                     horizontal

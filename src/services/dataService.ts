@@ -9,6 +9,7 @@ import {
   or,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { firebaseCloudStorage, firestoreDatabase } from "firebaseConfig";
@@ -22,7 +23,6 @@ import {
   VerifiedUser,
   VerifiedUserPreview,
 } from "~src/@types/types";
-import bookingsData from "~src/data/bookingsData";
 import { categoriesData } from "~src/data/categories";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import axios from "axios";
@@ -116,6 +116,11 @@ export const createBooking = async (booking: Booking) => {
   );
 };
 
+export const updateBooking = async (bookingId: string, data: any) => {
+  const docRef = doc(firestoreDatabase, STORAGE_KEYS.BOOKINGS, bookingId);
+  await updateDoc(docRef, data);
+};
+
 export const createService = async (serviceData: Service) => {
   await setDoc(
     doc(firestoreDatabase, STORAGE_KEYS.SERVICES, serviceData.id),
@@ -125,6 +130,11 @@ export const createService = async (serviceData: Service) => {
 
 export const createUser = async (user: VerifiedUser) => {
   await setDoc(doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id), user);
+};
+
+export const updateUser = async (userId: string, data: any) => {
+  const docRef = doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, userId);
+  await updateDoc(docRef, data);
 };
 
 export const getServices = async (
@@ -366,3 +376,7 @@ export const deleteFileFromFirebaseStorage = async (fileName: string) => {
 export const getOverallReviewsDataAboutService = async (
   serviceId: string
 ): Promise<Review[]> => {};
+
+export const createReview = async (review: Review) => {
+  await setDoc(doc(firestoreDatabase, STORAGE_KEYS.REVIEWS, review.id), review);
+};

@@ -21,19 +21,19 @@ import {
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
+import { APP_PAGES } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
-import { firestoreDatabase } from "firebaseConfig";
-import { doc, updateDoc } from "firebase/firestore";
 import {
   formatLatLng,
   getFirebaseErrorMessage,
   getFormattedAddressFromGeocode,
   showAlert,
+  updateUser,
 } from "~services";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { LocationParams, VerifiedUser } from "~src/@types/types";
 import * as Location from "expo-location";
+import uuid from "react-native-uuid";
 
 export const locationSchema = yup.object().shape({
   name: yup.string().required(),
@@ -73,10 +73,10 @@ const SetLocation = ({ navigation, route }: NativeStackScreenProps<any>) => {
           values.location.latitude,
           values.location.longitude
         );
-        const docRef = doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id);
-        await updateDoc(docRef, {
+        await updateUser(user.id, {
           locations: [
             {
+              id: uuid.v4() as string,
               name: values.name,
               address: formatted_address,
               location: values.location,

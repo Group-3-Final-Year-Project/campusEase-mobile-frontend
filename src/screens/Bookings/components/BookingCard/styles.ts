@@ -15,20 +15,11 @@ export const BookingCardContainer = styled.TouchableOpacity`
 export const BookingStatusTag = styled(Text).attrs({
   fontSize: "small",
 })`
-  color: rgba(50, 205, 50, 1);
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.regular};
-  font-size: 8px;
-  line-height: 8px;
-  padding: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  border-radius: 10px;
-  background-color: rgba(50, 205, 50, 0.1);
-  max-width: 72px;
-  /* margin-bottom: 15px; */
+  font-size: 12px;
+  line-height: 12px;
+  border-radius: 3px;
 `;
 
 export const BookingTitle = styled(Text).attrs({
@@ -36,5 +27,5 @@ export const BookingTitle = styled(Text).attrs({
   fontWeight: "bold",
 })`
   color: ${(props: DefaultThemeProps) => props.theme.colors.text};
-  padding: 7px 0;
+  margin-bottom: 10px;
 `;

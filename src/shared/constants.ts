@@ -11,6 +11,7 @@ export const APP_PAGES = {
   HOME: "Home",
   PROFILE: "Profile",
   SETTINGS: "Settings",
+  WRITE_REVIEW: "Write Review",
   NOTIFICATIONS: "Notifications",
   NEW_PASSWORD: "New Password",
   VERIFY_EMAIL: "Verify Email",
@@ -28,6 +29,7 @@ export const APP_PAGES = {
   SERVICE: "Service",
   ANALYTICS: "Analytics",
   BOOKINGS: "Bookings",
+  ADD_OR_EDIT_LOCATION: "Add or Edit Location",
   BOOKING_SUMMARY: "Booking Summary",
   BOOKING_DETAILS: "Booking Details",
   REGISTER_SERVICE: "Register Service",
@@ -76,6 +78,7 @@ export const STORAGE_KEYS = {
   DB_USERS: "campusEase_users",
   SERVICE_CATEGORIES: "campusEase_service_categories",
   BOOKINGS: "campuseEase_bookings",
+  REVIEWS: "campuseEase_reviews",
 };
 
 export const QUERY_KEYS = {

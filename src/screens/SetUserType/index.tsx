@@ -22,7 +22,7 @@ import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import { UserType, VerifiedUser } from "~src/@types/types";
-import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
+import { APP_PAGES } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
 import AdvancedActionSheet from "~components/AdvancedActionSheet";
 import {
@@ -31,9 +31,8 @@ import {
   navigateAndResetStack,
   saveUserDetails,
   showAlert,
+  updateUser,
 } from "~services";
-import { firestoreDatabase } from "firebaseConfig";
-import { doc, updateDoc } from "firebase/firestore";
 import ACTION_TYPES from "~store/actionTypes";
 
 export const userTypeSchema = yup.object().shape({
@@ -57,22 +56,21 @@ const SetUserType = ({ navigation, route }: NativeStackScreenProps<any>) => {
     validationSchema: userTypeSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const docRef = doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id);
-        await updateDoc(docRef, {
+        await updateUser(user.id, {
           userType: values.userType,
         })
           .then(async () => {
-            resetForm();
             const userDataFromDB = await getUser(user.id);
             await saveUserDetails(userDataFromDB);
             dispatch({
               type: ACTION_TYPES.UPDATE_USER_DATA,
               payload: userDataFromDB,
             });
+            resetForm();
             navigateAndResetStack(navigation, APP_PAGES.USER_CREATION_SUCCESS);
           })
-          .catch((err) => {
-            showAlert("Oops!", getFirebaseErrorMessage(err.code));
+          .catch((error: any) => {
+            showAlert("Oops!", getFirebaseErrorMessage(error.code));
           });
       } catch (error) {
         showAlert("Oops!", "Something went wrong");

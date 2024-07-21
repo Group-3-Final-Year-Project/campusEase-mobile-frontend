@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
 import {
@@ -18,7 +18,10 @@ import * as yup from "yup";
 import {
   getFirebaseErrorMessage,
   getServiceCategories,
+  getUser,
+  saveUserDetails,
   showAlert,
+  updateUser,
 } from "~services";
 import {
   ContentCard,
@@ -28,7 +31,12 @@ import {
   FormControl,
 } from "../Signup/styles";
 import AdvancedActionSheet from "~components/AdvancedActionSheet";
-import { Service, ServiceCategory } from "~src/@types/types";
+import {
+  Service,
+  ServiceCategory,
+  UserType,
+  VerifiedUser,
+} from "~src/@types/types";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
 import uuid from "react-native-uuid";
@@ -48,17 +56,21 @@ const SetServiceDetails = ({
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const serviceInCreation = useAppSelector((state) => state.serviceInCreation);
+  const serviceInCreation: Service = useAppSelector(
+    (state) => state.serviceInCreation
+  );
+  const user: VerifiedUser = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const serviceDetailsInitialValues = {
-    name: "",
-    email: "",
-    description: "",
-    website: "",
+    name: serviceInCreation.name || "",
+    email: serviceInCreation.email || "",
+    description: serviceInCreation?.description || "",
+    website: serviceInCreation?.website || "",
     category: {
-      id: "",
-      name: "",
+      id: serviceInCreation.category.id || "",
+      name: serviceInCreation.category.name || "",
+      description: serviceInCreation.category?.description || "",
     },
   };
 
@@ -74,7 +86,7 @@ const SetServiceDetails = ({
         dispatch({
           type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
           payload: {
-            id: uuid.v4() as string,
+            id: serviceInCreation.id || (uuid.v4() as string),
             ...values,
           },
         });
@@ -97,6 +109,36 @@ const SetServiceDetails = ({
     });
     return result;
   };
+
+  const setUserTypeToServiceProvider = useCallback(async () => {
+    if (user.userType === UserType.USER) {
+      try {
+        await updateUser(user.id, {
+          userType: UserType.SERVICE_PROVIDER,
+        })
+          .then(async () => {
+            const userDataFromDB = await getUser(user.id);
+            await saveUserDetails(userDataFromDB);
+            dispatch({
+              type: ACTION_TYPES.UPDATE_USER_DATA,
+              payload: userDataFromDB,
+            });
+          })
+          .catch((error: any) => {
+            showAlert("Oops!", getFirebaseErrorMessage(error.code));
+          });
+      } catch (error) {
+        showAlert(
+          "Oops!",
+          "Something went wrong while making you a service provider"
+        );
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setUserTypeToServiceProvider();
+  }, []);
 
   return (
     <Container style={{ paddingTop: 0 }}>

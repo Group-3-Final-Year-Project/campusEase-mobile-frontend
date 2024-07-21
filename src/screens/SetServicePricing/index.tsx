@@ -22,13 +22,13 @@ import {
   FormControl,
   InputLabel,
 } from "../Signup/styles";
-import { SubService } from "~src/@types/types";
+import { Service, SubService } from "~src/@types/types";
 import { CountryCodeContainer, CountryCodeText } from "../EnterPhone/styles";
 import { Iconify } from "react-native-iconify";
 import { AddAttachmentBtn } from "../MoreBookingInfo/styles";
 import { uniqueId } from "lodash";
 import { ScrollView } from "react-native";
-import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
 import { getFirebaseErrorMessage, showAlert } from "~services";
 
@@ -42,11 +42,16 @@ const SetServicePricing = ({
 }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
-  const [subServiceForms, setSubServiceForms] = useState<SubService[]>([]);
+  const serviceInCreation: Service = useAppSelector(
+    (state) => state.serviceInCreation
+  );
   const dispatch = useAppDispatch();
+  const [subServiceForms, setSubServiceForms] = useState<SubService[]>(
+    serviceInCreation.subServices || []
+  );
 
   const servicePricingInitialValues = {
-    startingPrice: "",
+    startingPrice: serviceInCreation.startingPrice.toString() || "",
   };
 
   const formik = useFormik<{

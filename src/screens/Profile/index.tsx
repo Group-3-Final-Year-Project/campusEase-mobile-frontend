@@ -1,36 +1,32 @@
 import { FlatList, ListRenderItem, View } from "react-native";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import {
   Container,
   HeaderCard,
   ProfileImage,
-  ProfileImageContainer,
   ProfileImageView,
   ProfileItemCard,
   ProfileItemLabel,
   Title,
 } from "./styles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
-import { IconBtn, Text } from "~components";
+import { IconBtn } from "~components";
 import { Iconify } from "react-native-iconify";
-import Switch from "react-native-ui-lib/switch";
 import { NavigationProp, useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES } from "~src/shared/constants";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
-import { VerifiedUser } from "~src/@types/types";
+import { UserType, VerifiedUser } from "~src/@types/types";
 import {
   changePassword,
+  handleCreateServiceNavigation,
   navigateAndResetStack,
-  pickImageAsync,
   showAlert,
   signoutUser,
 } from "~services";
 
 const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
-  const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const user: VerifiedUser = useAppSelector((state) => state.user);
@@ -134,6 +130,23 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
         />
       ),
       action: () => navigation.navigate(APP_PAGES.MANAGE_ADDRESSES),
+      showRightIcon: true,
+    },
+    {
+      name:
+        user.userType === UserType.SERVICE_PROVIDER
+          ? "Create service"
+          : "Become a service provider",
+      icon: (
+        <Iconify
+          icon="solar:add-circle-outline"
+          size={18}
+          strokeWidth={18}
+          color={themeContext?.colors.text}
+        />
+      ),
+      action: () =>
+        handleCreateServiceNavigation(navigation as NavigationProp<any>),
       showRightIcon: true,
     },
     // {

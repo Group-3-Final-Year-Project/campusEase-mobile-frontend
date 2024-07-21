@@ -6,8 +6,12 @@ import { Container } from "./styles";
 import AddressCard from "~components/AddressCard";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
+import { Button } from "~components";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { APP_PAGES } from "~src/shared/constants";
+import { NavigationProp } from "@react-navigation/native";
 
-const ManageAddresses = () => {
+const ManageAddresses = ({ navigation }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
   const bottomInset = useCustomBottomInset();
   const user: VerifiedUser = useAppSelector((state) => state.user);
@@ -15,12 +19,24 @@ const ManageAddresses = () => {
   return (
     <Container>
       <FlatList
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         data={user.locations ?? []}
-        renderItem={({ item }) => <AddressCard address={item} />}
+        renderItem={({ item }) => (
+          <AddressCard
+            address={item}
+            navigation={navigation as NavigationProp<any>}
+          />
+        )}
         ItemSeparatorComponent={() => <View style={{ marginVertical: 7 }} />}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
       />
+      <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <Button
+          onPress={() => navigation.navigate(APP_PAGES.ADD_OR_EDIT_LOCATION)}
+        >
+          Add address
+        </Button>
+      </View>
     </Container>
   );
 };

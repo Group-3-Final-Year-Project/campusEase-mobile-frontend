@@ -6,9 +6,10 @@ import * as Linking from "expo-linking";
 import * as Location from "expo-location";
 import { Platform } from "react-native";
 import { eventEmitter } from "./eventEmitter";
-import { SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
+import { APP_PAGES, SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
 import { getMyServices } from "./dataService";
 import * as DocumentPicker from "expo-document-picker";
+import { UserType } from "~src/@types/types";
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -180,7 +181,8 @@ export const getFirebaseErrorMessage = (errorCode?: string) => {
   };
 
   return (
-    messages[errorCode] || "An unknown error occurred. Please try again later."
+    messages?.[errorCode] ||
+    "An unknown error occurred. Please try again later."
   );
 };
 
@@ -207,5 +209,27 @@ export const checkIfServiceProviderHasService = async (providerId: string) => {
   const serviceProviderServices = await getMyServices(providerId);
   return !(
     !serviceProviderServices.length || serviceProviderServices.length === 0
+  );
+};
+
+export const handleCreateServiceNavigation = async (
+  navigation: NavigationProp<any>
+) => {
+  showAlert(
+    "Agreement Policy",
+    "Do you agree to the agreement policy and the terms and conditions of the agreement on the profile page?"
+  );
+
+  showAlert(
+    "Agreement Policy",
+    "Do you agree to the agreement policy and the terms and conditions of the agreement on the profile page?",
+    [
+      {
+        label: "I agree",
+        onPress: () => {
+          navigation.navigate(APP_PAGES.SET_SERVICE_DETAILS);
+        },
+      },
+    ]
   );
 };

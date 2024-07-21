@@ -1,7 +1,7 @@
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LocationObjectCoords } from "expo-location";
 import { AndroidNotificationPriority } from "expo-notifications";
+import * as Notifications from "expo-notifications";
 
 export type CustomNavigationProp = {
   navigation: NativeStackNavigationProp<ParamListBase, any>;
@@ -116,6 +116,7 @@ export type LocationParams = {
 };
 
 export type LocationObj = {
+  id: string;
   name?: string;
   address?: string;
   location: LocationParams;
@@ -251,9 +252,11 @@ export type Review = {
   userId: string;
   serviceId: string;
   providerId: string;
+  bookingId: string;
   rating: number;
   message: string;
   reviewerName: string;
+  createdAt?: string;
 };
 
 export type FirebaseNotificationData = {
@@ -264,4 +267,10 @@ export type FirebaseNotificationData = {
   vibrate?: boolean | number[];
   priority?: AndroidNotificationPriority;
   badge?: number;
+};
+
+export type NotificationObj = {
+  id: string;
+  userId: string;
+  notification: Notifications.Notification;
 };

@@ -36,6 +36,7 @@ import BookingBtns from "./components/BookingBtns";
 import PaymentSummary from "../BookingSummary/components/PaymentSummary";
 import { doc, onSnapshot, query, Unsubscribe } from "firebase/firestore";
 import { firestoreDatabase } from "firebaseConfig";
+import { NavigationProp } from "@react-navigation/native";
 
 const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -107,7 +108,11 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
       >
         {service && <TertiaryServiceCard service={service} />}
         <BookingInfoContainer style={{ flexDirection: "row" }}>
-          <BookingBtns booking={data} isMyService={isMyService} />
+          <BookingBtns
+            booking={data}
+            isMyService={isMyService}
+            navigation={navigation as NavigationProp<any>}
+          />
         </BookingInfoContainer>
         {serviceProvider && (
           <BookingInfoContainer>

@@ -37,8 +37,8 @@ import {
 import { DraggableGrid } from "react-native-draggable-grid";
 import { getFirebaseErrorMessage, pickImageAsync, showAlert } from "~services";
 import { Iconify } from "react-native-iconify";
-import { ImageForGallery } from "~src/@types/types";
-import { useAppDispatch } from "~store/hooks/useTypedRedux";
+import { GalleryFile, ImageForGallery, Service } from "~src/@types/types";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
 
 export const serviceGallerySchema = yup.object().shape({
@@ -53,10 +53,31 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
   const bottomInset = useCustomBottomInset();
   const themeContext = useContext(ThemeContext);
   const dispatch = useAppDispatch();
+  const serviceInCreation: Service = useAppSelector(
+    (state) => state.serviceInCreation
+  );
   const [gesturesEnabled, setgesturesEnabled] = useState(true);
 
+  const extractServiceGalleryFormatToPictures = (gllry: GalleryFile[]) => {
+    const picturesFormat: ImageForGallery[] = gllry.map((pic) => {
+      return {
+        disabledDrag: false,
+        disabledReSorted: false,
+        key: pic.key,
+        url: pic.downloadURL,
+        base64URL: pic.downloadURL,
+        fileName: pic.fileName,
+        fileSize: pic.fileSize,
+        fileType: pic.fileType,
+      };
+    });
+    return [...picturesFormat, ...pictures.slice(0, 9 - picturesFormat.length)];
+  };
+
   const serviceGalleryInitialValues = {
-    gallery: [...pictures],
+    gallery: serviceInCreation?.gallery?.length
+      ? extractServiceGalleryFormatToPictures(serviceInCreation.gallery)
+      : [...pictures],
   };
 
   const formik = useFormik<{

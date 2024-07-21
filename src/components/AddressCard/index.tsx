@@ -6,16 +6,25 @@ import { ThemeContext } from "styled-components/native";
 import { Iconify } from "react-native-iconify";
 import { LocationObj } from "~src/@types/types";
 import { formatLatLng } from "~services";
+import { APP_PAGES } from "~src/shared/constants";
+import { NavigationProp } from "@react-navigation/native";
 
 type AddressCardProps = {
   address: LocationObj;
+  navigation: NavigationProp<any>;
 };
 
-const AddressCard = ({ address }: AddressCardProps) => {
+const AddressCard = ({ address, navigation }: AddressCardProps) => {
   const themeContext = useContext(ThemeContext);
 
   return (
-    <AddressCardContainer>
+    <AddressCardContainer
+      onPress={() =>
+        navigation.navigate(APP_PAGES.ADD_OR_EDIT_LOCATION, {
+          address: address,
+        })
+      }
+    >
       <View style={{ flexDirection: "row" }}>
         <IconBtn
           style={{

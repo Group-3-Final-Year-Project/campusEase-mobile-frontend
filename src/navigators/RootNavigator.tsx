@@ -50,6 +50,7 @@ import Analytics from "~src/screens/Analytics";
 import TermsAndConditions from "~src/screens/TermsAndConditions";
 import Checkout from "~src/screens/Checkout";
 import EditProfile from "~src/screens/EditProfile";
+import WriteReview from "~src/screens/WriteReview";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -229,6 +230,10 @@ const RootNavigator = () => {
             <Stack.Screen
               name={APP_PAGES.EDIT_PROFILE}
               component={EditProfile}
+            />
+            <Stack.Screen
+              name={APP_PAGES.WRITE_REVIEW}
+              component={WriteReview}
             />
           </Stack.Group>
         </>

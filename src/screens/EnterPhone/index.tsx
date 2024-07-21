@@ -1,11 +1,9 @@
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import { CountryCodeContainer, CountryCodeText } from "./styles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { ThemeContext } from "styled-components/native";
-
 import { StatusBar } from "expo-status-bar";
 import {
   ErrorLabel,
@@ -19,14 +17,12 @@ import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { VerifiedUser } from "~src/@types/types";
-import { MaskService } from "react-native-masked-text";
-import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
-import { doc, updateDoc } from "firebase/firestore";
-import { firestoreDatabase } from "firebaseConfig";
+import { APP_PAGES } from "~src/shared/constants";
 import {
   formatPhoneNumber,
   getFirebaseErrorMessage,
   showAlert,
+  updateUser,
 } from "~services";
 
 export const phoneNumberSchema = yup.object().shape({
@@ -47,8 +43,7 @@ const EnterPhone = ({ navigation, route }: NativeStackScreenProps<any>) => {
     validationSchema: phoneNumberSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const docRef = doc(firestoreDatabase, STORAGE_KEYS.DB_USERS, user.id);
-        await updateDoc(docRef, {
+        await updateUser(user.id, {
           phoneNumber: formatPhoneNumber(values.phoneNumber),
         })
           .then(() => {
