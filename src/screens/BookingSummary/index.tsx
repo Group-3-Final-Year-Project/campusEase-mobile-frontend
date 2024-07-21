@@ -56,6 +56,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
             id: uuid.v4() as string,
             userId: user.id,
             serviceId: route.params?.service.id,
+            serviceName: route.params?.service.name,
             providerId: route.params?.service.providerId,
             location: selectedAddress,
             paymentMethodObject: selectedPaymentMethod,
@@ -69,6 +70,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
           payload: {
             userId: user.id,
             serviceId: route.params?.service.id,
+            serviceName: route.params?.service.name,
             providerId: route.params?.service.providerId,
             location: selectedAddress,
             paymentMethodObject: selectedPaymentMethod,

@@ -328,7 +328,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
               <ServiceProviderCard provider={serviceProvider} showContactInfo />
             </ServiceInfoContainer>
           )}
-          {data?.subServices && (
+          {!!data?.subServices?.length && (
             <ServiceInfoContainer>
               <ServiceInfoHeaderLabel>Sub services</ServiceInfoHeaderLabel>
               <BookingInfoCard>

@@ -178,6 +178,7 @@ export type Booking = {
   providerId: string;
   userId: string;
   serviceId: string;
+  serviceName: string;
   amount: number;
   createdAt: string;
   updatedAt: string;

@@ -51,6 +51,7 @@ import TermsAndConditions from "~src/screens/TermsAndConditions";
 import Checkout from "~src/screens/Checkout";
 import EditProfile from "~src/screens/EditProfile";
 import WriteReview from "~src/screens/WriteReview";
+import AddOrEditLocation from "~src/screens/AddOrEditLocation";
 
 const RootNavigator = () => {
   const theme = useContext(ThemeContext);
@@ -234,6 +235,10 @@ const RootNavigator = () => {
             <Stack.Screen
               name={APP_PAGES.WRITE_REVIEW}
               component={WriteReview}
+            />
+            <Stack.Screen
+              name={APP_PAGES.ADD_OR_EDIT_LOCATION}
+              component={AddOrEditLocation}
             />
           </Stack.Group>
         </>

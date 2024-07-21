@@ -124,7 +124,7 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
         )}
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Booking Status</BookingInfoHeaderLabel>
-          <BookingStatus />
+          <BookingStatus bookingStates={data.bookingStates} />
         </BookingInfoContainer>
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Payment Summary</BookingInfoHeaderLabel>

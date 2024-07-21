@@ -44,22 +44,33 @@ const BookingCard = ({ booking, navigation, ...props }: IBookingCard) => {
     >
       <View
         style={{
-          backgroundColor: `${getColorForBookingStatus(
-            booking.bookingStatus
-          )}20`,
-          padding: 8,
+          display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "flex-start",
           marginBottom: 15,
+          // width: "fit-content",
         }}
       >
-        <BookingStatusTag
+        <View
           style={{
-            color: getColorForBookingStatus(booking.bookingStatus),
+            backgroundColor: `${getColorForBookingStatus(
+              booking.bookingStatus
+            )}20`,
+            padding: 8,
+            borderRadius: 5,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
           }}
         >
-          {booking.bookingStatus.toUpperCase()}
-        </BookingStatusTag>
+          <BookingStatusTag
+            style={{
+              color: getColorForBookingStatus(booking.bookingStatus),
+            }}
+          >
+            {booking.bookingStatus.toUpperCase()}
+          </BookingStatusTag>
+        </View>
       </View>
       <View>
         <BookingTitle>

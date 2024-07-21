@@ -104,6 +104,14 @@ export const formatPhoneNumber = (phoneNumber: string) => {
   num += phoneNumber.startsWith("0") ? phoneNumber.slice(1) : phoneNumber;
   return num;
 };
+export const reverseFormatPhoneNumber = (phoneNumber: string) => {
+  // will do proper formatting here...
+  let num = "0";
+  const n = phoneNumber.startsWith("+233")
+    ? num + phoneNumber.slice(4)
+    : phoneNumber;
+  return n;
+};
 
 export const formatCurrency = (value: number) => {
   const formatter = new Intl.NumberFormat("en-GH", {

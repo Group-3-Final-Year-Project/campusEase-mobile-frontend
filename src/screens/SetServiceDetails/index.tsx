@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText } from "~components";
 import {
@@ -18,10 +18,7 @@ import * as yup from "yup";
 import {
   getFirebaseErrorMessage,
   getServiceCategories,
-  getUser,
-  saveUserDetails,
   showAlert,
-  updateUser,
 } from "~services";
 import {
   ContentCard,
@@ -31,12 +28,7 @@ import {
   FormControl,
 } from "../Signup/styles";
 import AdvancedActionSheet from "~components/AdvancedActionSheet";
-import {
-  Service,
-  ServiceCategory,
-  UserType,
-  VerifiedUser,
-} from "~src/@types/types";
+import { Service, ServiceCategory, VerifiedUser } from "~src/@types/types";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
 import uuid from "react-native-uuid";
@@ -68,7 +60,7 @@ const SetServiceDetails = ({
     description: serviceInCreation?.description || "",
     website: serviceInCreation?.website || "",
     category: {
-      id: serviceInCreation.category.id || "",
+      id: serviceInCreation.category?.id || "",
       name: serviceInCreation.category.name || "",
       description: serviceInCreation.category?.description || "",
     },
@@ -78,7 +70,7 @@ const SetServiceDetails = ({
     initialValues: serviceDetailsInitialValues,
     validationSchema: serviceDetailsSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      if (!values.category.id) {
+      if (!values.category?.id) {
         formik.setFieldError("category", "Category must be specified");
         return;
       }
@@ -86,7 +78,9 @@ const SetServiceDetails = ({
         dispatch({
           type: ACTION_TYPES.UPDATE_SERVICE_IN_CREATION_DATA,
           payload: {
-            id: serviceInCreation.id || (uuid.v4() as string),
+            id: serviceInCreation?.id
+              ? serviceInCreation.id
+              : (uuid.v4() as string),
             ...values,
           },
         });
@@ -109,36 +103,6 @@ const SetServiceDetails = ({
     });
     return result;
   };
-
-  const setUserTypeToServiceProvider = useCallback(async () => {
-    if (user.userType === UserType.USER) {
-      try {
-        await updateUser(user.id, {
-          userType: UserType.SERVICE_PROVIDER,
-        })
-          .then(async () => {
-            const userDataFromDB = await getUser(user.id);
-            await saveUserDetails(userDataFromDB);
-            dispatch({
-              type: ACTION_TYPES.UPDATE_USER_DATA,
-              payload: userDataFromDB,
-            });
-          })
-          .catch((error: any) => {
-            showAlert("Oops!", getFirebaseErrorMessage(error.code));
-          });
-      } catch (error) {
-        showAlert(
-          "Oops!",
-          "Something went wrong while making you a service provider"
-        );
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    setUserTypeToServiceProvider();
-  }, []);
 
   return (
     <Container style={{ paddingTop: 0 }}>

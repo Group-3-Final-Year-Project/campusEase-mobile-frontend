@@ -79,32 +79,32 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
           paddingHorizontal: 15,
         }}
       >
-        {booking.subService && (
+        {booking?.subService && (
           <BookingInfoContainer style={{ marginTop: 0 }}>
             <BookingInfoHeaderLabel style={headerStyle}>
               Sub service(s)
             </BookingInfoHeaderLabel>
-            <Description>{booking.subService.name}</Description>
+            <Description>{booking?.subService.name}</Description>
           </BookingInfoContainer>
         )}
         <BookingInfoContainer>
           <BookingInfoHeaderLabel style={headerStyle}>
             Customer Information
           </BookingInfoHeaderLabel>
-          <Description style={style}>Name:{booking.customerName}</Description>
+          <Description style={style}>Name:{booking?.customerName}</Description>
           <Description style={style}>
-            Email: {booking.customerEmail}
+            Email: {booking?.customerEmail}
           </Description>
           <Description style={style}>
-            Phone number: {booking.customerPhone}
+            Phone number: {booking?.customerPhone}
           </Description>
           <Description style={style}>
             Address:
-            {booking.location?.address
-              ? booking.location.address
+            {booking?.location?.address
+              ? booking?.location?.address
               : formatLatLng(
-                  booking.location.location.latitude,
-                  booking.location.location.longitude
+                  booking?.location?.location?.latitude,
+                  booking?.location?.location?.longitude
                 )}
           </Description>
         </BookingInfoContainer>
@@ -112,9 +112,9 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
           <BookingInfoHeaderLabel style={headerStyle}>
             Payment Summary
           </BookingInfoHeaderLabel>
-          <PaymentSummary amount={booking.amount} />
+          <PaymentSummary amount={booking?.amount} />
           <Description style={style}>
-            Payment method: {booking.paymentMethodObject.name}
+            Payment method: {booking?.paymentMethodObject.name}
           </Description>
         </BookingInfoContainer>
         <BookingInfoContainer>
@@ -122,20 +122,20 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
             Other Information
           </BookingInfoHeaderLabel>
           <Description style={style}>
-            Scheduled Date: {booking.scheduledDate}
+            Scheduled Date: {booking?.scheduledDate}
           </Description>
           <Description style={style}>
-            Scheduled Time: {booking.scheduledTime}
+            Scheduled Time: {booking?.scheduledTime}
           </Description>
           <Description style={style}>
-            Note to provider: {booking.notes}
+            Note to provider: {booking?.notes}
           </Description>
           <Description style={style}>
-            Attachments: {booking.attachments.length}
+            Attachments: {booking?.attachments.length}
           </Description>
         </BookingInfoContainer>
       </ScrollView>
-      <BottomCard>
+      <View>
         <Button
           style={{ width: "100%", height: 60, padding: 12 }}
           loading={loading}
@@ -143,7 +143,7 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
         >
           Confirm booking
         </Button>
-      </BottomCard>
+      </View>
     </Container>
   );
 };

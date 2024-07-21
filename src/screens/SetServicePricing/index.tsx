@@ -51,7 +51,7 @@ const SetServicePricing = ({
   );
 
   const servicePricingInitialValues = {
-    startingPrice: serviceInCreation.startingPrice.toString() || "",
+    startingPrice: serviceInCreation.startingPrice?.toString() || "",
   };
 
   const formik = useFormik<{

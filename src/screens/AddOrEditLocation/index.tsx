@@ -168,7 +168,7 @@ const AddOrEditLocation = ({
             // @ts-ignore
             onPress={formik.handleSubmit}
           >
-            Continue
+            Save
           </Button>
         </View>
       </KeyboardAvoidingView>

@@ -23,6 +23,7 @@ const ManageAddresses = ({ navigation }: NativeStackScreenProps<any>) => {
         data={user.locations ?? []}
         renderItem={({ item }) => (
           <AddressCard
+            key={item.id}
             address={item}
             navigation={navigation as NavigationProp<any>}
           />
@@ -30,7 +31,7 @@ const ManageAddresses = ({ navigation }: NativeStackScreenProps<any>) => {
         ItemSeparatorComponent={() => <View style={{ marginVertical: 7 }} />}
         ListHeaderComponent={() => <View style={{ marginTop: 7 }} />}
       />
-      <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+      <View>
         <Button
           onPress={() => navigation.navigate(APP_PAGES.ADD_OR_EDIT_LOCATION)}
         >

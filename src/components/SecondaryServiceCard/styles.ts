@@ -43,7 +43,10 @@ export const Description = styled(Text).attrs({})`
   // padding-bottom: 10px;
 `;
 
-export const ServiceTitle = styled(Text)`
+export const ServiceTitle = styled(Text).attrs({
+  fontSize: "regular",
+  fontWeight: "bold",
+})`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.semiBold};
 `;

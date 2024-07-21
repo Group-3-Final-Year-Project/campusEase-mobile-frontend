@@ -11,6 +11,7 @@ import {
   getFirebaseErrorMessage,
   getUser,
   pickImageAsync,
+  reverseFormatPhoneNumber,
   saveUserDetails,
   showAlert,
   showToast,
@@ -49,7 +50,7 @@ const EditProfile = ({ navigation }: NativeStackScreenProps<any>) => {
   const profileInitialValues = {
     email: user?.email || "",
     name: user?.username || "",
-    phoneNumber: user?.phoneNumber || "",
+    phoneNumber: reverseFormatPhoneNumber(user?.phoneNumber) || "",
   };
 
   const formik = useFormik({
@@ -180,7 +181,7 @@ const EditProfile = ({ navigation }: NativeStackScreenProps<any>) => {
           </FormControl>
         </View>
       </ScrollView>
-      <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+      <View>
         <Button
           loading={formik.isSubmitting}
           // @ts-ignore

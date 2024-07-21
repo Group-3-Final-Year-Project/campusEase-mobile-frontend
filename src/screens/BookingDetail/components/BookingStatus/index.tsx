@@ -8,30 +8,31 @@ import {
   TimelineTopbar,
 } from "./styles";
 import { Description } from "../../styles";
+import { BookingState } from "~src/@types/types";
 
-const BookingStatus = () => {
+const BookingStatus = ({
+  bookingStates,
+}: {
+  bookingStates: BookingState[];
+}) => {
   const themeContext = useContext(ThemeContext);
   const [anchorIndex, setAnchorIndex] = useState(0);
   const anchor = useRef();
 
-  const renderContent = () => {
+  const TimelineContent = ({ item }: { item: BookingState }) => {
     return (
       <TimelineItemContainer ref={anchor}>
         <TimelineTopbar>
-          <TimelineHeaderLabel>Booking Confirmed</TimelineHeaderLabel>
+          <TimelineHeaderLabel>{item.name}</TimelineHeaderLabel>
         </TimelineTopbar>
-        <Description style={{ lineHeight: 24 }}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti
-          itaque rem accusamus, quidem quae modi ea nobis assumenda, officiis
-          magni nostrum vitae expedita non fuga quod. Vel sit ipsa error!
-        </Description>
+        <Description style={{ lineHeight: 24 }}>{item.description}</Description>
       </TimelineItemContainer>
     );
   };
 
   return (
     <View>
-      {[...new Array(3)].map((item, index) => (
+      {bookingStates.map((item, index) => (
         <Timeline
           key={index}
           point={{
@@ -79,7 +80,7 @@ const BookingStatus = () => {
             //   : undefined
           }
         >
-          {renderContent()}
+          <TimelineContent item={item} />
         </Timeline>
       ))}
     </View>

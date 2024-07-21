@@ -35,6 +35,10 @@ import {
 import uuid from "react-native-uuid";
 import VirtualisedContainer from "~src/hocs/VirtualisedContainer";
 import { bookingStates } from "~src/data/bookingStatesData";
+import {
+  reverseFormatPhoneNumber,
+  formatPhoneNumber,
+} from "../../services/uiService";
 
 export const bookingInfoSchema = yup.object().shape({
   username: yup.string().required("Username required!"),
@@ -77,7 +81,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
   const bookingInfoInitialValues = {
     username: user.username,
     email: user.email,
-    phoneNumber: user.phoneNumber,
+    phoneNumber: reverseFormatPhoneNumber(user.phoneNumber),
     scheduledTime: new Date(),
     scheduledDate: new Date(),
     noteToProvider: "",
@@ -95,7 +99,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
               payload: {
                 customerEmail: values.email,
                 customerName: values.username,
-                customerPhone: values.phoneNumber,
+                customerPhone: formatPhoneNumber(values.phoneNumber),
                 notes: values.noteToProvider,
                 bookingStatus: BookingStatus.PENDING,
                 bookingStates: [bookingStates.Pending],
@@ -104,7 +108,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
                 ),
                 scheduledTime: moment(values.scheduledTime).format("h:mm:ss a"),
                 createdAt: moment(new Date()).format(
-                  "dddd, MMMM Do YYYY at h:mm a"
+                  "dddd, MMMM Do YYYY  h:mm a"
                 ),
                 requestCompletedConfirmationFromUser: false,
                 requestCompletedConfirmationFromProvider: false,

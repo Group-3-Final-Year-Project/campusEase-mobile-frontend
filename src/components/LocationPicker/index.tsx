@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Container } from "./styles";
 import MapView, { Marker } from "react-native-maps";
-import type { Details, MapViewProps, Region } from "react-native-maps";
+import type { MapViewProps, Region } from "react-native-maps";
 import Button from "../Button";
 import * as Location from "expo-location";
 import { ThemeContext } from "styled-components/native";
@@ -27,6 +27,10 @@ const LocationPicker = (props: LocationPickerProps) => {
 
   useEffect(() => {
     const fetchUserCurrentLocation = async () => {
+      const { granted } = await Location.requestForegroundPermissionsAsync();
+      if (!granted) {
+        return;
+      }
       let { coords } = await Location.getCurrentPositionAsync({
         timeInterval: 120000,
       });
@@ -45,9 +49,6 @@ const LocationPicker = (props: LocationPickerProps) => {
     };
 
     fetchUserCurrentLocation();
-    () => {
-      mapRef.current = null;
-    };
   }, []);
 
   return (

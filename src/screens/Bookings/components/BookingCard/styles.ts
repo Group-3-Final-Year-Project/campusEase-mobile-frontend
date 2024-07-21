@@ -19,7 +19,6 @@ export const BookingStatusTag = styled(Text).attrs({
     props.theme.typography.fontFamily.regular};
   font-size: 12px;
   line-height: 12px;
-  border-radius: 3px;
 `;
 
 export const BookingTitle = styled(Text).attrs({

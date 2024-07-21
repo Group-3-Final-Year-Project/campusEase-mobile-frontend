@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { Button, Input, HeroText, LocationPicker } from "~components";
 import {
@@ -23,14 +23,22 @@ import * as yup from "yup";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { Iconify } from "react-native-iconify";
-import { LocationParams, Service, VerifiedUser } from "~src/@types/types";
+import {
+  LocationParams,
+  Service,
+  UserType,
+  VerifiedUser,
+} from "~src/@types/types";
 import {
   createService,
   formatLatLng,
   getFirebaseErrorMessage,
   getFormattedAddressFromGeocode,
+  getUser,
   navigateAndResetStack,
+  saveUserDetails,
   showAlert,
+  updateUser,
 } from "~services";
 import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import ACTION_TYPES from "~store/actionTypes";
@@ -73,6 +81,36 @@ const SetServiceLocation = ({
     }
     return { isSuccess };
   };
+
+  const setUserTypeToServiceProvider = useCallback(async () => {
+    if (user.userType === UserType.USER) {
+      try {
+        await updateUser(user.id, {
+          userType: UserType.SERVICE_PROVIDER,
+        })
+          .then(async () => {
+            const userDataFromDB = await getUser(user.id);
+            await saveUserDetails(userDataFromDB);
+            dispatch({
+              type: ACTION_TYPES.UPDATE_USER_DATA,
+              payload: userDataFromDB,
+            });
+          })
+          .catch((error: any) => {
+            showAlert("Oops!", getFirebaseErrorMessage(error.code));
+          });
+      } catch (error) {
+        showAlert(
+          "Oops!",
+          "Something went wrong while making you a service provider"
+        );
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setUserTypeToServiceProvider();
+  }, []);
 
   const formik = useFormik<{
     location: LocationParams;
