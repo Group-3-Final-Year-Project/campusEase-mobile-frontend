@@ -139,7 +139,7 @@ const Profile = ({ navigation }: BottomTabScreenProps<any>) => {
           : "Become a service provider",
       icon: (
         <Iconify
-          icon="solar:add-circle-outline"
+          icon="solar:shop-2-outline"
           size={18}
           strokeWidth={18}
           color={themeContext?.colors.text}

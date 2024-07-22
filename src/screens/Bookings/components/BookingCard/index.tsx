@@ -74,7 +74,8 @@ const BookingCard = ({ booking, navigation, ...props }: IBookingCard) => {
       </View>
       <View>
         <BookingTitle>
-          {booking.customerName} ({formatCurrency(booking.amount)})
+          {booking?.serviceName ? booking.serviceName : booking.customerName} (
+          {formatCurrency(booking.amount)})
         </BookingTitle>
         <Description>{booking.createdAt}</Description>
       </View>

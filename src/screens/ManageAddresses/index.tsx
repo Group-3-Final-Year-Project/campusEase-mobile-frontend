@@ -19,7 +19,7 @@ const ManageAddresses = ({ navigation }: NativeStackScreenProps<any>) => {
   return (
     <Container>
       <FlatList
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         data={user.locations ?? []}
         renderItem={({ item }) => (
           <AddressCard

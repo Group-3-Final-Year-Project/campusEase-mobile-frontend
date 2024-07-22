@@ -8,7 +8,6 @@ import {
   Container,
 } from "./styles";
 import {
-  Button,
   CustomRefreshControl,
   EmptyState,
   LoadingView,
@@ -24,17 +23,11 @@ import {
 } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEYS, STORAGE_KEYS } from "~src/shared/constants";
-import {
-  getBooking,
-  getService,
-  getUserDataPreview,
-  showAlert,
-} from "~services";
+import { STORAGE_KEYS } from "~src/shared/constants";
+import { getService, getUserDataPreview, showAlert } from "~services";
 import BookingBtns from "./components/BookingBtns";
 import PaymentSummary from "../BookingSummary/components/PaymentSummary";
-import { doc, onSnapshot, query, Unsubscribe } from "firebase/firestore";
+import { doc, onSnapshot, Unsubscribe } from "firebase/firestore";
 import { firestoreDatabase } from "firebaseConfig";
 import { NavigationProp } from "@react-navigation/native";
 
@@ -45,24 +38,47 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const [serviceProvider, setServiceProvider] =
     useState<VerifiedUserPreview | null>(null);
   const [service, setService] = useState<Service | null>(null);
+  const [booking, setBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [refetching, setRefetching] = useState<boolean>(false);
 
-  const fetchData = (bookingId: string): Promise<Booking> => {
-    return new Promise((resolve, reject) => {
+  const fetchBookingData = async (bookingId: string) => {
+    try {
       const unsubscribe = onSnapshot(
         doc(firestoreDatabase, STORAGE_KEYS.BOOKINGS, bookingId),
         (querySnapshot) => {
-          const booking = {
+          const bookingData = {
             id: querySnapshot.id,
             ...querySnapshot.data(),
           } as Booking;
-          resolve(booking);
-        },
-        (error) => reject(error)
+          setBooking(bookingData);
+        }
       );
-
-      return () => unsubscribe();
-    });
+      return unsubscribe;
+    } catch (error) {
+      showAlert("Ooops..", "Could not fetch booking details. Try again");
+    }
   };
+
+  useEffect(() => {
+    let unsubscribe: Unsubscribe | undefined;
+    setLoading(true);
+    if (route.params?.bookingId) {
+      (async () => {
+        try {
+          unsubscribe = await fetchBookingData(route.params?.bookingId);
+        } catch (error) {
+          console.error("Error fetching booking data:", error);
+          // Handle error here (optional)
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+
+    // Cleanup function for effect
+    return () => unsubscribe?.();
+  }, []);
 
   const getServiceProviderData = useCallback(
     async (providerId: string) => {
@@ -78,38 +94,43 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
     [route.params?.bookingId]
   );
 
-  const { data, isLoading, isError, isRefetching } = useQuery({
-    queryKey: [QUERY_KEYS.SERVICE],
-    queryFn: () => fetchData(route.params?.bookingId),
-  });
-
-  const isMyService = user.id === data?.providerId;
+  const isMyService = user.id === booking?.providerId;
 
   useEffect(() => {
-    if (data) {
-      getServiceData(data.serviceId);
+    if (booking) {
+      getServiceData(booking.serviceId);
       if (isMyService) {
-        getServiceProviderData(data.userId);
+        getServiceProviderData(booking.userId);
       } else {
-        getServiceProviderData(data.providerId);
+        getServiceProviderData(booking.providerId);
       }
     }
-  }, [data]);
+  }, [booking]);
 
-  if (isLoading) return <LoadingView />;
-  else if (isError || !data || data === undefined || !route.params?.bookingId)
+  if (loading) return <LoadingView />;
+  else if (!booking || booking === undefined || !route.params?.bookingId)
     return <EmptyState />;
 
   return (
     <Container>
       <ScrollView
-        refreshControl={<CustomRefreshControl refreshing={isRefetching} />}
+        refreshControl={
+          <CustomRefreshControl
+            refreshing={refetching}
+            onRefresh={() => {
+              setRefetching(true);
+              fetchBookingData(route.params?.bookingId).finally(() =>
+                setRefetching(false)
+              );
+            }}
+          />
+        }
         style={{ paddingBottom: bottomInset }}
       >
         {service && <TertiaryServiceCard service={service} />}
         <BookingInfoContainer style={{ flexDirection: "row" }}>
           <BookingBtns
-            booking={data}
+            booking={booking}
             isMyService={isMyService}
             navigation={navigation as NavigationProp<any>}
           />
@@ -124,11 +145,11 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
         )}
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Booking Status</BookingInfoHeaderLabel>
-          <BookingStatus bookingStates={data.bookingStates} />
+          <BookingStatus bookingStates={booking.bookingStates} />
         </BookingInfoContainer>
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Payment Summary</BookingInfoHeaderLabel>
-          <PaymentSummary amount={data.amount} />
+          <PaymentSummary amount={booking.amount} />
         </BookingInfoContainer>
       </ScrollView>
     </Container>

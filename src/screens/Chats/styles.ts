@@ -12,6 +12,7 @@ export const Container = styled(SafeAreaView).attrs({
 
 export const ChatCardContainer = styled.TouchableOpacity`
   flex-direction: row;
+  align-items: center;
   padding: 15px;
 `;
 
@@ -27,4 +28,5 @@ export const ChatCardLabel = styled(Text).attrs({})`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
   padding-bottom: 7px;
+  font-size: 14px;
 `;

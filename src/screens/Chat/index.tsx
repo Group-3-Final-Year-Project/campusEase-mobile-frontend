@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   Linking,
@@ -38,17 +38,23 @@ import { VerifiedUser } from "~src/@types/types";
 import moment from "moment";
 import { Description } from "../Home/styles";
 import { useFocusEffect } from "@react-navigation/native";
+import { showAlert } from "~services";
+import { EmptyState, LoadingView } from "~components";
+import { Iconify } from "react-native-iconify";
 
 const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
-  const { chatId } = route.params;
   const dispatch = useAppDispatch();
   const chat = useAppSelector((state) => state.chat);
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const giftedChatUser: GiftedChatUser = {
     _id: user.id,
     name: user.username,
+    avatar: user?.profilePicture
+      ? user.profilePicture
+      : "https://cdn-icons-png.flaticon.com/512/149/149071.png",
   };
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -57,9 +63,11 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
       });
     }, [])
   );
+  console.log(chat);
 
   useEffect(() => {
     const fetchMessages = async (chatId: string) => {
+      setLoading(true);
       try {
         const messagesRef = collection(
           firestoreDatabase,
@@ -67,22 +75,21 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
           chatId,
           STORAGE_KEYS.MESSAGES
         );
-        const q = query(messagesRef, orderBy("createdAt", "desc")); // Order by descending timestamp
+        const q = query(messagesRef, orderBy("createdAt", "asc"));
 
         // Fetch messages with real-time updates
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const messages = querySnapshot.docs.map((doc) => {
             const messageData = doc.data();
             return {
-              _id: messageData._id, // Assuming _id exists
+              _id: messageData._id,
               createdAt: messageData?.createdAt
                 ? moment(messageData.createdAt).toLocaleString()
-                : moment().toLocaleString(), // Convert timestamp to date
+                : moment().toLocaleString(),
               text: messageData.text,
-              user: messageData.user, // Assuming 'user' field exists with user data
+              user: messageData.user,
             };
           });
-
           dispatch({
             type: ACTION_TYPES.LOAD_EARLIER_MESSAGES,
             payload: messages,
@@ -92,23 +99,26 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
         // Cleanup function for real-time listener
         return unsubscribe;
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        showAlert("Ooops...", "Error fetching chat messages");
+      } finally {
+        setLoading(false);
       }
     };
 
-    let unsubscribe: Promise<Unsubscribe | undefined> | (() => any);
+    let unsubscribe: Unsubscribe | undefined;
 
-    // Fetch messages initially or on chatId change
-    if (chatId) {
-      unsubscribe = fetchMessages(chatId);
+    if (route.params?.chatId) {
+      (async () => {
+        try {
+          unsubscribe = await fetchMessages(route.params?.chatId);
+        } catch (error) {
+          console.error("Error fetching booking data:", error);
+        }
+      })();
     }
 
-    // Cleanup function for effect
-    return () => {
-      // Unsubscribe from the real-time listener if it exists
-      unsubscribe && unsubscribe;
-    };
-  }, [chatId]);
+    return () => unsubscribe?.();
+  }, []);
 
   const onSend = useCallback(
     (messages: any[]) => {
@@ -133,7 +143,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
         collection(
           firestoreDatabase,
           STORAGE_KEYS.CHATROOMS,
-          chatId,
+          route.params?.chatId,
           STORAGE_KEYS.MESSAGES
         ),
         {
@@ -321,10 +331,17 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const renderSend = useCallback((props: SendProps<IMessage>) => {
     return (
       <Send {...props} containerStyle={{ justifyContent: "center" }}>
-        <MaterialIcons size={30} color={"tomato"} name={"send"} />
+        <Iconify
+          icon={"solar:plain-bold"}
+          size={30}
+          color={themeContext?.colors.primary}
+        />
       </Send>
     );
   }, []);
+
+  if (loading) return <LoadingView />;
+  else if (!route.params?.chatId) return <EmptyState />;
 
   return (
     <Container>
@@ -356,8 +373,10 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
           renderSend={renderSend}
           keyboardShouldPersistTaps="never"
           isTyping={chat.isTyping}
-          inverted={Platform.OS !== "web"}
+          // inverted={Platform.OS !== "web"}
           infiniteScroll
+          placeholder="Type a message"
+          renderLoading={() => <LoadingView />}
         />
       </KeyboardAvoidingView>
     </Container>
@@ -365,6 +384,3 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
 };
 
 export default Chat;
-function unsubscribe() {
-  throw new Error("Function not implemented.");
-}

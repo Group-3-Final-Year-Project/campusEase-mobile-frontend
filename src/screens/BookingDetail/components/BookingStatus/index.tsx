@@ -40,12 +40,6 @@ const BookingStatus = ({
             color: themeContext?.colors.primary,
             // label: index + 1,
             anchorRef: index == 0 ? anchor : undefined,
-            state:
-              index === 0
-                ? Timeline.states.ERROR
-                : index === 2
-                ? Timeline.states.SUCCESS
-                : Timeline.states.CURRENT,
           }}
           topLine={
             // index === 3
@@ -53,12 +47,6 @@ const BookingStatus = ({
             {
               type: Timeline.lineTypes.SOLID,
               color: themeContext?.colors.primary,
-              state:
-                index === 0
-                  ? Timeline.states.ERROR
-                  : index === 2
-                  ? Timeline.states.SUCCESS
-                  : Timeline.states.CURRENT,
               entry: index === 0,
             }
             //   : undefined
@@ -70,12 +58,6 @@ const BookingStatus = ({
               type: Timeline.lineTypes.SOLID,
               //   color: themeContext?.colors.primary,
               entry: index === 2,
-              state:
-                index === 0
-                  ? Timeline.states.ERROR
-                  : index === 2
-                  ? Timeline.states.SUCCESS
-                  : Timeline.states.CURRENT,
             }
             //   : undefined
           }

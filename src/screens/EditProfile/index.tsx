@@ -16,6 +16,7 @@ import {
   showAlert,
   showToast,
   updateUser,
+  uploadFileToFirebaseStorage,
 } from "~services";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -63,7 +64,10 @@ const EditProfile = ({ navigation }: NativeStackScreenProps<any>) => {
           email: values.email,
           phoneNumber: formatPhoneNumber(values.phoneNumber),
           profilePicture:
-            userPic || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+            (await uploadFileToFirebaseStorage({
+              base64String: userPic,
+              fileName: `${user.username}_profile_pic`,
+            })) || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
         })
           .then(async () => {
             const userDataFromDB = await getUser(user.id);
@@ -107,9 +111,10 @@ const EditProfile = ({ navigation }: NativeStackScreenProps<any>) => {
                 backgroundColor: themeContext?.colors.primary,
               }}
               onPress={() =>
-                pickImageAsync().then(
-                  (images) =>
-                    images && images.length && setUserPic(images[0].uri)
+                pickImageAsync().then((images) =>
+                  images && images.length
+                    ? setUserPic(images[0].base64!)
+                    : setUserPic("")
                 )
               }
             >
