@@ -10,7 +10,6 @@ import { Container, ListLabel } from "./styles";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import type { Region } from "react-native-maps";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import servicesData from "~src/data/servicesData";
 import SearchFilterBtn from "~components/SearchFilterBtn";
 import { VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
@@ -52,11 +51,13 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
       }}
     >
       <MapView
-        // provider={PROVIDER_GOOGLE}
+        provider={PROVIDER_GOOGLE}
         initialRegion={initialRegion ?? undefined}
         style={{ flex: 1 }}
         showsCompass
         showsMyLocationButton
+        loadingBackgroundColor={themeContext?.colors.background}
+        loadingIndicatorColor={themeContext?.colors.primary}
         // ref={mapRef}
       >
         {data &&

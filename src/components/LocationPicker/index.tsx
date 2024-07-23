@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Container } from "./styles";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import type { MapViewProps, Region } from "react-native-maps";
 import Button from "../Button";
 import * as Location from "expo-location";
@@ -54,8 +54,8 @@ const LocationPicker = (props: LocationPickerProps) => {
   return (
     <Container>
       <MapView
+        provider={PROVIDER_GOOGLE}
         ref={mapRef}
-        provider={"google"}
         style={{
           width: "100%",
           height: "100%",

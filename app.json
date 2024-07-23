@@ -11,11 +11,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#181820"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.solo0722.campusEase",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "googleMapsApiKey": "AIzaSyC5EjZLty1XaIiUSbRB0rZOaKCDxxBlb8w"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +30,13 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.solo0722.campusEase",
-      "versionCode": 7
+      "versionCode": 8,
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCnAjVdltmc7ZwsoP5w3t0fqKEm3-YHN1c"
+        }
+      }
     },
     "web": {
       "favicon": "./src/assets/images/favicon48.png"

@@ -8,7 +8,7 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 export default class CustomView extends React.Component<{
   currentMessage: any;
@@ -37,6 +37,7 @@ export default class CustomView extends React.Component<{
         >
           {Platform.OS !== "web" ? (
             <MapView
+              provider={PROVIDER_GOOGLE}
               style={[styles.mapView, mapViewStyle]}
               region={{
                 latitude: currentMessage.location.latitude,
