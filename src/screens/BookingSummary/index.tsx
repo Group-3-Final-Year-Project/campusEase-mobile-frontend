@@ -49,7 +49,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
 
   const onContinue = () => {
     if (selectedPaymentMethod && selectedAddress) {
-      if (selectedSubService) {
+      if (route.params?.service.subServices.length && selectedSubService) {
         dispatch({
           type: ACTION_TYPES.UPDATE_BOOKING_DATA,
           payload: {
@@ -61,7 +61,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
             location: selectedAddress,
             paymentMethodObject: selectedPaymentMethod,
             subService: selectedSubService,
-            amount: selectedSubService.price,
+            amount: selectedSubService.price || route.params?.service.price,
           },
         });
       } else {
@@ -106,7 +106,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
             provider={route.params?.serviceProvider as VerifiedUserPreview}
           />
         </BookingInfoContainer>
-        {route.params?.service.subServices && (
+        {route.params?.service.subServices.length && (
           <BookingInfoContainer>
             <BookingInfoHeaderLabel>Sub Service(s)</BookingInfoHeaderLabel>
             <SubServiceSelection

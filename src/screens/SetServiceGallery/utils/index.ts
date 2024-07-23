@@ -29,11 +29,11 @@ export const pictures = [
     disabledDrag: false,
     disabledReSorted: false,
   },
-  { key: "realid5", disabledDrag: true, disabledReSorted: true },
-  { key: "realid8", disabledDrag: true, disabledReSorted: true },
-  { key: "realid7", disabledDrag: true, disabledReSorted: true },
-  { key: "realid522", disabledDrag: true, disabledReSorted: true },
-  { key: "realid5222", disabledDrag: true, disabledReSorted: true },
+  { key: "realid5", disabledDrag: false, disabledReSorted: false },
+  { key: "realid8", disabledDrag: false, disabledReSorted: false },
+  { key: "realid7", disabledDrag: false, disabledReSorted: false },
+  { key: "realid522", disabledDrag: false, disabledReSorted: false },
+  { key: "realid5222", disabledDrag: false, disabledReSorted: false },
 ];
 
 export const sortByUrl = (firstItem: any, secondItem: any) =>

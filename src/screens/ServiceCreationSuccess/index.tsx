@@ -1,11 +1,21 @@
 import { View } from "react-native";
-import React, { useRef, useState } from "react";
-import { navigateAndResetStack } from "~services";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  getFirebaseErrorMessage,
+  getUser,
+  navigateAndResetStack,
+  saveUserDetails,
+  showAlert,
+  updateUser,
+} from "~services";
 import { SuccessState } from "~components";
 import LottieView from "lottie-react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
 import { Container } from "../Signup/styles";
+import ACTION_TYPES from "~store/actionTypes";
+import { Service, UserType, VerifiedUser } from "~src/@types/types";
+import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 
 const ServiceCreationSuccess = ({
   navigation,
@@ -13,9 +23,42 @@ const ServiceCreationSuccess = ({
   const confettiRef = useRef<LottieView>(null);
   const [isVisible, setIsVisible] = useState(true);
 
+  const user: VerifiedUser = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
   const handlePress = () => {
     navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
   };
+
+  const setUserTypeToServiceProvider = useCallback(async () => {
+    if (user.userType === UserType.USER) {
+      try {
+        await updateUser(user.id, {
+          userType: UserType.SERVICE_PROVIDER,
+        })
+          .then(async () => {
+            const userDataFromDB = await getUser(user.id);
+            await saveUserDetails(userDataFromDB);
+            dispatch({
+              type: ACTION_TYPES.UPDATE_USER_DATA,
+              payload: userDataFromDB,
+            });
+          })
+          .catch((error: any) => {
+            showAlert("Oops!", getFirebaseErrorMessage(error.code));
+          });
+      } catch (error) {
+        showAlert(
+          "Oops!",
+          "Something went wrong while making you a service provider"
+        );
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setUserTypeToServiceProvider();
+  }, []);
 
   return (
     <Container

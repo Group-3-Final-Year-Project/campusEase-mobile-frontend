@@ -59,7 +59,7 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
   const [gesturesEnabled, setgesturesEnabled] = useState(true);
 
   const extractServiceGalleryFormatToPictures = (gllry: GalleryFile[]) => {
-    const picturesFormat: ImageForGallery[] = gllry.map((pic) => {
+    const picturesFormat: ImageForGallery[] = gllry?.map((pic) => {
       return {
         disabledDrag: false,
         disabledReSorted: false,
@@ -71,14 +71,25 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
         fileType: pic.fileType,
       };
     });
-    return [...picturesFormat, ...pictures.slice(0, 9 - picturesFormat.length)];
+    const uniquePictures = pictures.filter(
+      (pic) => !picturesFormat.some((format) => format.key === pic.key)
+    );
+
+    const combinedPictures = [
+      ...picturesFormat,
+      ...uniquePictures.slice(0, 9 - picturesFormat.length),
+    ];
+
+    return combinedPictures;
   };
 
   const serviceGalleryInitialValues = {
     gallery: serviceInCreation?.gallery?.length
-      ? extractServiceGalleryFormatToPictures(serviceInCreation.gallery)
+      ? [...extractServiceGalleryFormatToPictures(serviceInCreation?.gallery)]
       : [...pictures],
   };
+
+  console.log(serviceGalleryInitialValues);
 
   const formik = useFormik<{
     gallery: ImageForGallery[];
@@ -122,7 +133,7 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
   }) => {
     const themeContext = useContext(ThemeContext);
 
-    const hasPicture = !!picture.url;
+    const hasPicture = !!picture?.url;
 
     const style = useAnimatedStyle(() => {
       const rotation = withSpring(hasPicture ? `45deg` : `0deg`);
@@ -192,7 +203,7 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
                   <View>
                     <AddUserPhoto
                       onDelete={() => {
-                        const newPics = formik.values.gallery
+                        const newPics = formik.values?.gallery
                           .map(deleteUrlFromItem(picture))
                           .sort(sortByUrl);
                         formik.setFieldValue("gallery", newPics);
@@ -225,7 +236,7 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
                     />
                   </View>
                 )}
-                data={formik.values.gallery}
+                data={formik.values?.gallery}
                 itemHeight={userPictureHeight}
                 style={{ zIndex: 10 }}
                 onDragStart={() => setgesturesEnabled(false)}

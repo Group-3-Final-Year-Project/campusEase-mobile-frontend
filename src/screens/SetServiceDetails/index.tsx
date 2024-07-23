@@ -55,8 +55,8 @@ const SetServiceDetails = ({
   const dispatch = useAppDispatch();
 
   const serviceDetailsInitialValues = {
-    name: serviceInCreation.name || "",
-    email: serviceInCreation.email || "",
+    name: serviceInCreation?.name || "",
+    email: serviceInCreation?.email || "",
     description: serviceInCreation?.description || "",
     website: serviceInCreation?.website || "",
     category: {

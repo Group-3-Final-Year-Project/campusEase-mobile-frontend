@@ -75,7 +75,7 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
           chatId,
           STORAGE_KEYS.MESSAGES
         );
-        const q = query(messagesRef, orderBy("createdAt", "asc"));
+        const q = query(messagesRef, orderBy("createdAt", "desc"));
 
         // Fetch messages with real-time updates
         const unsubscribe = onSnapshot(q, (querySnapshot) => {

@@ -22,6 +22,7 @@ const LocationPicker = (props: LocationPickerProps) => {
 
   const handleLocationConfirmation = () => {
     selectedRegion && props.setSelectedLocation(selectedRegion);
+    mapRef.current = null;
     props.onClose();
   };
 
