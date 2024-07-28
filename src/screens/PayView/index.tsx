@@ -24,11 +24,11 @@ const PayView = ({ navigation }: NativeStackScreenProps<any>) => {
     };
     await createBooking(bookingData)
       .then(() => {
+        navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
         dispatch({
           type: ACTION_TYPES.CLEAR_BOOKING_DATA,
           payload: {},
         });
-        navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
       })
       .catch(() => {
         showAlert("Ooops!", "Could not create your request. Try again");

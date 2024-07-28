@@ -190,6 +190,22 @@ const BookingBtns = ({
         </>
       );
     } else if (bookingStatus === BookingStatus.IN_PROGRESS) {
+      if (booking.requestCompletedConfirmationFromUser) {
+        return (
+          <Button
+            variant="outline"
+            style={{
+              flexGrow: 1,
+              marginRight: 7,
+              borderColor: themeContext?.colors.secondaryBackground,
+            }}
+            disabled
+          >
+            Booking completed confirmed. Waiting for the service provider to
+            confirm
+          </Button>
+        );
+      }
       return (
         <>
           <Button
@@ -284,6 +300,21 @@ const BookingBtns = ({
         </>
       );
     } else if (bookingStatus === BookingStatus.IN_PROGRESS) {
+      if (booking.requestCompletedConfirmationFromProvider) {
+        return (
+          <Button
+            variant="outline"
+            style={{
+              flexGrow: 1,
+              marginRight: 7,
+              borderColor: themeContext?.colors.secondaryBackground,
+            }}
+            disabled
+          >
+            Booking completed confirmed. Waiting for the end consumer to confirm
+          </Button>
+        );
+      }
       return (
         <>
           <Button

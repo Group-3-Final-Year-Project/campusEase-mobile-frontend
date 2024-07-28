@@ -10,7 +10,7 @@ import Avatar from "react-native-ui-lib/avatar";
 import { ThemeContext } from "styled-components/native";
 import IconBtn from "~components/IconBtn";
 import { Iconify } from "react-native-iconify";
-import { VerifiedUserPreview } from "~src/@types/types";
+import { VerifiedUser, VerifiedUserPreview } from "~src/@types/types";
 import { extractUserDataForFirebase, openChat, openLink } from "~services";
 import usersData from "~src/data/usersData";
 import { NavigationProp, useNavigation } from "@react-navigation/native";

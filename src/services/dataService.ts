@@ -7,6 +7,7 @@ import {
   getDocs,
   limit,
   or,
+  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -270,7 +271,8 @@ export const getMyBookingsAsServiceProvider = async (userId: string) => {
 export const getBookingsAsUserOrProvider = async (userId: string) => {
   const q = query(
     collection(firestoreDatabase, STORAGE_KEYS.BOOKINGS),
-    or(where("userId", "==", userId), where("providerId", "==", userId))
+    or(where("userId", "==", userId), where("providerId", "==", userId)),
+    orderBy("createdAt", "desc")
   );
   const querySnapshot = await getDocs(q);
   const bookings = querySnapshot.docs.map((doc) => {

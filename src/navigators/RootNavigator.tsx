@@ -156,6 +156,7 @@ const RootNavigator = () => {
         },
         headerTitleStyle: {
           fontFamily: `${theme?.typography.fontFamily.bold}`,
+          fontSize: 18,
         },
         headerTintColor: theme?.colors.text,
       }}
@@ -219,6 +220,9 @@ const RootNavigator = () => {
             />
             <Stack.Screen name={APP_PAGES.CHECKOUT} component={Checkout} />
             <Stack.Screen
+              options={{
+                headerShown: false,
+              }}
               name={APP_PAGES.BOOKING_CREATION_SUCCESS}
               component={BookingCreationSuccess}
             />

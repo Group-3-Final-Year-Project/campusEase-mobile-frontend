@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native";
+import { FlatList, ScrollView } from "react-native";
 import React, { useContext, useState } from "react";
 import { useCustomBottomInset } from "~hooks";
 import { ThemeContext } from "styled-components/native";
@@ -129,154 +129,170 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
     },
   });
 
+  const FlatListForOptimisation = ({
+    children,
+  }: {
+    children: React.ReactElement;
+  }) => (
+    <FlatList
+      style={{
+        paddingBottom: bottomInset,
+        paddingHorizontal: 15,
+      }}
+      data={[]}
+      renderItem={() => null}
+      ListHeaderComponent={children}
+    />
+  );
+
   return (
     <Container>
-      <VirtualisedContainer
-        style={{
-          paddingBottom: bottomInset,
-          paddingHorizontal: 15,
-        }}
-        renderItem={undefined}
-      >
-        <BookingInfoContainer style={{ marginTop: 0 }}>
-          <BookingInfoHeaderLabel>Customer Information</BookingInfoHeaderLabel>
-          <FormControl>
-            <Input
-              onChangeText={formik.handleChange("username")}
-              onBlur={formik.handleBlur("username")}
-              value={formik.values?.username}
-              textContentType="name"
-              placeholder="Username"
-              icon={
-                <Iconify
-                  size={18}
-                  color={themeContext?.colors.secondaryText2}
-                  icon="solar:user-rounded-outline"
-                />
-              }
-            />
-            {formik.touched?.username && formik.errors?.username ? (
-              <ErrorLabel>{formik.errors?.username}</ErrorLabel>
-            ) : null}
-          </FormControl>
-          <FormControl>
-            <Input
-              onChangeText={formik.handleChange("email")}
-              onBlur={formik.handleBlur("email")}
-              value={formik.values?.email}
-              textContentType="emailAddress"
-              placeholder="Email"
-              icon={
-                <Iconify
-                  size={18}
-                  color={themeContext?.colors.secondaryText2}
-                  icon="solar:letter-outline"
-                />
-              }
-            />
-            {formik.touched?.email && formik.errors?.email ? (
-              <ErrorLabel>{formik.errors?.email}</ErrorLabel>
-            ) : null}
-          </FormControl>
-          <FormControl>
-            <Input
-              onChangeText={formik.handleChange("phoneNumber")}
-              onBlur={formik.handleBlur("phoneNumber")}
-              value={formik.values?.phoneNumber}
-              textContentType="telephoneNumber"
-              keyboardType="phone-pad"
-              placeholder="Phone number"
-              icon={<CountryCodeText>🇬🇭 +233</CountryCodeText>}
-            />
-            {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
-              <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
-            ) : null}
-          </FormControl>
-        </BookingInfoContainer>
-        <BookingInfoContainer>
-          <BookingInfoHeaderLabel>Other Information</BookingInfoHeaderLabel>
-          <FormControl>
-            <DateContainerWrapper>
-              <DateIconContainer>
-                <Iconify
-                  size={18}
-                  color={themeContext?.colors.secondaryText2}
-                  icon="solar:calendar-outline"
-                />
-              </DateIconContainer>
-              <DateContainer
-                dateTimeFormatter={(value) =>
-                  moment(value).format("dddd, MMMM Do YYYY")
+      <FlatListForOptimisation>
+        <>
+          <BookingInfoContainer style={{ marginTop: 0 }}>
+            <BookingInfoHeaderLabel>
+              Customer Information
+            </BookingInfoHeaderLabel>
+            <FormControl>
+              <Input
+                onChangeText={formik.handleChange("username")}
+                onBlur={formik.handleBlur("username")}
+                value={formik.values?.username}
+                textContentType="name"
+                placeholder="Username"
+                icon={
+                  <Iconify
+                    size={18}
+                    color={themeContext?.colors.secondaryText2}
+                    icon="solar:user-rounded-outline"
+                  />
                 }
-                placeholder={"Select scheduled date for service"}
-                mode={"date"}
-                minimumDate={new Date()}
-                maximumDate={new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)}
-                onChange={(date: string | number | Date) =>
-                  formik.setFieldValue("scheduledDate", new Date(date))
-                }
-                onBlur={formik.handleBlur("scheduledDate")}
-                value={formik.values?.scheduledDate}
               />
-            </DateContainerWrapper>
-          </FormControl>
-          <FormControl>
-            <DateContainerWrapper>
-              <DateIconContainer>
-                <Iconify
-                  size={18}
-                  color={themeContext?.colors.secondaryText2}
-                  icon="solar:clock-circle-outline"
-                />
-              </DateIconContainer>
-              <DateContainer
-                dateTimeFormatter={(value) => moment(value).format("h:mm:ss a")}
-                placeholder={"Select scheduled time for service"}
-                mode={"time"}
-                onChange={(date: string | number | Date) =>
-                  formik.setFieldValue("scheduledTime", new Date(date))
+              {formik.touched?.username && formik.errors?.username ? (
+                <ErrorLabel>{formik.errors?.username}</ErrorLabel>
+              ) : null}
+            </FormControl>
+            <FormControl>
+              <Input
+                onChangeText={formik.handleChange("email")}
+                onBlur={formik.handleBlur("email")}
+                value={formik.values?.email}
+                textContentType="emailAddress"
+                placeholder="Email"
+                icon={
+                  <Iconify
+                    size={18}
+                    color={themeContext?.colors.secondaryText2}
+                    icon="solar:letter-outline"
+                  />
                 }
-                onBlur={formik.handleBlur("scheduledTime")}
-                value={formik.values?.scheduledTime}
               />
-            </DateContainerWrapper>
-          </FormControl>
-          <FormControl>
-            <Input
-              onChangeText={formik.handleChange("noteToProvider")}
-              onBlur={formik.handleBlur("noteToProvider")}
-              value={formik.values?.noteToProvider}
-              textContentType="name"
-              placeholder={
-                "Note to service provider\ne.g I want you to please call me when you are ready."
-              }
-              multiline
-              numberOfLines={5}
-              textAlignVertical="top"
-              inputContainerStyles={{ height: 5 * 50 }}
-              icon={
-                <Iconify
-                  size={18}
-                  color={themeContext?.colors.secondaryText2}
-                  icon="solar:notebook-outline"
-                  style={{ marginBottom: 4 * 51 }}
+              {formik.touched?.email && formik.errors?.email ? (
+                <ErrorLabel>{formik.errors?.email}</ErrorLabel>
+              ) : null}
+            </FormControl>
+            <FormControl>
+              <Input
+                onChangeText={formik.handleChange("phoneNumber")}
+                onBlur={formik.handleBlur("phoneNumber")}
+                value={formik.values?.phoneNumber}
+                textContentType="telephoneNumber"
+                keyboardType="phone-pad"
+                placeholder="Phone number"
+                icon={<CountryCodeText>🇬🇭 +233</CountryCodeText>}
+              />
+              {formik.touched?.phoneNumber && formik.errors?.phoneNumber ? (
+                <ErrorLabel>{formik.errors?.phoneNumber}</ErrorLabel>
+              ) : null}
+            </FormControl>
+          </BookingInfoContainer>
+          <BookingInfoContainer>
+            <BookingInfoHeaderLabel>Other Information</BookingInfoHeaderLabel>
+            <FormControl>
+              <DateContainerWrapper>
+                <DateIconContainer>
+                  <Iconify
+                    size={18}
+                    color={themeContext?.colors.secondaryText2}
+                    icon="solar:calendar-outline"
+                  />
+                </DateIconContainer>
+                <DateContainer
+                  dateTimeFormatter={(value) =>
+                    moment(value).format("dddd, MMMM Do YYYY")
+                  }
+                  placeholder={"Select scheduled date for service"}
+                  mode={"date"}
+                  minimumDate={new Date()}
+                  maximumDate={new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)}
+                  onChange={(date: string | number | Date) =>
+                    formik.setFieldValue("scheduledDate", new Date(date))
+                  }
+                  onBlur={formik.handleBlur("scheduledDate")}
+                  value={formik.values?.scheduledDate}
                 />
-              }
-            />
-          </FormControl>
-        </BookingInfoContainer>
-        <BookingInfoContainer>
-          <BookingInfoHeaderLabel>
-            Attachments for service provider
-          </BookingInfoHeaderLabel>
-          <FormControl>
-            <BookingAttachments
-              attachments={attachments}
-              setAttachments={setAttachments}
-            />
-          </FormControl>
-        </BookingInfoContainer>
-      </VirtualisedContainer>
+              </DateContainerWrapper>
+            </FormControl>
+            <FormControl>
+              <DateContainerWrapper>
+                <DateIconContainer>
+                  <Iconify
+                    size={18}
+                    color={themeContext?.colors.secondaryText2}
+                    icon="solar:clock-circle-outline"
+                  />
+                </DateIconContainer>
+                <DateContainer
+                  dateTimeFormatter={(value) =>
+                    moment(value).format("h:mm:ss a")
+                  }
+                  placeholder={"Select scheduled time for service"}
+                  mode={"time"}
+                  onChange={(date: string | number | Date) =>
+                    formik.setFieldValue("scheduledTime", new Date(date))
+                  }
+                  onBlur={formik.handleBlur("scheduledTime")}
+                  value={formik.values?.scheduledTime}
+                />
+              </DateContainerWrapper>
+            </FormControl>
+            <FormControl>
+              <Input
+                onChangeText={formik.handleChange("noteToProvider")}
+                onBlur={formik.handleBlur("noteToProvider")}
+                value={formik.values?.noteToProvider}
+                textContentType="name"
+                placeholder={
+                  "Note to service provider\ne.g I want you to please call me when you are ready."
+                }
+                multiline
+                numberOfLines={5}
+                textAlignVertical="top"
+                inputContainerStyles={{ height: 5 * 50 }}
+                icon={
+                  <Iconify
+                    size={18}
+                    color={themeContext?.colors.secondaryText2}
+                    icon="solar:notebook-outline"
+                    style={{ marginBottom: 4 * 51 }}
+                  />
+                }
+              />
+            </FormControl>
+          </BookingInfoContainer>
+          <BookingInfoContainer>
+            <BookingInfoHeaderLabel>
+              Attachments for service provider
+            </BookingInfoHeaderLabel>
+            <FormControl>
+              <BookingAttachments
+                attachments={attachments}
+                setAttachments={setAttachments}
+              />
+            </FormControl>
+          </BookingInfoContainer>
+        </>
+      </FlatListForOptimisation>
       <BottomCard>
         <Button
           style={{ width: "100%", height: 60, padding: 12 }}

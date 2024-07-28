@@ -33,6 +33,7 @@ import paymentMethodsData from "~src/data/paymentMethodsData";
 import { updateBookingData } from "~store/actions/bookingActions";
 import ACTION_TYPES from "~store/actionTypes";
 import uuid from "react-native-uuid";
+import { showAlert } from "~services";
 
 const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const insets = useSafeAreaInsets();
@@ -49,7 +50,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
 
   const onContinue = () => {
     if (selectedPaymentMethod && selectedAddress) {
-      if (route.params?.service.subServices.length && selectedSubService) {
+      if (route.params?.service.subServices.length && selectedSubService?.id) {
         dispatch({
           type: ACTION_TYPES.UPDATE_BOOKING_DATA,
           payload: {
@@ -61,13 +62,15 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
             location: selectedAddress,
             paymentMethodObject: selectedPaymentMethod,
             subService: selectedSubService,
-            amount: selectedSubService.price || route.params?.service.price,
+            amount:
+              selectedSubService.price || route.params?.service.startingPrice,
           },
         });
       } else {
         dispatch({
           type: ACTION_TYPES.UPDATE_BOOKING_DATA,
           payload: {
+            id: uuid.v4() as string,
             userId: user.id,
             serviceId: route.params?.service.id,
             serviceName: route.params?.service.name,
@@ -75,12 +78,14 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
             location: selectedAddress,
             paymentMethodObject: selectedPaymentMethod,
             subService: selectedSubService,
-            amount: route.params?.service.price,
+            amount: route.params?.service.startingPrice,
           },
         });
       }
+      navigation.navigate(APP_PAGES.OTHER_BOOKING_INFO);
+    } else {
+      showAlert("Waitttt!", "Select address and payment method to continue");
     }
-    navigation.navigate(APP_PAGES.OTHER_BOOKING_INFO);
   };
 
   if (!route.params?.service && !route.params?.serviceProvider)
@@ -106,7 +111,7 @@ const BookingSummary = ({ navigation, route }: NativeStackScreenProps<any>) => {
             provider={route.params?.serviceProvider as VerifiedUserPreview}
           />
         </BookingInfoContainer>
-        {route.params?.service.subServices.length && (
+        {!!route.params?.service.subServices.length && (
           <BookingInfoContainer>
             <BookingInfoHeaderLabel>Sub Service(s)</BookingInfoHeaderLabel>
             <SubServiceSelection

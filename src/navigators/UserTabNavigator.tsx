@@ -176,6 +176,7 @@ const UserTabNavigator = () => {
         },
         headerTitleStyle: {
           fontFamily: `${theme?.typography.fontFamily.bold}`,
+          fontSize: 18,
         },
       }}
     >

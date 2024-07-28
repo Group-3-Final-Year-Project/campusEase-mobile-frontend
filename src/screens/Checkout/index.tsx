@@ -37,15 +37,17 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
       ...booking,
       paymentStatus: PaymentStatus.PAID,
     };
+    console.log(bookingData);
     await createBooking(bookingData)
       .then(() => {
+        navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
         dispatch({
           type: ACTION_TYPES.CLEAR_BOOKING_DATA,
           payload: {},
         });
-        navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         showAlert("Ooops!", "Could not create your request. Try again");
       })
       .finally(() => setLoading(false));

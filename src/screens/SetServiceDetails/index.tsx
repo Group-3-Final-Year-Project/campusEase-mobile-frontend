@@ -6,6 +6,7 @@ import {
   Platform,
   View,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { ThemeContext } from "styled-components/native";
 
@@ -111,71 +112,111 @@ const SetServiceDetails = ({
         style={{ flexGrow: 1 }}
       >
         <StatusBar style={themeContext?.dark ? "light" : "dark"} />
-        <ContentCard style={{ paddingBottom: bottomInset }}>
-          <View>
-            <HeroText text={"Service Details"} />
-            <Description
-              style={{
-                marginTop: 10,
-                color: themeContext?.colors.secondaryText2,
-              }}
-            >
-              Hey there! Welcome back. You've been missed.
-            </Description>
-          </View>
-          <View style={{ marginTop: 40, width: "100%" }}>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("name")}
-                onBlur={formik.handleBlur("name")}
-                value={formik.values?.name}
-                textContentType="name"
-                placeholder="Name"
-                icon={
-                  <Iconify
-                    size={18}
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:buildings-outline"
-                  />
-                }
-              />
-              {formik.touched?.name && formik.errors?.name ? (
-                <ErrorLabel>{formik.errors?.name}</ErrorLabel>
-              ) : null}
-            </FormControl>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("description")}
-                onBlur={formik.handleBlur("description")}
-                value={formik.values?.description}
-                textContentType="name"
-                placeholder="Service Bio"
-                multiline
-                numberOfLines={5}
-                textAlignVertical="top"
-                inputContainerStyles={{ height: 5 * 50 }}
-                icon={
-                  <Iconify
-                    size={18}
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:notebook-outline"
-                    style={{ marginBottom: 4 * 51 }}
-                  />
-                }
-              />
-            </FormControl>
-            <FormControl>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsVisible(true);
+        <ScrollView>
+          <ContentCard style={{ paddingBottom: bottomInset }}>
+            <View>
+              <HeroText text={"Service Details"} />
+              <Description
+                style={{
+                  marginTop: 10,
+                  color: themeContext?.colors.secondaryText2,
                 }}
               >
+                Hey there! Welcome back. You've been missed.
+              </Description>
+            </View>
+            <View style={{ marginTop: 40, width: "100%" }}>
+              <FormControl>
                 <Input
-                  readOnly
-                  onBlur={formik.handleBlur("category")}
-                  value={formik.values?.category?.name}
+                  onChangeText={formik.handleChange("name")}
+                  onBlur={formik.handleBlur("name")}
+                  value={formik.values?.name}
                   textContentType="name"
-                  placeholder="Category"
+                  placeholder="Name"
+                  icon={
+                    <Iconify
+                      size={18}
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:buildings-outline"
+                    />
+                  }
+                />
+                {formik.touched?.name && formik.errors?.name ? (
+                  <ErrorLabel>{formik.errors?.name}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("description")}
+                  onBlur={formik.handleBlur("description")}
+                  value={formik.values?.description}
+                  textContentType="name"
+                  placeholder="Service Bio"
+                  multiline
+                  numberOfLines={5}
+                  textAlignVertical="top"
+                  inputContainerStyles={{ height: 5 * 50 }}
+                  icon={
+                    <Iconify
+                      size={18}
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:notebook-outline"
+                      style={{ marginBottom: 4 * 51 }}
+                    />
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsVisible(true);
+                  }}
+                >
+                  <Input
+                    readOnly
+                    onBlur={formik.handleBlur("category")}
+                    value={formik.values?.category?.name}
+                    textContentType="name"
+                    placeholder="Category"
+                    icon={
+                      <Iconify
+                        size={18}
+                        color={themeContext?.colors.secondaryText2}
+                        icon="solar:global-outline"
+                      />
+                    }
+                  />
+                </TouchableOpacity>
+                {formik.errors?.category ? (
+                  <ErrorLabel>{formik.errors?.category}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("email")}
+                  onBlur={formik.handleBlur("email")}
+                  value={formik.values?.email}
+                  textContentType="emailAddress"
+                  placeholder="Email"
+                  icon={
+                    <Iconify
+                      size={18}
+                      color={themeContext?.colors.secondaryText2}
+                      icon="solar:letter-outline"
+                    />
+                  }
+                />
+                {formik.touched?.email && formik.errors?.email ? (
+                  <ErrorLabel>{formik.errors?.email}</ErrorLabel>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Input
+                  onChangeText={formik.handleChange("website")}
+                  onBlur={formik.handleBlur("website")}
+                  value={formik.values?.website}
+                  textContentType="URL"
+                  placeholder="Website"
                   icon={
                     <Iconify
                       size={18}
@@ -184,51 +225,14 @@ const SetServiceDetails = ({
                     />
                   }
                 />
-              </TouchableOpacity>
-              {formik.errors?.category ? (
-                <ErrorLabel>{formik.errors?.category}</ErrorLabel>
-              ) : null}
-            </FormControl>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("email")}
-                onBlur={formik.handleBlur("email")}
-                value={formik.values?.email}
-                textContentType="emailAddress"
-                placeholder="Email"
-                icon={
-                  <Iconify
-                    size={18}
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:letter-outline"
-                  />
-                }
-              />
-              {formik.touched?.email && formik.errors?.email ? (
-                <ErrorLabel>{formik.errors?.email}</ErrorLabel>
-              ) : null}
-            </FormControl>
-            <FormControl>
-              <Input
-                onChangeText={formik.handleChange("website")}
-                onBlur={formik.handleBlur("website")}
-                value={formik.values?.website}
-                textContentType="URL"
-                placeholder="Website"
-                icon={
-                  <Iconify
-                    size={18}
-                    color={themeContext?.colors.secondaryText2}
-                    icon="solar:global-outline"
-                  />
-                }
-              />
-              {formik.touched?.website && formik.errors?.website ? (
-                <ErrorLabel>{formik.errors?.website}</ErrorLabel>
-              ) : null}
-            </FormControl>
-          </View>
-        </ContentCard>
+                {formik.touched?.website && formik.errors?.website ? (
+                  <ErrorLabel>{formik.errors?.website}</ErrorLabel>
+                ) : null}
+              </FormControl>
+            </View>
+          </ContentCard>
+        </ScrollView>
+
         <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
           <Button
             loading={formik.isSubmitting}
