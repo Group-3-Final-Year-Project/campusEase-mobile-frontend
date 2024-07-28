@@ -121,14 +121,14 @@ const SetServiceLocation = ({
             console.log(res);
             if (res?.isSuccess) {
               resetForm();
-              dispatch({
-                type: ACTION_TYPES.CLEAR_SERVICE_IN_CREATION_DATA,
-                payload: {},
-              });
               navigateAndResetStack(
                 navigation,
                 APP_PAGES.SERVICE_CREATION_SUCCESS
               );
+              dispatch({
+                type: ACTION_TYPES.CLEAR_SERVICE_IN_CREATION_DATA,
+                payload: {},
+              });
             }
           });
         });
