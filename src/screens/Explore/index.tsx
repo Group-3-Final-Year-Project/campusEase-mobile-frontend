@@ -22,7 +22,7 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
   const themeContext = useContext(ThemeContext);
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const userLocation = user.locations[0]?.location;
-  const mapRef = useRef<React.RefObject<MapView>>();
+  const mapRef = useRef<MapView>(null);
   const [initialRegion] = useState<Region | null>(
     !user.locations
       ? null
@@ -51,16 +51,18 @@ const Explore = ({ navigation }: BottomTabScreenProps<any>) => {
       }}
     >
       <MapView
+        ref={mapRef}
         provider={PROVIDER_GOOGLE}
         initialRegion={initialRegion ?? undefined}
         style={{ flex: 1 }}
         showsCompass
         showsMyLocationButton
+        loadingEnabled={true}
         loadingBackgroundColor={themeContext?.colors.background}
         loadingIndicatorColor={themeContext?.colors.primary}
         // ref={mapRef}
       >
-        {data &&
+        {!!data?.length &&
           data.map((service) => (
             <Marker
               key={service.id}

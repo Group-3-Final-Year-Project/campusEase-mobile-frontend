@@ -58,6 +58,8 @@ const CustomToast = (props: { children: any }) => {
           centerMessage
           containerStyle={{
             borderRadius: 20,
+            backgroundColor: themeContext?.colors.secondaryBackground,
+            padding:10
           }}
           messageStyle={{
             color: themeContext?.colors.text,

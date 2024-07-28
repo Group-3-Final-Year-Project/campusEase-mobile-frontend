@@ -377,7 +377,20 @@ export const deleteFileFromFirebaseStorage = async (fileName: string) => {
 
 export const getOverallReviewsDataAboutService = async (
   serviceId: string
-): Promise<Review[]> => {};
+): Promise<Review[]> => {
+  const q = query(
+    collection(firestoreDatabase, STORAGE_KEYS.REVIEWS),
+    where("serviceId", "!=", serviceId),
+  );
+  const querySnapshot = await getDocs(q);
+  const reviews = querySnapshot.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data(),
+    } as Review;
+  });
+  return reviews;
+};
 
 export const createReview = async (review: Review) => {
   await setDoc(doc(firestoreDatabase, STORAGE_KEYS.REVIEWS, review.id), review);

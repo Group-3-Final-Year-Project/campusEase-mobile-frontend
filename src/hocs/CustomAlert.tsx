@@ -58,7 +58,7 @@ const CustomAlert = (props: { children: any }) => {
           showCancelButton={false}
           showConfirmButton={true}
           // cancelText="No, cancel"
-          confirmText="Ok"
+          confirmText={alertButtons[0]?.label || "Ok"}
           confirmButtonColor={themeContext?.colors.primary}
           onCancelPressed={hideAlert}
           onConfirmPressed={() =>
@@ -87,11 +87,11 @@ const CustomAlert = (props: { children: any }) => {
           }}
           confirmButtonStyle={{
             height: 40,
-            width: 100,
+            minWidth: 100,
             alignItems: "center",
             justifyContent: "center",
             paddingVertical: 12,
-            paddingHorizontal: 5,
+            paddingHorizontal: 7,
           }}
           confirmButtonTextStyle={{
             fontFamily: themeContext?.typography.fontFamily.regular,

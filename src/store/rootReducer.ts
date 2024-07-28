@@ -4,7 +4,7 @@ import FilterReducer from "./reducers/filterReducer";
 import ChatReducer from "./reducers/chatReducer";
 import BookingReducer from "./reducers/bookingReducer";
 import ServiceInCreationReducer from "./reducers/serviceInCreationReducer";
-// import ServicesReducer from "./reducers/servicesReducer";
+import ThemeReducer from "./reducers/themeReducer";
 
 const appReducer = combineReducers({
   user: UserReducer,
@@ -12,7 +12,7 @@ const appReducer = combineReducers({
   chat: ChatReducer,
   booking: BookingReducer,
   serviceInCreation: ServiceInCreationReducer,
-  // services: ServicesReducer,
+  theme:ThemeReducer,
 });
 
 export const RootActions = {

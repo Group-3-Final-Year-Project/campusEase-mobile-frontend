@@ -138,8 +138,7 @@ const BookingBtns = ({
         </>
       );
     } else if (
-      bookingStatus === BookingStatus.CANCELLED ||
-      bookingStatus === BookingStatus.COMPLETED
+      bookingStatus === BookingStatus.CANCELLED
     ) {
       return (
         <>
@@ -163,33 +162,59 @@ const BookingBtns = ({
           >
             Book again
           </Button>
-          {bookingStatus === BookingStatus.COMPLETED && (
-            <View style={{ flexDirection: "row" }}>
-              <Button
-                variant="outline"
-                style={{
-                  flexGrow: 1,
-                  marginRight: 7,
-                  //   borderColor: themeContext?.colors.secondaryBackground,
-                }}
-                onPress={handleWriteReview}
-              >
-                Write review
-              </Button>
-              <Button
-                style={{
-                  flexGrow: 1,
-                  // backgroundColor: themeContext?.colors.secondary,
-                }}
-                onPress={handlePrintReceipt}
-              >
-                E-receipt
-              </Button>
-            </View>
-          )}
         </>
       );
-    } else if (bookingStatus === BookingStatus.IN_PROGRESS) {
+    } else if (bookingStatus == BookingStatus.COMPLETED) {
+      return (
+        <View style={{ rowGap: 10, width: "100%" }}>
+          <View style={{ flexDirection: "row", columnGap: 10, width: "100%" }}>
+            <Button
+              variant="outline"
+              style={{
+                flexGrow: 1,
+                marginRight: 7,
+                borderColor: themeContext?.colors.secondaryBackground,
+              }}
+              disabled
+            >
+              {bookingStatus}
+            </Button>
+          </View>
+          <View style={{ flexDirection: "row", columnGap: 10, width: "100%" }}>
+            <Button
+              style={{
+                flexGrow: 1,
+                // backgroundColor: themeContext?.colors.secondary,
+              }}
+              onPress={handleBookAgain}
+            >
+              Book again
+            </Button>
+            <Button
+              variant="outline"
+              style={{
+                flexGrow: 1,
+                marginRight: 7,
+                //   borderColor: themeContext?.colors.secondaryBackground,
+              }}
+              onPress={handleWriteReview}
+            >
+              Write review
+            </Button>
+            <Button
+              style={{
+                flexGrow: 1,
+                // backgroundColor: themeContext?.colors.secondary,
+              }}
+              onPress={handlePrintReceipt}
+            >
+              E-receipt
+            </Button>
+          </View>
+        </View>
+      );
+    }
+    else if (bookingStatus === BookingStatus.IN_PROGRESS) {
       if (booking.requestCompletedConfirmationFromUser) {
         return (
           <Button

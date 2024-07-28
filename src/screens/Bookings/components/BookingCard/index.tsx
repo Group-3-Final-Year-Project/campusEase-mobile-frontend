@@ -10,6 +10,7 @@ import { ThemeContext } from "styled-components/native";
 import { APP_PAGES } from "~src/shared/constants";
 import { Booking, BookingStatus, VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
+import { Card } from "react-native-ui-lib";
 
 interface IBookingCard extends TouchableOpacityProps {
   booking: Booking;
@@ -34,52 +35,52 @@ const BookingCard = ({ booking, navigation, ...props }: IBookingCard) => {
   };
 
   return (
-    <BookingCardContainer
-      onPress={() =>
-        navigation.navigate(APP_PAGES.BOOKING_DETAILS, {
-          bookingId: booking.id,
-        })
-      }
-      {...props}
-    >
-      <View
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          marginBottom: 15,
-          // width: "fit-content",
-        }}
+      <BookingCardContainer
+        onPress={() =>
+          navigation.navigate(APP_PAGES.BOOKING_DETAILS, {
+            bookingId: booking.id,
+          })
+        }
+        {...props}
       >
         <View
           style={{
-            backgroundColor: `${getColorForBookingStatus(
-              booking.bookingStatus
-            )}20`,
-            padding: 8,
-            borderRadius: 5,
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
+            marginBottom: 15,
+            // width: "fit-content",
           }}
         >
-          <BookingStatusTag
+          <View
             style={{
-              color: getColorForBookingStatus(booking.bookingStatus),
+              backgroundColor: `${getColorForBookingStatus(
+                booking.bookingStatus
+              )}20`,
+              padding: 8,
+              borderRadius: 5,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-start",
             }}
           >
-            {booking.bookingStatus.toUpperCase()}
-          </BookingStatusTag>
+            <BookingStatusTag
+              style={{
+                color: getColorForBookingStatus(booking.bookingStatus),
+              }}
+            >
+              {booking.bookingStatus.toUpperCase()}
+            </BookingStatusTag>
+          </View>
         </View>
-      </View>
-      <View>
-        <BookingTitle>
-          {booking?.serviceName ? booking.serviceName : booking.customerName} (
-          {formatCurrency(booking.amount)})
-        </BookingTitle>
-        <Description>{booking.createdAt}</Description>
-      </View>
-    </BookingCardContainer>
+        <View>
+          <BookingTitle>
+            {booking?.serviceName ? booking.serviceName : booking.customerName}{" "}
+            ({formatCurrency(booking.amount)})
+          </BookingTitle>
+          <Description>{booking.createdAt}</Description>
+        </View>
+      </BookingCardContainer>
   );
 };
 

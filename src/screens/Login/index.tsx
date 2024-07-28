@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomBottomInset } from "~hooks";
-import { Button, Input, HeroText } from "~components";
+import { Button, Input, HeroText, OAuthBtns } from "~components";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +19,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import {
   checkIfServiceProviderHasService,
+  directServiceProviderToServiceCreation,
   getFirebaseErrorMessage,
   navigateAndResetStack,
   showAlert,
@@ -76,10 +77,7 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
               await checkIfServiceProviderHasService(result.user.id);
             serviceProviderHasService
               ? navigateAndResetStack(navigation, APP_PAGES.USER_TAB)
-              : navigateAndResetStack(
-                  navigation,
-                  APP_PAGES.SET_SERVICE_DETAILS
-                );
+              : directServiceProviderToServiceCreation(navigation);
           } else {
             navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
           }
@@ -194,6 +192,9 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
           >
             Sign in
           </Button>
+          <View style={{ marginVertical: 7 }}>
+            <OAuthBtns />
+          </View>
           <Pressable onPress={() => navigation.navigate(APP_PAGES.SIGNUP)}>
             <Description
               style={{

@@ -21,7 +21,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "styled-components/native";
 import { useNavigationBar } from "~hooks";
 import { DarkTheme, DefaultTheme, Font, LightTheme } from "~src/shared/theme";
-import { useDidMountEffect } from "~services";
+import { setNavbar, setStatusbar, useDidMountEffect } from "~services";
 import { SafeComponent } from "~components";
 import RootNavigator from "~src/navigators/RootNavigator";
 import { Provider } from "react-redux";

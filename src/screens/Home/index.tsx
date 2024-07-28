@@ -76,9 +76,9 @@ const Home = ({ navigation }: BottomTabScreenProps<any>) => {
               onPress={() => navigation.navigate(APP_PAGES.PROFILE)}
               animate
               useAutoColors
-              label="SO"
+              label={user.username.slice(0, 1)}
               size={35}
-              backgroundColor="green"
+              backgroundColor={themeContext?.colors.secondary}
               labelColor="white"
               containerStyle={{
                 marginLeft: 10,

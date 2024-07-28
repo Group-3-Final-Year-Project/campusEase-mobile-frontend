@@ -25,6 +25,7 @@ import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { STORAGE_KEYS } from "~src/shared/constants";
 import {
+  downloadFile,
   downloadFileFromFirebaseStorage,
   formatCurrency,
   getService,
@@ -39,9 +40,7 @@ import { NavigationProp } from "@react-navigation/native";
 import { Description } from "../Service/styles";
 import { ThemeContext } from "styled-components/native";
 import { BookingInfoCard } from "../BookingSummary/styles";
-import BookingAttachments, {
-  pickAttachmentTypeIcon,
-} from "../MoreBookingInfo/components/BookingAttachments";
+import { pickAttachmentTypeIcon } from "../MoreBookingInfo/components/BookingAttachments";
 import {
   AttachmentContainer,
   AttachmentName,
@@ -197,43 +196,6 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
             </BookingInfoCard>
           </BookingInfoContainer>
         )}
-        {!!booking.attachments.length && (
-          <BookingInfoContainer>
-            <BookingInfoHeaderLabel>
-              Attachments for service provider
-            </BookingInfoHeaderLabel>
-            {booking.attachments.map((attachment) => (
-              <AttachmentContainer
-                key={attachment.key}
-                // style={{ width: Dimensions.get("screen").width - 30 }}
-              >
-                <AttachmentTypeContainer>
-                  {pickAttachmentTypeIcon(
-                    attachment.fileType ?? "application/*"
-                  )}
-                </AttachmentTypeContainer>
-                <InfoContainer>
-                  <AttachmentName>
-                    {truncate(attachment.fileName, { length: 20 })}
-                  </AttachmentName>
-                  <Description>{attachment.fileSize}B</Description>
-                </InfoContainer>
-                <TouchableOpacity
-                  onPress={() =>
-                    downloadFileFromFirebaseStorage(attachment.fileName)
-                  }
-                  style={{ borderRadius: 100 }}
-                >
-                  <Iconify
-                    size={22}
-                    color={themeContext?.colors.green}
-                    icon="solar:close-circle-bold"
-                  />
-                </TouchableOpacity>
-              </AttachmentContainer>
-            ))}
-          </BookingInfoContainer>
-        )}
         {serviceProvider && (
           <BookingInfoContainer>
             <BookingInfoHeaderLabel>
@@ -281,6 +243,89 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 </View>
               </View>
             </BookingInfoCard>
+          </BookingInfoContainer>
+        )}
+        {!!booking.notes && (
+          <BookingInfoContainer>
+            <BookingInfoHeaderLabel>
+              {isMyService ? "Note from customer" : "Note to service provider"}
+            </BookingInfoHeaderLabel>
+            <BookingInfoCard>
+              <Description>{booking.notes}</Description>
+            </BookingInfoCard>
+          </BookingInfoContainer>
+        )}
+        {(!!booking.scheduledDate || !!booking.scheduledTime) && (
+          <BookingInfoContainer>
+            <BookingInfoHeaderLabel>Schedule</BookingInfoHeaderLabel>
+            <BookingInfoCard>
+              <View style={{ paddingVertical: 7 }}>
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Description>Scheduled Date</Description>
+                  <Description>{booking?.scheduledDate}</Description>
+                </View>
+              </View>
+              <View style={{ paddingVertical: 7 }}>
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Description>Scheduled Time</Description>
+                  <Description>{booking?.scheduledTime}</Description>
+                </View>
+              </View>
+            </BookingInfoCard>
+          </BookingInfoContainer>
+        )}
+        {!!booking.attachments.length && (
+          <BookingInfoContainer>
+            <BookingInfoHeaderLabel>
+              Attachments for service provider
+            </BookingInfoHeaderLabel>
+            {booking.attachments.map((attachment) => (
+              <AttachmentContainer
+                key={attachment.key}
+                // style={{ width: Dimensions.get("screen").width - 30 }}
+              >
+                <AttachmentTypeContainer>
+                  {pickAttachmentTypeIcon(
+                    attachment.fileType ?? "application/*"
+                  )}
+                </AttachmentTypeContainer>
+                <InfoContainer>
+                  <AttachmentName>
+                    {truncate(attachment.fileName, { length: 20 })}
+                  </AttachmentName>
+                  <Description>{attachment.fileSize}B</Description>
+                </InfoContainer>
+                <TouchableOpacity
+                  onPress={async () =>
+                    downloadFileFromFirebaseStorage(attachment.fileName).then(
+                      async (url) =>
+                        await downloadFile(url, attachment.fileName)
+                    )
+                  }
+                  style={{ borderRadius: 100 }}
+                >
+                  <Iconify
+                    size={22}
+                    color={themeContext?.colors.text}
+                    icon="solar:download-outline"
+                  />
+                </TouchableOpacity>
+              </AttachmentContainer>
+            ))}
           </BookingInfoContainer>
         )}
         <BookingInfoContainer>

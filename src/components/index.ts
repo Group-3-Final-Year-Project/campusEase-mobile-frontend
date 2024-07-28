@@ -19,3 +19,4 @@ export { default as HeroText } from "./HeroText";
 export { default as LocationPicker } from "./LocationPicker";
 export { default as SuccessState } from "./SuccessState";
 export { default as ReviewCard } from "./ReviewCard";
+export { default as OAuthBtns } from "./OAuthBtns";

@@ -2,6 +2,8 @@ import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AndroidNotificationPriority } from "expo-notifications";
 import * as Notifications from "expo-notifications";
+import { ColorSchemeName } from "react-native";
+
 
 export type CustomNavigationProp = {
   navigation: NativeStackNavigationProp<ParamListBase, any>;
@@ -82,6 +84,7 @@ export type ReduxState = {
   };
   chat: ChatData;
   serviceInCreation: Service;
+  theme:ColorSchemeName
 };
 
 export type ApiRequestResult<TData = any, SData = any> = {
@@ -255,7 +258,8 @@ export type Review = {
   providerId: string;
   bookingId: string;
   rating: number;
-  message: string;
+  serviceProviderReviewMsg: string;
+  appReviewMsg: string;
   reviewerName: string;
   createdAt?: string;
 };

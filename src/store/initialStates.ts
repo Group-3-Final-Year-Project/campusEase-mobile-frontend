@@ -1,9 +1,11 @@
 import {
+  BookingStatus,
   Filters,
   PaymentStatus,
   ReduxState,
   UserType,
 } from "~src/@types/types";
+import { DefaultTheme } from "~src/shared/theme";
 
 const INITIAL_STATE: ReduxState = {
   user: {
@@ -52,7 +54,10 @@ const INITIAL_STATE: ReduxState = {
         altitudeAccuracy: null,
         heading: null,
         speed: null,
+        latitudeDelta: 0,
+        longitudeDelta: 0
       },
+      id: ""
     },
     paymentMethodObject: {
       id: "",
@@ -68,6 +73,11 @@ const INITIAL_STATE: ReduxState = {
     notes: "",
     attachments: [],
     bookingStates: [],
+    serviceName: "",
+    amount: 0,
+    bookingStatus: BookingStatus.PENDING,
+    requestCompletedConfirmationFromUser: false,
+    requestCompletedConfirmationFromProvider: false
   },
   serviceInCreation: {
     id: "",
@@ -77,7 +87,6 @@ const INITIAL_STATE: ReduxState = {
       id: "",
       name: "",
       description: undefined,
-      image: undefined,
     },
     location: {
       name: "",
@@ -90,13 +99,18 @@ const INITIAL_STATE: ReduxState = {
         altitudeAccuracy: null,
         heading: null,
         speed: null,
+        latitudeDelta: 0,
+        longitudeDelta: 0
       },
+      id: ""
     },
     coverImage: "",
     email: null,
     createdAt: "",
     isAvailable: false,
+    startingPrice: 0
   },
+  theme: "dark"
 };
 
 export default INITIAL_STATE;

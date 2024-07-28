@@ -147,7 +147,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
 
   return (
     <Container>
-      <FlatListForOptimisation>
+      <ScrollView style={{paddingHorizontal:15}}>
         <>
           <BookingInfoContainer style={{ marginTop: 0 }}>
             <BookingInfoHeaderLabel>
@@ -292,7 +292,7 @@ const MoreBookingInfo = ({ navigation }: NativeStackScreenProps<any>) => {
             </FormControl>
           </BookingInfoContainer>
         </>
-      </FlatListForOptimisation>
+      </ScrollView>
       <BottomCard>
         <Button
           style={{ width: "100%", height: 60, padding: 12 }}

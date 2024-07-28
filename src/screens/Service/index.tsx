@@ -149,6 +149,8 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     }
   }, [data]);
 
+  console.log(reviews);
+
   const getServiceProvider = useCallback(
     async (providerId: string) => {
       setServiceProvider(await getUserDataPreview(providerId));
@@ -158,7 +160,8 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
 
   const getReviews = useCallback(
     async (serviceId: string) => {
-      setReviews(await getOverallReviewsDataAboutService(serviceId));
+      const revs = await getOverallReviewsDataAboutService(serviceId);
+      setReviews(revs || []);
     },
     [route.params?.serviceId]
   );
@@ -397,15 +400,17 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
             <ServiceInfoContainer>
               <ServiceInfoHeaderLabel>Reviews</ServiceInfoHeaderLabel>
               <StackAggregator
-                bg-transparent
-                contentContainerStyle={{
-                  backgroundColor: "transparent",
-                }}
-                buttonProps={{
-                  "bg-transparent": true,
-                  bottom: true,
-                }}
+                // bg-transparent
+                // contentContainerStyle={{
+                //   backgroundColor: "transparent",
+                // }}
+                // buttonProps={{
+                //   "bg-transparent": true,
+                //   bottom: true,
+                // }}
+
               >
+              
                 {reviews.map((item) => (
                   <ReviewCard
                     key={item.id}

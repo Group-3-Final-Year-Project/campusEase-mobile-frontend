@@ -4,12 +4,15 @@ import { EffectCallback, DependencyList, useRef, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as Linking from "expo-linking";
 import * as Location from "expo-location";
-import { Platform } from "react-native";
+import { ColorSchemeName, Platform, StatusBar, StatusBarStyle } from "react-native";
 import { eventEmitter } from "./eventEmitter";
 import { APP_PAGES, SUBSCRIBABLE_EVENTS } from "~src/shared/constants";
 import { getMyServices } from "./dataService";
 import * as DocumentPicker from "expo-document-picker";
 import { UserType } from "~src/@types/types";
+import * as NavigationBar from 'expo-navigation-bar';
+import RNFetchBlob, { RNFetchBlobConfig } from "rn-fetch-blob";
+
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -240,4 +243,69 @@ export const handleCreateServiceNavigation = async (
       },
     ]
   );
+};
+
+export const directServiceProviderToServiceCreation = (
+  navigation: NavigationProp<any>
+) => {
+  showAlert(
+    "Waitttt!",
+    "You will be taken to service creation onboard because you are a service provider but has not yet created a service.\nIf you have already created a service, please make sure you have a healthy internet connection and reopen the app",
+    [
+      {
+        label: "Go to service creation",
+        onPress: () =>
+          navigateAndResetStack(navigation, APP_PAGES.SET_SERVICE_DETAILS),
+      },
+    ]
+  );
+};
+
+export const setNavbar = async (color:string,isTransparent?:boolean) => {
+  if (Platform.OS === 'android') {
+    if (isTransparent) {
+      await NavigationBar.setBackgroundColorAsync("#00000000");
+    } else {
+      await NavigationBar.setBackgroundColorAsync(color);
+    }
+    await NavigationBar.setBorderColorAsync("#00000000");
+  }
+};
+
+export const setStatusbar = async (color: string, barStyle:StatusBarStyle, isTransparent?:boolean) => {
+ if (Platform.OS === "android") {
+   if (isTransparent) {
+     StatusBar.setTranslucent(true);
+     StatusBar.setBackgroundColor("transparent", true);
+   } else {
+     StatusBar.setBackgroundColor(
+        color,true
+     );
+   }
+   StatusBar.setBarStyle(barStyle);
+ } else {
+   StatusBar.setBarStyle("dark-content");
+ }
+}
+
+export const downloadFile = async (url: string, fileName: string) => {
+  const { config, fs } = RNFetchBlob;
+  const RootDir = fs.dirs.DownloadDir;
+  const options: RNFetchBlobConfig = {
+    fileCache: true,
+    addAndroidDownloads: {
+      path: RootDir + "/file_" + fileName,
+      description: "downloading file...",
+      notification: true,
+      useDownloadManager: true,
+    },
+  };
+  config(options)
+    .fetch("GET", url)
+    .then(() => {
+      showToast("File Downloaded Successfully");
+    })
+    .catch(() => {
+      showToast("File Download Failed");
+    });
 };

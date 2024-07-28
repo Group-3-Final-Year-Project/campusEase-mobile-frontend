@@ -85,7 +85,7 @@ export const LightTheme: DefaultThemeProps = {
   colors: {
     primary: "#5F55FE",
     secondary: "#ff1a40",
-    text: "#111214",
+    text: "#21212b",
     secondaryText: "#3e4857",
     secondaryText2: Color("#3e4857").fade(0.5).rgb().string(),
     background: "#ffffff",
@@ -97,4 +97,4 @@ export const LightTheme: DefaultThemeProps = {
   },
 };
 
-export const DefaultTheme = LightTheme;
+export const DefaultTheme = DarkTheme;

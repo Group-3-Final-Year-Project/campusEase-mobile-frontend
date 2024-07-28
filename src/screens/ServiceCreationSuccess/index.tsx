@@ -49,7 +49,7 @@ const ServiceCreationSuccess = ({
           });
       } catch (error) {
         showAlert(
-          "Oops!",
+          "Ooops!",
           "Something went wrong while making you a service provider"
         );
       }

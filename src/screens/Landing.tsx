@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import {
   checkIfServiceProviderHasService,
+  directServiceProviderToServiceCreation,
   isAlreadyLoggedIn,
   isAlreadyUser,
   navigateAndResetStack,
@@ -36,7 +37,7 @@ const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
         console.log("HasService?: ", serviceProviderHasService);
         serviceProviderHasService
           ? navigateAndResetStack(navigation, APP_PAGES.USER_TAB)
-          : navigateAndResetStack(navigation, APP_PAGES.SET_SERVICE_DETAILS);
+          : directServiceProviderToServiceCreation(navigation);
       } else {
         navigateAndResetStack(navigation, APP_PAGES.USER_TAB);
       }

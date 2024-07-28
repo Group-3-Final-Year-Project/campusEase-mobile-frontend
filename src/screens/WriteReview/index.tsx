@@ -1,6 +1,7 @@
 import {
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -24,9 +25,18 @@ import { Review, VerifiedUser } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import moment from "moment";
+import { BookingInfoCard } from "../BookingSummary/styles";
+import { BookingInfoHeaderLabel } from "../BookingDetail/styles";
 
 export const reviewSchema = yup.object().shape({
-  message: yup.string().min(3, "Name not valid!").required("Name required!"),
+  serviceProviderReviewMsg: yup
+    .string()
+    .min(3, "Name not valid!")
+    .required("Name required!"),
+  appReviewMsg: yup
+    .string()
+    .min(3, "Name not valid!")
+    .required("Name required!"),
   rating: yup
     .number()
     .min(1, "Minimum rating is 1")
@@ -38,7 +48,8 @@ const WriteReview = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const themeContext = useContext(ThemeContext);
   const reviewInitialValues = {
-    message: "",
+    serviceProviderReviewMsg: "",
+    appReviewMsg: "",
     rating: 0,
   };
 
@@ -59,6 +70,7 @@ const WriteReview = ({ navigation, route }: NativeStackScreenProps<any>) => {
           reviewerName: user.username,
           createdAt: moment(new Date()).format("dddd, MMMM Do YYYY"),
         };
+        console.log(reviewData);
         await createReview(reviewData)
           .then(() => {
             showToast("Review submitted successfully");
@@ -86,42 +98,47 @@ const WriteReview = ({ navigation, route }: NativeStackScreenProps<any>) => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flexGrow: 1 }}
       >
-        <View style={{ width: "100%" }}>
+        <ScrollView style={{ width: "100%" }}>
           <FormControl>
-            {[...new Array(5)].map((_, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={{ marginRight: 10 }}
-                  onPress={() => handleRating(index)}
-                >
-                  {index < formik.values.rating ? (
-                    <Iconify
-                      icon="fluent-emoji-flat:star"
-                      size={30}
-                      strokeWidth={30}
-                    />
-                  ) : (
-                    <Iconify
-                      icon="solar:add-circle-outline"
-                      size={30}
-                      strokeWidth={30}
-                    />
-                  )}
-                </TouchableOpacity>
-              );
-            })}
+            <BookingInfoHeaderLabel>How would you rate your service provision?</BookingInfoHeaderLabel>
+            <View style={{ flexDirection: "row" }}>
+              {[...new Array(5)].map((_, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={{ marginRight: 10 }}
+                    onPress={() => handleRating(index)}
+                  >
+                    {index < formik.values.rating ? (
+                      <Iconify
+                        icon="fluent-emoji-flat:star"
+                        size={40}
+                        strokeWidth={10}
+                      />
+                    ) : (
+                      <Iconify
+                        icon="solar:star-outline"
+                        size={40}
+                        strokeWidth={10}
+                        color={themeContext?.colors.primary}
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
             {formik.touched?.rating && formik.errors?.rating ? (
               <ErrorLabel>{formik.errors?.rating}</ErrorLabel>
             ) : null}
           </FormControl>
           <FormControl>
+            <BookingInfoHeaderLabel>How was your service provision?</BookingInfoHeaderLabel>
             <Input
-              onChangeText={formik.handleChange("message")}
-              onBlur={formik.handleBlur("message")}
-              value={formik.values?.message}
+              onChangeText={formik.handleChange("serviceProviderReviewMsg")}
+              onBlur={formik.handleBlur("serviceProviderReviewMsg")}
+              value={formik.values?.serviceProviderReviewMsg}
               textContentType="name"
-              placeholder="Service Bio"
+              placeholder="e.g The service provider was very patient"
               multiline
               numberOfLines={5}
               textAlignVertical="top"
@@ -136,7 +153,29 @@ const WriteReview = ({ navigation, route }: NativeStackScreenProps<any>) => {
               }
             />
           </FormControl>
-        </View>
+          <FormControl>
+            <BookingInfoHeaderLabel>How was the overall app usage?</BookingInfoHeaderLabel>
+            <Input
+              onChangeText={formik.handleChange("appReviewMsg")}
+              onBlur={formik.handleBlur("appReviewMsg")}
+              value={formik.values?.appReviewMsg}
+              textContentType="name"
+              placeholder="e.g I really like this app"
+              multiline
+              numberOfLines={5}
+              textAlignVertical="top"
+              inputContainerStyles={{ height: 5 * 50 }}
+              icon={
+                <Iconify
+                  size={18}
+                  color={themeContext?.colors.secondaryText2}
+                  icon="solar:notebook-outline"
+                  style={{ marginBottom: 4 * 51 }}
+                />
+              }
+            />
+          </FormControl>
+        </ScrollView>
         <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
           <Button
             loading={formik.isSubmitting}
