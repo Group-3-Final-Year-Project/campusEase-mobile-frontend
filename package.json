@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@emailjs/react-native": "^4.2.2",
     "@expo-google-fonts/lexend": "^0.2.3",
     "@expo-google-fonts/urbanist": "^0.2.3",
     "@react-native-async-storage/async-storage": "^1.23.1",

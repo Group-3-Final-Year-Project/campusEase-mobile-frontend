@@ -9,6 +9,7 @@ import {
   createBooking,
   formatLatLng,
   navigateAndResetStack,
+  sendEmail,
   showAlert,
 } from "~services";
 import ACTION_TYPES from "~store/actionTypes";
@@ -39,12 +40,13 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
     };
     console.log(bookingData);
     await createBooking(bookingData)
-      .then(() => {
+      .then(async () => {
         navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
         dispatch({
           type: ACTION_TYPES.CLEAR_BOOKING_DATA,
           payload: {},
         });
+        await sendEmail(bookingData.customerName,bookingData.customerEmail,"Your request has been sent successfully to service provider\nWe will notify you if the request is accepted or rejected");
       })
       .catch((error) => {
         console.log(error);

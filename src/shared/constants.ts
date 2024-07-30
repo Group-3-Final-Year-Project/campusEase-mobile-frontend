@@ -50,6 +50,7 @@ export const APP_PAGES = {
   FORGOT_PASSWORD: "Forgot Password?",
   TERMS_AND_CONDITIONS: "Terms and Conditions",
   CHECKOUT: "Checkout",
+  REPORT:"Report"
 };
 
 export const API_URLS = {
@@ -79,6 +80,7 @@ export const STORAGE_KEYS = {
   SERVICE_CATEGORIES: "campusEase_service_categories",
   BOOKINGS: "campuseEase_bookings",
   REVIEWS: "campuseEase_reviews",
+  REPORTS:"campusEase_reports"
 };
 
 export const QUERY_KEYS = {

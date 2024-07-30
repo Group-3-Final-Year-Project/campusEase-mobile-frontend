@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "~store/hooks/useTypedRedux";
 import { Booking, PaymentStatus } from "~src/@types/types";
 import { Container } from "../Home/styles";
 import { ThemeContext } from "styled-components/native";
-import { createBooking, navigateAndResetStack, showAlert } from "~services";
+import { createBooking, navigateAndResetStack, sendEmail, showAlert } from "~services";
 import ACTION_TYPES from "~store/actionTypes";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { APP_PAGES } from "~src/shared/constants";
@@ -23,12 +23,17 @@ const PayView = ({ navigation }: NativeStackScreenProps<any>) => {
       paymentStatus: PaymentStatus.PAID,
     };
     await createBooking(bookingData)
-      .then(() => {
+      .then(async () => {
         navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
         dispatch({
           type: ACTION_TYPES.CLEAR_BOOKING_DATA,
           payload: {},
         });
+        await sendEmail(
+          bookingData.customerName,
+          bookingData.customerEmail,
+          "Your request has been sent successfully to service provider\nWe will notify you if the request is accepted or rejected"
+        );
       })
       .catch(() => {
         showAlert("Ooops!", "Could not create your request. Try again");

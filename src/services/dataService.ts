@@ -17,6 +17,7 @@ import { firebaseCloudStorage, firestoreDatabase } from "firebaseConfig";
 import {
   Booking,
   BookingStatus,
+  ReportObj,
   Review,
   Service,
   ServiceCategory,
@@ -33,6 +34,8 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { send, EmailJSResponseStatus } from "@emailjs/react-native";
+import { showToast } from "./uiService";
 
 export const getBookmarks = async () => {
   const bookmarks = await AsyncStorage.getItem(STORAGE_KEYS.BOOKMARKS);
@@ -396,6 +399,10 @@ export const createReview = async (review: Review) => {
   await setDoc(doc(firestoreDatabase, STORAGE_KEYS.REVIEWS, review.id), review);
 };
 
+export const createReport = async (report: ReportObj) => {
+  await setDoc(doc(firestoreDatabase, STORAGE_KEYS.REPORTS, report.id), report);
+};
+
 export const getOverallRatingAboutService = async (
   serviceId: string
 ): Promise<number | null> => {
@@ -426,5 +433,29 @@ export const getOverallRatingAboutService = async (
   } catch (error) {
     console.error("Error fetching or processing reviews:", error);
     return null;
+  }
+};
+
+
+export const sendEmail = async (name:string, email:string,message:string) => {
+
+  const templateParams = {
+    from_name:"CampusEase",
+    to_name: name,
+    message: message,
+    reply_to: email,
+  };
+
+  try {
+    await send("service_tlrtr7f", "template_bj3c7lf", templateParams, {
+      publicKey: "1lAyiheL0jxBJN9ju",
+    });
+
+  } catch (err) {
+    if (err instanceof EmailJSResponseStatus) {
+      console.log("EmailJS Request Failed...", err);
+    }
+
+    console.log("ERROR", err);
   }
 };

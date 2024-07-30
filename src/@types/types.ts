@@ -176,6 +176,18 @@ export type Service = {
   numberOfReviews?: number;
 };
 
+export type ReportObj = {
+  id: string;
+  providerId: string;
+  userId: string;
+  serviceId: string;
+  bookingId: string;
+  reporterName: string;
+  message: string;
+  createdAt: string;
+  updatedAt?: string;
+} 
+
 export type Booking = {
   id: string;
   providerId: string;

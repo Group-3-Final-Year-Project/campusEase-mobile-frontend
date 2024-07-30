@@ -8,6 +8,7 @@ import {
   Container,
 } from "./styles";
 import {
+  Button,
   CustomRefreshControl,
   EmptyState,
   LoadingView,
@@ -23,7 +24,7 @@ import {
 } from "~src/@types/types";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { STORAGE_KEYS } from "~src/shared/constants";
+import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import {
   downloadFile,
   downloadFileFromFirebaseStorage,
@@ -337,6 +338,15 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
         <BookingInfoContainer>
           <BookingInfoHeaderLabel>Booking Status</BookingInfoHeaderLabel>
           <BookingStatus bookingStates={booking.bookingStates} />
+        </BookingInfoContainer>
+        <BookingInfoContainer>
+          <Button style={{ backgroundColor: "transparent" }} onPress={() => {
+            navigation.navigate(APP_PAGES.REPORT, {
+              bookingId: booking.id,
+              serviceId: booking.serviceId,
+              providerId: booking.providerId,
+            });
+          }}>Report service / service provider</Button>
         </BookingInfoContainer>
       </ScrollView>
     </Container>

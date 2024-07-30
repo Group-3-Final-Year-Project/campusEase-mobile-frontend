@@ -22,7 +22,8 @@ export const Description = styled(Text).attrs({
 
 export const ListLabel = styled(Description)`
   font-family: ${(props: DefaultThemeProps) =>
-    props.theme.typography.fontFamily.bold};
+  props.theme.typography.fontFamily.bold};
+    font-size:14px;
 `;
 
 export const Title = styled(Text).attrs({
