@@ -65,7 +65,6 @@ const Login = ({ navigation, route }: NativeStackScreenProps<any>) => {
           values.email,
           values.password
         );
-        console.log("Res: ", result);
         if (result.user) {
           dispatch({
             type: ACTION_TYPES.UPDATE_USER_DATA,

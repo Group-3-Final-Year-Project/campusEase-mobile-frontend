@@ -70,7 +70,6 @@ const WriteReview = ({ navigation, route }: NativeStackScreenProps<any>) => {
           reviewerName: user.username,
           createdAt: moment(new Date()).format("dddd, MMMM Do YYYY"),
         };
-        console.log(reviewData);
         await createReview(reviewData)
           .then(() => {
             showToast("Review submitted successfully");

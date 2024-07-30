@@ -63,7 +63,6 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
       });
     }, [])
   );
-  console.log(chat);
 
   useEffect(() => {
     const fetchMessages = async (chatId: string) => {
@@ -158,7 +157,6 @@ const Chat = ({ navigation, route }: NativeStackScreenProps<any>) => {
   );
 
   // const onLoadEarlier = useCallback(() => {
-  //   console.log("loading");
   //   dispatch({ type: ACTION_TYPES.LOAD_EARLIER_START });
   //   setTimeout(() => {
   //     const newMessages = GiftedChat.prepend(

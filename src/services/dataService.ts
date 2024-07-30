@@ -233,7 +233,6 @@ export const openChat = async (
 
     await setDoc(doc(messagesRef), {});
   } else {
-    console.log("Chat already exists.");
   }
   navigation.navigate(APP_PAGES.CHAT, {
     chatId,
@@ -357,7 +356,6 @@ export const uploadFileToFirebaseStorage = async (file: {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("Download URL: " + downloadURL);
           resolve(downloadURL);
         });
       }
@@ -453,9 +451,7 @@ export const sendEmail = async (name:string, email:string,message:string) => {
 
   } catch (err) {
     if (err instanceof EmailJSResponseStatus) {
-      console.log("EmailJS Request Failed...", err);
     }
 
-    console.log("ERROR", err);
   }
 };

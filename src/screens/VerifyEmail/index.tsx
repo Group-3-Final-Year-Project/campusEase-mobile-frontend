@@ -50,8 +50,6 @@ const VerifyEmail = ({ navigation, route }: NativeStackScreenProps<any>) => {
                 numberOfDigits={6}
                 focusColor={themeContext?.colors.primary}
                 focusStickBlinkingDuration={500}
-                onTextChange={(text) => console.log(text)}
-                onFilled={(text) => console.log(`OTP is ${text}`)}
                 textInputProps={{
                   accessibilityLabel: "One-Time Password",
                 }}

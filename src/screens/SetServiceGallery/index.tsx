@@ -89,7 +89,6 @@ const SetServiceGallery = ({ navigation }: NativeStackScreenProps<any>) => {
       : [...pictures],
   };
 
-  console.log(serviceGalleryInitialValues);
 
   const formik = useFormik<{
     gallery: ImageForGallery[];

@@ -34,7 +34,6 @@ const Landing = ({ navigation }: NativeStackScreenProps<any>) => {
       if (loginData.userType === UserType.SERVICE_PROVIDER) {
         const serviceProviderHasService =
           await checkIfServiceProviderHasService(loginData.id);
-        console.log("HasService?: ", serviceProviderHasService);
         serviceProviderHasService
           ? navigateAndResetStack(navigation, APP_PAGES.USER_TAB)
           : directServiceProviderToServiceCreation(navigation);

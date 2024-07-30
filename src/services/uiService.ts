@@ -204,7 +204,6 @@ export const normalizeFilePath = (filePath: string) => {
       try {
         filePath = decodeURI(filePath);
       } catch (e) {
-        console.log(e);
       }
     }
   }
@@ -290,9 +289,7 @@ export const setStatusbar = async (color: string, barStyle:StatusBarStyle, isTra
 export const requestFileWritePermission = async () => {
   const permissions =
     await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-  console.log(permissions.granted);
   if (!permissions.granted) {
-    console.log("File write Permissions Denied!!");
     return {
       access: false,
       directoryUri: null,
@@ -319,11 +316,9 @@ export const downloadFile = async (url: string, fileName: string,fileType:string
             });
           })
           .then((res) => {
-            console.log(res);
             showToast("File downloaded successfully");
           })
           .catch((e) => {
-            console.log(e);
           });
     }
     })

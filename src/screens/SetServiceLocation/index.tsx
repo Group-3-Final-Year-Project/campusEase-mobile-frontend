@@ -118,7 +118,6 @@ const SetServiceLocation = ({
             updatedAt: new Date().toLocaleString(),
           };
           await startServiceCreation(service).then((res) => {
-            console.log(res);
             if (res?.isSuccess) {
               resetForm();
               navigateAndResetStack(

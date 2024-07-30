@@ -38,7 +38,6 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
       ...booking,
       paymentStatus: PaymentStatus.PAID,
     };
-    console.log(bookingData);
     await createBooking(bookingData)
       .then(async () => {
         navigateAndResetStack(navigation, APP_PAGES.BOOKING_CREATION_SUCCESS);
@@ -49,7 +48,6 @@ const Checkout = ({ navigation }: NativeStackScreenProps<any>) => {
         await sendEmail(bookingData.customerName,bookingData.customerEmail,"Your request has been sent successfully to service provider\nWe will notify you if the request is accepted or rejected");
       })
       .catch((error) => {
-        console.log(error);
         showAlert("Ooops!", "Could not create your request. Try again");
       })
       .finally(() => setLoading(false));

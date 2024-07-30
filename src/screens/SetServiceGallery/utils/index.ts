@@ -69,7 +69,6 @@ export const uploadServiceGallery = async (gallery: ImageForGallery[]) => {
         fileType: file.fileType ?? "",
         fileSize: file.fileSize,
       });
-      console.log("durl: ", downloadURL);
 
       successfulUploads.push({
         fileName: file.fileName,
