@@ -314,7 +314,7 @@ const BookingDetail = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   onPress={async () =>
                     downloadFileFromFirebaseStorage(attachment.fileName).then(
                       async (url) =>
-                        await downloadFile(url, attachment.fileName)
+                        await downloadFile(url, attachment.fileName,attachment.fileType)
                     )
                   }
                   style={{ borderRadius: 100 }}

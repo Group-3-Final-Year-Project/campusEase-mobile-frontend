@@ -11,8 +11,7 @@ import { getMyServices } from "./dataService";
 import * as DocumentPicker from "expo-document-picker";
 import { UserType } from "~src/@types/types";
 import * as NavigationBar from 'expo-navigation-bar';
-import RNFetchBlob, { RNFetchBlobConfig } from "rn-fetch-blob";
-
+import * as FileSystem from 'expo-file-system';
 
 export const navigateAndResetStack = (
   navigationObject: NavigationProp<any> | BottomTabNavigationHelpers,
@@ -288,24 +287,47 @@ export const setStatusbar = async (color: string, barStyle:StatusBarStyle, isTra
  }
 }
 
-export const downloadFile = async (url: string, fileName: string) => {
-  const { config, fs } = RNFetchBlob;
-  const RootDir = fs.dirs.DownloadDir;
-  const options: RNFetchBlobConfig = {
-    fileCache: true,
-    addAndroidDownloads: {
-      path: RootDir + "/file_" + fileName,
-      description: "downloading file...",
-      notification: true,
-      useDownloadManager: true,
-    },
+export const requestFileWritePermission = async () => {
+  const permissions =
+    await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+  console.log(permissions.granted);
+  if (!permissions.granted) {
+    console.log("File write Permissions Denied!!");
+    return {
+      access: false,
+      directoryUri: null,
+    };
+  }
+  return {
+    access: true,
+    directoryUri: permissions.directoryUri,
   };
-  config(options)
-    .fetch("GET", url)
-    .then(() => {
-      showToast("File Downloaded Successfully");
+};
+export const downloadFile = async (url: string, fileName: string,fileType:string) => {
+  try {
+    await requestFileWritePermission().then(async ({access,directoryUri}) => {
+
+      if (access) {
+        await FileSystem.StorageAccessFramework.createFileAsync(
+          directoryUri!,
+          fileName,
+          fileType
+        )
+          .then(async (uri) => {
+            await FileSystem.writeAsStringAsync(uri, url, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+          })
+          .then((res) => {
+            console.log(res);
+            showToast("File downloaded successfully");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+    }
     })
-    .catch(() => {
-      showToast("File Download Failed");
-    });
+  } catch (error) {
+    showAlert("Ooops...", `Could not Download file`);
+  }
 };
