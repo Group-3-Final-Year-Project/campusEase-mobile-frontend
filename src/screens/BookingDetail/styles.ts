@@ -28,4 +28,5 @@ export const BookingInfoHeaderLabel = styled(Text).attrs({})`
   font-family: ${(props: DefaultThemeProps) =>
     props.theme.typography.fontFamily.bold};
   padding-bottom: 10px;
+  font-size:14px;
 `;

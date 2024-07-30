@@ -315,7 +315,7 @@ export const downloadFile = async (url: string, fileName: string,fileType:string
         )
           .then(async (uri) => {
             await FileSystem.writeAsStringAsync(uri, url, {
-              encoding: FileSystem.EncodingType.Base64,
+              // encoding: FileSystem.EncodingType.Base64,
             });
           })
           .then((res) => {

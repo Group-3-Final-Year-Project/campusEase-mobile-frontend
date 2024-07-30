@@ -13,21 +13,17 @@ import {
 import {
   CustomRefreshControl,
   EmptyState,
-  IconBtn,
   LoadingView,
-  SafeComponent,
 } from "~components";
-import { Iconify } from "react-native-iconify";
-import { useFocusEffect } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { APP_PAGES, STORAGE_KEYS } from "~src/shared/constants";
 import Avatar from "react-native-ui-lib/avatar";
 import {
   DocumentData,
+  QueryDocumentSnapshot,
   collection,
   getDocs,
   query,
-  where,
 } from "firebase/firestore";
 import { firestoreDatabase } from "firebaseConfig";
 import { useAppSelector } from "~store/hooks/useTypedRedux";
@@ -116,9 +112,11 @@ const Chats = ({ navigation }: BottomTabScreenProps<any>) => {
     const chatsRef = collection(firestoreDatabase, STORAGE_KEYS.CHATROOMS);
     const querySnapshot = await getDocs(chatsRef);
 
+    const result: QueryDocumentSnapshot<DocumentData, DocumentData>[] = querySnapshot.docs.filter(doc => doc.id.includes(user.id));
+
     try {
       const chatData = await Promise.all(
-        querySnapshot.docs.map(async (doc) => {
+        result.map(async (doc) => {
           const chatId = doc.id;
           const chatDocData = doc.data(); // Store chat document data
 
