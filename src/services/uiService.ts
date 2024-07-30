@@ -305,21 +305,29 @@ export const downloadFile = async (url: string, fileName: string,fileType:string
     await requestFileWritePermission().then(async ({access,directoryUri}) => {
 
       if (access) {
-        await FileSystem.StorageAccessFramework.createFileAsync(
-          directoryUri!,
-          fileName,
-          fileType
-        )
-          .then(async (uri) => {
-            await FileSystem.writeAsStringAsync(uri, url, {
-              // encoding: FileSystem.EncodingType.Base64,
-            });
-          })
-          .then((res) => {
-            showToast("File downloaded successfully");
-          })
-          .catch((e) => {
-          });
+         const downloadInstance = FileSystem.createDownloadResumable(
+           url,
+           FileSystem.documentDirectory + "/" + fileName
+         );
+          await FileSystem.downloadAsync(
+            url,
+            FileSystem.documentDirectory + "/" + fileName
+          ).then((res) => showToast("File downloaded successfully"));
+        // await FileSystem.StorageAccessFramework.createFileAsync(
+        //   directoryUri!,
+        //   fileName,
+        //   fileType
+        // )
+        //   .then(async (uri) => {
+        //     await FileSystem.writeAsStringAsync(uri, url, {
+        //       // encoding: FileSystem.EncodingType.Base64,
+        //     });
+        //   })
+        //   .then((res) => {
+        //     showToast("File downloaded successfully");
+        //   })
+        //   .catch((e) => {
+        //   });
     }
     })
   } catch (error) {
