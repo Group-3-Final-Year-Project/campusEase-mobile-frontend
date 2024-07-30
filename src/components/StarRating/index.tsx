@@ -10,7 +10,7 @@ interface IStarRating {
 
 const StarRating = (props: IStarRating) => {
   const renderStars = () => {
-    return [...new Array(props.value)].map((_, index) => (
+    return [...new Array(Math.floor(props.value))].map((_, index) => (
       <Iconify
         key={index}
         icon="fluent-emoji-flat:star"

@@ -1,5 +1,5 @@
 import { View, TouchableOpacityProps } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CardContainer,
   CardImage,
@@ -12,7 +12,7 @@ import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
 import StarRating from "../StarRating";
 import Text from "../Text";
-import { formatCurrency } from "~services";
+import { formatCurrency, getOverallRatingAboutService } from "~services";
 import { ServiceListService } from "~src/@types/types";
 
 interface ServiceCardProps extends TouchableOpacityProps {
@@ -23,6 +23,28 @@ interface ServiceCardProps extends TouchableOpacityProps {
 const SecondaryServiceCard = (props: ServiceCardProps) => {
   const themeContext = useContext(ThemeContext);
   const { service, navigation } = props;
+
+   const [serviceRating, setServiceRating] = useState(0);
+
+   const fetchServiceRating = async (serviceId: string) => {
+     try {
+       const rating = await getOverallRatingAboutService(serviceId);
+       return rating || 0;
+     } catch (error) {
+       return null;
+     }
+   };
+
+   useEffect(() => {
+     const fetchData = async () => {
+       const rating = await fetchServiceRating(service.id);
+       if (rating !== null) {
+         setServiceRating(rating);
+       }
+     };
+
+     fetchData();
+   }, [service]);
 
   return (
     <CardContainer
@@ -40,8 +62,8 @@ const SecondaryServiceCard = (props: ServiceCardProps) => {
       <InfoContainer>
         <ServiceTitle>{service.name}</ServiceTitle>
         <View style={{ flexDirection: "row" }}>
-          <StarRating value={Math.floor(service.rating ?? 1)} size={12} />
-          <Text>({service.rating ?? 0.0})</Text>
+          <StarRating value={serviceRating} size={12} />
+          <Text>({serviceRating ?? 0.0})</Text>
         </View>
         <Description>{formatCurrency(service.startingPrice ?? 0)}</Description>
       </InfoContainer>

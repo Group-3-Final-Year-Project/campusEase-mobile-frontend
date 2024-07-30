@@ -380,7 +380,7 @@ export const getOverallReviewsDataAboutService = async (
 ): Promise<Review[]> => {
   const q = query(
     collection(firestoreDatabase, STORAGE_KEYS.REVIEWS),
-    where("serviceId", "!=", serviceId),
+    where("serviceId", "==", serviceId),
   );
   const querySnapshot = await getDocs(q);
   const reviews = querySnapshot.docs.map((doc) => {
@@ -394,4 +394,37 @@ export const getOverallReviewsDataAboutService = async (
 
 export const createReview = async (review: Review) => {
   await setDoc(doc(firestoreDatabase, STORAGE_KEYS.REVIEWS, review.id), review);
+};
+
+export const getOverallRatingAboutService = async (
+  serviceId: string
+): Promise<number | null> => {
+  try {
+    const q = query(
+      collection(firestoreDatabase, STORAGE_KEYS.REVIEWS),
+      where("serviceId", "==", serviceId)
+    );
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size === 0) {
+      return null;
+    }
+
+    let totalRating = 0;
+    let ratingCount = 0;
+    querySnapshot.forEach((doc) => {
+      const rating = doc.data().rating; 
+
+      if (typeof rating === "number") {
+        totalRating += rating;
+        ratingCount++;
+      } else {
+        console.warn(`Invalid rating format for review ${doc.id}`);
+      }
+    });
+
+    return ratingCount > 0 ? totalRating / ratingCount : 0;
+  } catch (error) {
+    console.error("Error fetching or processing reviews:", error);
+    return null;
+  }
 };

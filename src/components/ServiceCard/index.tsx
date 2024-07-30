@@ -1,5 +1,5 @@
 import { Dimensions, ImageBackground, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CardContainer, CardImage, CardInfoContainer, Title } from "./styles";
 import { Card, CardProps } from "react-native-ui-lib";
 import { ThemeContext } from "styled-components/native";
@@ -9,7 +9,7 @@ import Text from "~components/Text";
 import { APP_PAGES } from "~src/shared/constants";
 import { NavigationProp } from "@react-navigation/native";
 import { ServiceListService } from "~src/@types/types";
-import { formatCurrency, setBookmarks } from "~services";
+import { formatCurrency, getOverallRatingAboutService, setBookmarks } from "~services";
 import {
   Description,
   ServiceTitle,
@@ -24,6 +24,28 @@ interface ServiceCardProps extends CardProps {
 const ServiceCard = (props: ServiceCardProps) => {
   const theme = useContext(ThemeContext);
   const { service, navigation } = props;
+  const [serviceRating, setServiceRating] = useState(0);
+
+const fetchServiceRating = async (serviceId:string) => {
+  try {
+    const rating = await getOverallRatingAboutService(serviceId);
+    return rating || 0;
+  } catch (error) {
+    return null;
+  }
+};
+
+useEffect(() => {
+  const fetchData = async () => {
+    const rating = await fetchServiceRating(service.id);
+    if (rating !== null) {
+      setServiceRating(rating);
+    }
+  };
+
+  fetchData();
+}, [service]);
+
 
   return (
     <CardContainer
@@ -73,7 +95,7 @@ const ServiceCard = (props: ServiceCardProps) => {
             color={theme?.colors.text}
           />
           <Text style={{ marginLeft: 5, fontSize: 12, lineHeight: 14 }}>
-            {service?.rating ?? 0.0}
+            {serviceRating}
           </Text>
         </IconBtn>
         <IconBtn onPress={() => setBookmarks([service])}>

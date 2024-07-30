@@ -88,6 +88,7 @@ const Analytics = () => {
             }}
           />
         </View>
+        
       </ScrollView>
     </Container>
   );

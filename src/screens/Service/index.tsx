@@ -41,6 +41,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BookingInfoCard } from "../BookingSummary/styles";
 import {
   extractUserDataForFirebase,
+  getOverallRatingAboutService,
   getOverallReviewsDataAboutService,
   getService,
   getUserDataPreview,
@@ -57,6 +58,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
   const [serviceProvider, setServiceProvider] =
     useState<VerifiedUserPreview | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+    const [serviceRating, setServiceRating] = useState(0);
   const user: VerifiedUser = useAppSelector((state) => state.user);
   const currentUserForFirebase: VerifiedUserPreview =
     extractUserDataForFirebase(user);
@@ -137,6 +139,15 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     navigation.navigate(APP_PAGES.SET_SERVICE_DETAILS);
   };
 
+  const fetchServiceRating = async (serviceId: string) => {
+    try {
+      const rating = await getOverallRatingAboutService(serviceId);
+      return rating || 0;
+    } catch (error) {
+      return null;
+    }
+  };
+
   const { data, isLoading, isError, isRefetching, error, refetch } = useQuery({
     queryKey: [QUERY_KEYS.SERVICE],
     queryFn: () => fetchData(route.params?.serviceId),
@@ -146,10 +157,16 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
     if (data) {
       getServiceProvider(data.providerId);
       getReviews(data.id);
+      const fetchData = async () => {
+        const rating = await fetchServiceRating(data.id);
+        if (rating !== null) {
+          setServiceRating(rating);
+        }
+      };
+        fetchData();
     }
   }, [data]);
 
-  console.log(reviews);
 
   const getServiceProvider = useCallback(
     async (providerId: string) => {
@@ -282,7 +299,7 @@ const Service = ({ navigation, route }: NativeStackScreenProps<any>) => {
                   strokeWidth={10}
                 />
                 <TagLabel>
-                  {data?.rating ?? 0.0} ({data?.numberOfReviews ?? 0} reviews)
+                  {serviceRating ?? 0.0} ({reviews.length ?? 0} reviews)
                 </TagLabel>
               </IconBtn>
             </View>
